@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>APMS — Scan Checkpoint Patroli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#070a0d; --bg-panel:#0d1319; --bg-panel-raised:#111923;
+    --line:#1c2733; --line-bright:#2a3a4a;
+    --green:#2ee6a6; --green-dim:#1a5c48;
+    --amber:#e8b13f; --red:#e5484d; --blue:#4a9eff;
+    --text-hi:#eef3f5; --text-mid:#8fa3ab; --text-lo:#4d616b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    background:radial-gradient(ellipse 700px 500px at 50% -10%, rgba(46,230,166,0.08), transparent 60%), var(--bg-void);
+    color:var(--text-hi); font-family:'IBM Plex Mono', monospace;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;
+  }
+  .card{
+    width:100%; max-width:380px; background:var(--bg-panel); border:1px solid var(--line-bright); border-radius:18px;
+    padding:26px 24px; box-shadow:0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(46,230,166,0.08), 0 0 40px rgba(46,230,166,0.16), 0 0 80px rgba(46,230,166,0.08);
+    transition:box-shadow .3s;
+  }
+  .card:hover{
+    box-shadow:0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(46,230,166,0.18), 0 0 55px rgba(46,230,166,0.28), 0 0 100px rgba(46,230,166,0.14);
+  }
+  .brand-mini{display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:18px;}
+  .brand-mini .crest{width:26px; height:26px; border-radius:50%; background:rgba(46,230,166,0.1); border:1px solid var(--green-dim); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--green);}
+  .brand-mini span{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:13px; letter-spacing:1.5px; color:var(--text-mid);}
+  .brand-mini b{color:var(--green);}
+
+  .cp-badge{
+    display:inline-flex; align-items:center; gap:6px; background:rgba(74,158,255,0.1); border:1px solid rgba(74,158,255,0.3);
+    color:var(--blue); font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:10.5px; letter-spacing:1px;
+    padding:4px 12px; border-radius:20px; margin:0 auto 14px; display:table;
+  }
+  .gate-head{text-align:center; margin-bottom:20px;}
+  .gate-icon{width:56px; height:56px; margin:0 auto 12px; border-radius:16px; background:rgba(74,158,255,0.08); border:1px solid rgba(74,158,255,0.35); display:flex; align-items:center; justify-content:center; font-size:26px; color:var(--blue);}
+  .gate-head h1{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:18px; letter-spacing:.3px;}
+  .gate-head p{font-size:11px; color:var(--text-mid); margin-top:4px;}
+  .gate-head .cp-time{font-size:10.5px; color:var(--text-lo); margin-top:6px;}
+  .cp-progress{display:flex; align-items:center; justify-content:center; gap:5px; margin-top:10px;}
+  .cp-progress .dot{width:8px; height:8px; border-radius:50%; background:var(--line-bright);}
+  .cp-progress .dot.done{background:var(--green);}
+  .cp-progress .dot.current{background:var(--blue); box-shadow:0 0 0 3px rgba(74,158,255,0.25); width:10px; height:10px;}
+  .cp-progress-label{font-size:9.5px; color:var(--text-mid); margin-top:5px; letter-spacing:.5px;}
+
+  .field{margin-bottom:16px;}
+  .field label{font-size:10px; letter-spacing:1.5px; color:var(--text-mid); display:block; margin-bottom:7px;}
+  .input-wrap{display:flex; align-items:center; gap:10px; background:var(--bg-panel-raised); border:1px solid var(--line); border-radius:10px; padding:14px 15px;}
+  .input-wrap:focus-within{border-color:var(--green-dim);}
+  .input-wrap input, .input-wrap select{background:none; border:none; outline:none; color:var(--text-hi); font-family:'IBM Plex Mono'; font-size:14px; width:100%; appearance:none;}
+  .input-wrap input::placeholder{color:var(--text-lo);}
+  .chev{color:var(--text-mid); font-size:11px;}
+
+  .field-note{
+    background:rgba(232,177,63,0.06); border:1px dashed rgba(232,177,63,0.3); border-radius:10px;
+    padding:11px 13px; margin-bottom:18px; font-size:10.5px; color:var(--text-mid); line-height:1.5;
+  }
+
+  .id-toggle{display:flex; gap:8px; margin-bottom:16px; background:var(--bg-panel-raised); border-radius:12px; padding:5px;}
+  .id-toggle-btn{flex:1; padding:11px; border-radius:9px; border:none; background:none; color:var(--text-mid); font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:11.5px; letter-spacing:.5px; cursor:pointer;}
+  .id-toggle-btn.active{background:var(--bg-panel); color:var(--green); box-shadow:0 0 0 1px var(--green-dim);}
+
+  .nfc-tap-area{display:flex; flex-direction:column; align-items:center; gap:12px; padding:22px 10px; margin-bottom:6px;}
+  .nfc-tap-circle{
+    width:84px; height:84px; border-radius:50%; border:2px dashed var(--blue); color:var(--blue);
+    display:flex; align-items:center; justify-content:center; animation:nfcPulse 1.8s infinite;
+  }
+  .nfc-tap-circle.reading{border-style:solid; color:var(--green); border-color:var(--green); animation:none;}
+  @keyframes nfcPulse{0%,100%{box-shadow:0 0 0 0 rgba(74,158,255,0.25);} 50%{box-shadow:0 0 0 10px rgba(74,158,255,0);}}
+  .nfc-tap-label{font-size:11px; color:var(--text-mid); text-align:center;}
+
+  .selfie-capture-box{
+    position:relative; height:190px; border-radius:12px; border:2px dashed var(--line-bright);
+    background:var(--bg-panel-raised); display:flex; align-items:center; justify-content:center; overflow:hidden; cursor:pointer;
+  }
+  .selfie-capture-box.filled{border-style:solid; border-color:var(--green-dim);}
+  .selfie-empty{display:flex; flex-direction:column; align-items:center; gap:10px; color:var(--text-mid); font-size:11.5px; text-align:center; padding:0 20px;}
+  .selfie-empty svg{color:var(--text-lo);}
+  #selfiePreview{width:100%; height:100%; object-fit:cover;}
+
+  .gps-status{
+    display:flex; align-items:center; gap:9px; background:var(--bg-panel-raised); border:1px solid var(--line);
+    border-radius:10px; padding:11px 14px; margin:14px 0 18px; font-size:11px; color:var(--text-mid);
+  }
+  .gps-status svg{color:var(--text-lo); flex-shrink:0;}
+  .gps-status.ok{border-color:var(--green-dim);}
+  .gps-status.ok svg{color:var(--green);}
+  .gps-status.err{border-color:rgba(229,72,77,0.35);}
+  .gps-status.err svg{color:var(--red);}
+
+  .btn-confirm{
+    width:100%; padding:16px; border-radius:12px; border:none; cursor:pointer;
+    background:linear-gradient(180deg,#39e8ac,#1fae7e); color:#04140d; font-family:'Chakra Petch',sans-serif;
+    font-weight:700; font-size:15px; letter-spacing:1.5px; box-shadow:0 10px 25px rgba(46,230,166,0.25);
+    transition:box-shadow .2s, transform .2s;
+  }
+  .btn-confirm:hover:not(:disabled){box-shadow:0 10px 25px rgba(46,230,166,0.3), 0 0 30px rgba(46,230,166,0.4); transform:translateY(-1px);}
+  .btn-confirm:disabled{opacity:.4; cursor:not-allowed; box-shadow:none;}
+  .btn-confirm.mode-blocked{background:linear-gradient(180deg,#e5484d,#b93a3e); box-shadow:0 10px 25px rgba(229,72,77,0.25); opacity:1;}
+  .anomaly-btn{
+    width:100%; padding:12px; margin-top:10px; border-radius:10px; border:1px dashed rgba(229,72,77,0.4);
+    background:rgba(229,72,77,0.06); color:var(--red); font-family:'IBM Plex Mono'; font-size:11px; letter-spacing:.5px; cursor:pointer;
+  }
+
+  .foot-note{text-align:center; font-size:9.5px; color:var(--text-lo); margin-top:16px; letter-spacing:.5px;}
+
+  .step{display:none;}
+  .step.active{display:block;}
+
+  .success-wrap{display:none; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:10px 0 4px;}
+  .success-wrap.show{display:flex;}
+  .success-ico{width:74px; height:74px; border-radius:50%; background:rgba(46,230,166,0.1); border:2px solid var(--green); display:flex; align-items:center; justify-content:center; font-size:34px; color:var(--green);}
+  .success-wrap h2{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:18px; color:var(--text-hi);}
+  .success-detail{background:var(--bg-panel-raised); border:1px solid var(--line); border-radius:10px; padding:14px; width:100%; text-align:left; font-size:12px; margin-top:4px;}
+  .success-detail .row{display:flex; justify-content:space-between; padding:4px 0; color:var(--text-mid);}
+  .success-detail .row b{color:var(--text-hi);}
+  .btn-again{margin-top:6px; padding:12px 20px; border-radius:9px; border:1px solid var(--line-bright); background:var(--bg-panel-raised); color:var(--text-mid); font-family:'IBM Plex Mono'; font-size:11.5px; cursor:pointer;}
+  .next-hint{width:100%; text-align:center; font-size:11px; color:var(--green); background:rgba(46,230,166,0.06); border:1px solid var(--green-dim); border-radius:9px; padding:10px; line-height:1.5;}
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="brand-mini"><div class="crest">⚑</div><span>COMMAND360 <b>APMS</b></span></div>
+
+    <div id="stepScan" class="step active">
+      <div class="cp-badge">TITIK PATROLI</div>
+      <div class="gate-head">
+        <div class="gate-icon">📍</div>
+        <h1 id="cpName">CP 1 — Pos Jaga Depan</h1>
+        <p id="cpRoute">Rute 1 — Sektor Utara</p>
+        <div class="cp-progress" id="cpProgress"></div>
+        <div class="cp-time" id="cpTime">Memuat waktu...</div>
+      </div>
+
+      <div class="field">
+        <label>TIM PATROLI</label>
+        <div class="input-wrap">
+          <select id="selectTim">
+            <option value="">Pilih tim Anda</option>
+            <option value="Tim Alpha">Tim Alpha</option>
+            <option value="Tim Bravo">Tim Bravo</option>
+            <option value="Tim Charlie">Tim Charlie</option>
+          </select>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+
+      <div class="id-toggle">
+        <button class="id-toggle-btn active" id="btnIdManual">INPUT MANUAL</button>
+        <button class="id-toggle-btn" id="btnIdNfc">TAP KARTU NFC</button>
+      </div>
+
+      <div class="field" id="fieldManual">
+        <label>NRP / NAMA ANGGOTA</label>
+        <div class="input-wrap">
+          <input type="text" id="inputNama" placeholder="Ketik NRP atau nama Anda">
+        </div>
+      </div>
+
+      <div class="nfc-tap-area" id="fieldNfc" style="display:none;">
+        <div class="nfc-tap-circle" id="nfcTapCircle">
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="9" width="10" height="12" rx="1.5"/><path d="M9 9V6.5a3 3 0 0 1 6 0V9"/><circle cx="12" cy="14" r="2"/></svg>
+        </div>
+        <div class="nfc-tap-label" id="nfcTapLabel">Tempelkan KTA / kartu NFC ke belakang HP</div>
+      </div>
+
+      <div class="field">
+        <label>SELFIE VALIDASI (WAJIB)</label>
+        <div class="selfie-capture-box" id="selfieBox">
+          <input type="file" accept="image/*" capture="user" id="selfieInput" style="display:none;">
+          <div class="selfie-empty" id="selfieEmpty">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2.5h7L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8Z"/><circle cx="12" cy="14" r="3.8"/></svg>
+            <span>Ketuk untuk ambil foto selfie di lokasi</span>
+          </div>
+          <img id="selfiePreview" style="display:none;">
+        </div>
+      </div>
+
+      <div class="gps-status" id="gpsStatus">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6.5-6.1 6.5-11A6.5 6.5 0 0 0 5.5 10c0 4.9 6.5 11 6.5 11Z"/><circle cx="12" cy="10" r="2.2"/></svg>
+        <span id="gpsText">Mencari lokasi GPS...</span>
+      </div>
+
+      <button class="btn-confirm" id="btnConfirm" disabled>KONFIRMASI CHECKPOINT</button>
+      <button class="anomaly-btn" id="anomalyBtn" style="display:none;">TETAP LAPORKAN (TERTANDAI ANOMALI)</button>
+      <div class="foot-note">Data akan tercatat otomatis ke Dashboard APMS Staf Intelijen</div>
+    </div>
+
+    <div class="success-wrap" id="stepSuccess">
+      <img id="successSelfieThumb" style="width:74px;height:74px;border-radius:50%;object-fit:cover;border:2px solid var(--green); display:none;">
+      <div class="success-ico" id="successIcoCp">✓</div>
+      <h2>Checkpoint Tercatat</h2>
+      <div class="success-detail">
+        <div class="row"><span>Checkpoint</span><b id="sumCp">-</b></div>
+        <div class="row"><span>Tim</span><b id="sumTim">-</b></div>
+        <div class="row"><span>Nama</span><b id="sumNama">-</b></div>
+        <div class="row"><span>Waktu</span><b id="sumWaktu">-</b></div>
+        <div class="row"><span>Lokasi GPS</span><b id="sumGps">-</b></div>
+      </div>
+      <div class="next-hint" id="nextHint"></div>
+      <button class="btn-again" id="btnAgain">SCAN LAGI</button>
+    </div>
+  </div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const cpName = params.get('nama') || 'Pos Jaga Depan';
+  const cpId = params.get('cp') || 'CP1';
+  const routeName = params.get('rute') || 'Rute 1 — Sektor Utara';
+  const urutan = parseInt(params.get('urutan') || '1', 10);
+  const total = parseInt(params.get('total') || '5', 10);
+  // Koordinat sah checkpoint ini (ditanam di dalam QR code fisik di lokasi, bukan dimasukkan anggota)
+  const cpLat = params.get('lat') ? parseFloat(params.get('lat')) : -6.17511;
+  const cpLng = params.get('lng') ? parseFloat(params.get('lng')) : 106.82716;
+  const cpRadius = parseInt(params.get('radius') || '100', 10); // meter, toleransi akurasi GPS
+
+  document.getElementById('cpName').textContent = cpId + ' — ' + cpName;
+  document.getElementById('cpRoute').textContent = routeName;
+
+  const progWrap = document.getElementById('cpProgress');
+  let dotsHtml = '';
+  for(let i = 1; i <= total; i++){
+    if(i < urutan) dotsHtml += '<div class="dot done"></div>';
+    else if(i === urutan) dotsHtml += '<div class="dot current"></div>';
+    else dotsHtml += '<div class="dot"></div>';
+  }
+  progWrap.innerHTML = dotsHtml;
+  const progLabel = document.createElement('div');
+  progLabel.className = 'cp-progress-label';
+  progLabel.textContent = 'Checkpoint ' + urutan + ' dari ' + total + ' — ' + routeName;
+  progWrap.after(progLabel);
+
+  function updateClock(){
+    const now = new Date();
+    const d = now.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    const t = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    document.getElementById('cpTime').textContent = d + ' · ' + t + ' WIB';
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  const selectTim = document.getElementById('selectTim');
+  const inputNama = document.getElementById('inputNama');
+  const btnConfirm = document.getElementById('btnConfirm');
+
+  let idMethod = 'manual';
+  let nfcVerified = false;
+  const btnIdManual = document.getElementById('btnIdManual');
+  const btnIdNfc = document.getElementById('btnIdNfc');
+  const fieldManual = document.getElementById('fieldManual');
+  const fieldNfc = document.getElementById('fieldNfc');
+  const nfcTapCircle = document.getElementById('nfcTapCircle');
+  const nfcTapLabel = document.getElementById('nfcTapLabel');
+  const DEMO_CARD_NAMES = ['Serda Andi Wijaya','Kopda Rudi Hartono','Praka Slamet Riyadi'];
+
+  btnIdManual.addEventListener('click', ()=>{
+    idMethod = 'manual';
+    btnIdManual.classList.add('active'); btnIdNfc.classList.remove('active');
+    fieldManual.style.display = 'block'; fieldNfc.style.display = 'none';
+    validate();
+  });
+  btnIdNfc.addEventListener('click', ()=>{
+    idMethod = 'nfc';
+    btnIdNfc.classList.add('active'); btnIdManual.classList.remove('active');
+    fieldManual.style.display = 'none'; fieldNfc.style.display = 'flex';
+    validate();
+  });
+  nfcTapCircle.addEventListener('click', ()=>{
+    if(nfcVerified) return;
+    nfcTapLabel.textContent = 'Membaca kartu...';
+    setTimeout(()=>{
+      const name = DEMO_CARD_NAMES[Math.floor(Math.random()*DEMO_CARD_NAMES.length)];
+      inputNama.value = name;
+      nfcVerified = true;
+      nfcTapCircle.classList.add('reading');
+      nfcTapLabel.innerHTML = '✓ Kartu terbaca: <b style="color:var(--text-hi);">' + name + '</b>';
+      validate();
+    }, 900);
+  });
+
+  function validate(){
+    const idOk = idMethod === 'nfc' ? nfcVerified : inputNama.value.trim().length >= 2;
+    btnConfirm.disabled = !(selectTim.value && idOk && selfieTaken && gpsCaptured && gpsWithinRange);
+  }
+  selectTim.addEventListener('change', validate);
+  inputNama.addEventListener('input', validate);
+
+  // ===== SELFIE CAPTURE =====
+  let selfieTaken = false;
+  let selfieDataUrl = null;
+  const selfieBox = document.getElementById('selfieBox');
+  const selfieInput = document.getElementById('selfieInput');
+  const selfieEmpty = document.getElementById('selfieEmpty');
+  const selfiePreview = document.getElementById('selfiePreview');
+
+  selfieBox.addEventListener('click', ()=> selfieInput.click());
+  selfieInput.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      selfieDataUrl = ev.target.result;
+      selfiePreview.src = selfieDataUrl;
+      selfiePreview.style.display = 'block';
+      selfieEmpty.style.display = 'none';
+      selfieBox.classList.add('filled');
+      selfieTaken = true;
+      validate();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ===== GPS CAPTURE + VALIDASI GEOFENCE =====
+  let gpsCaptured = false;
+  let gpsLabel = '-';
+  let gpsWithinRange = false;
+  let gpsDistance = null;
+  const gpsStatusEl = document.getElementById('gpsStatus');
+  const gpsTextEl = document.getElementById('gpsText');
+
+  // Rumus Haversine — hitung jarak antara 2 koordinat (meter)
+  function hitungJarak(lat1, lng1, lat2, lng2){
+    const R = 6371000;
+    const toRad = deg => deg * Math.PI / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLng = toRad(lng2 - lng1);
+    const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2)**2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }
+
+  function captureGps(){
+    if(!navigator.geolocation){
+      gpsTextEl.textContent = 'GPS tidak didukung perangkat ini — checkpoint akan ditandai untuk verifikasi manual.';
+      gpsStatusEl.classList.add('err');
+      gpsCaptured = true;
+      gpsWithinRange = false;
+      updateConfirmState();
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos)=>{
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const acc = Math.round(pos.coords.accuracy);
+        gpsDistance = Math.round(hitungJarak(lat, lng, cpLat, cpLng));
+        gpsLabel = lat.toFixed(5) + ', ' + lng.toFixed(5) + ' (±' + acc + 'm)';
+        gpsCaptured = true;
+
+        if(gpsDistance <= cpRadius){
+          gpsWithinRange = true;
+          gpsTextEl.textContent = 'Lokasi terverifikasi — ' + gpsDistance + 'm dari titik checkpoint.';
+          gpsStatusEl.classList.add('ok');
+          gpsStatusEl.classList.remove('err');
+        } else {
+          gpsWithinRange = false;
+          gpsTextEl.textContent = '⚠ Anda terdeteksi ' + gpsDistance + 'm dari ' + cpId + ' — di luar radius ' + cpRadius + 'm yang diizinkan.';
+          gpsStatusEl.classList.add('err');
+          gpsStatusEl.classList.remove('ok');
+        }
+        updateConfirmState();
+      },
+      (err)=>{
+        gpsTextEl.textContent = 'Lokasi tidak dapat diakses (' + err.message + '). Aktifkan izin lokasi untuk validasi checkpoint.';
+        gpsStatusEl.classList.add('err');
+        gpsCaptured = false;
+        gpsWithinRange = false;
+        updateConfirmState();
+      },
+      { enableHighAccuracy:true, timeout:10000 }
+    );
+  }
+  captureGps();
+
+  function updateConfirmState(){
+    if(gpsCaptured && !gpsWithinRange){
+      btnConfirm.textContent = 'LOKASI TERLALU JAUH';
+      btnConfirm.classList.add('mode-blocked');
+      btnConfirm.disabled = true;
+      document.getElementById('anomalyBtn').style.display = 'block';
+    } else {
+      btnConfirm.textContent = 'KONFIRMASI CHECKPOINT';
+      btnConfirm.classList.remove('mode-blocked');
+      document.getElementById('anomalyBtn').style.display = 'none';
+      validate();
+    }
+  }
+
+  // ===== SIMPAN EVENT KE LOCALSTORAGE (untuk dibaca Dashboard APMS) =====
+  function logApmsEvent(evt){
+    try{
+      const key = 'apms_events';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      existing.unshift({ ...evt, ts: Date.now() });
+      localStorage.setItem(key, JSON.stringify(existing.slice(0, 100)));
+    } catch(e){ console.warn('Gagal menyimpan event APMS:', e); }
+  }
+
+  function submitCheckpoint(isAnomaly){
+    const now = new Date();
+    const t = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('sumCp').textContent = cpId + ' — ' + cpName;
+    document.getElementById('sumTim').textContent = selectTim.value;
+    document.getElementById('sumNama').textContent = inputNama.value.trim();
+    document.getElementById('sumWaktu').textContent = t + ' WIB';
+    document.getElementById('sumGps').textContent = gpsLabel + (gpsDistance !== null ? ' · ' + gpsDistance + 'm dari titik' : '');
+
+    logApmsEvent({
+      type: 'checkpoint',
+      nama: inputNama.value.trim(),
+      tim: selectTim.value,
+      checkpoint: cpId + ' — ' + cpName,
+      anomali: !!isAnomaly,
+      waktu: t + ' WIB'
+    });
+
+    const thumb = document.getElementById('successSelfieThumb');
+    if(selfieDataUrl){
+      thumb.src = selfieDataUrl;
+      thumb.style.display = 'block';
+    }
+
+    const icoCp = document.getElementById('successIcoCp');
+    const titleEl = document.querySelector('#stepSuccess h2');
+    if(isAnomaly){
+      icoCp.textContent = '⚠';
+      icoCp.style.background = 'rgba(229,72,77,0.1)';
+      icoCp.style.borderColor = 'var(--red)';
+      icoCp.style.color = 'var(--red)';
+      titleEl.textContent = 'Tercatat Sebagai Anomali';
+      titleEl.style.color = 'var(--red)';
+    } else {
+      icoCp.textContent = '✓';
+      icoCp.style.background = '';
+      icoCp.style.borderColor = '';
+      icoCp.style.color = '';
+      titleEl.textContent = 'Checkpoint Tercatat';
+      titleEl.style.color = '';
+    }
+
+    const hint = document.getElementById('nextHint');
+    if(isAnomaly){
+      hint.textContent = '⚠ Laporan ini otomatis dikirim ke Staf Intelijen untuk verifikasi lanjutan karena lokasi tidak sesuai.';
+      hint.style.color = 'var(--red)';
+      hint.style.background = 'rgba(229,72,77,0.06)';
+      hint.style.borderColor = 'var(--red)';
+    } else if(urutan < total){
+      hint.textContent = '→ Lanjutkan ke Checkpoint ' + (urutan + 1) + ' dari ' + total + '. Tetap semangat!';
+      hint.style.color = ''; hint.style.background = ''; hint.style.borderColor = '';
+    } else {
+      hint.textContent = '✓ Ini checkpoint terakhir — rute patroli selesai!';
+      hint.style.color = ''; hint.style.background = ''; hint.style.borderColor = '';
+    }
+    hint.style.display = 'block';
+
+    document.getElementById('stepScan').classList.remove('active');
+    document.getElementById('stepSuccess').classList.add('show');
+  }
+
+  btnConfirm.addEventListener('click', ()=> submitCheckpoint(false));
+
+  document.getElementById('anomalyBtn').addEventListener('click', ()=>{
+    const idOk = idMethod === 'nfc' ? nfcVerified : inputNama.value.trim().length >= 2;
+    if(!(selectTim.value && idOk && selfieTaken)){
+      alert('Lengkapi Tim, Nama, dan Selfie terlebih dahulu sebelum melaporkan anomali.');
+      return;
+    }
+    submitCheckpoint(true);
+  });
+
+  document.getElementById('btnAgain').addEventListener('click', ()=>{
+    document.getElementById('stepSuccess').classList.remove('show');
+    document.getElementById('stepScan').classList.add('active');
+    selectTim.value = '';
+    inputNama.value = '';
+    nfcVerified = false;
+    nfcTapCircle.classList.remove('reading');
+    nfcTapLabel.textContent = 'Tempelkan KTA / kartu NFC ke belakang HP';
+    selfieTaken = false;
+    selfieDataUrl = null;
+    selfiePreview.style.display = 'none';
+    selfieEmpty.style.display = 'flex';
+    selfieBox.classList.remove('filled');
+    selfieInput.value = '';
+    document.getElementById('successSelfieThumb').style.display = 'none';
+    btnConfirm.disabled = true;
+  });
+</script>
+
+</body>
+</html>

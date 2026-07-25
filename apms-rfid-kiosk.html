@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>APMS — RFID Reader Kiosk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#070a0d; --bg-panel:#0d1319; --bg-panel-raised:#111923;
+    --line:#1c2733; --line-bright:#2a3a4a;
+    --green:#2ee6a6; --green-dim:#1a5c48;
+    --amber:#e8b13f; --red:#e5484d; --blue:#4a9eff;
+    --text-hi:#eef3f5; --text-mid:#8fa3ab; --text-lo:#4d616b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; user-select:none;}
+  html,body{height:100%; overflow:hidden;}
+  body{
+    background:radial-gradient(ellipse 900px 700px at 50% -10%, rgba(46,230,166,0.07), transparent 60%), var(--bg-void);
+    color:var(--text-hi); font-family:'IBM Plex Mono', monospace;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px;
+    position:relative;
+  }
+  body::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(46,230,166,0.035) 0px, rgba(46,230,166,0.035) 1px, transparent 1px, transparent 46px),
+      repeating-linear-gradient(90deg, rgba(46,230,166,0.035) 0px, rgba(46,230,166,0.035) 1px, transparent 1px, transparent 46px);
+    mask-image:radial-gradient(ellipse 900px 700px at 50% 40%, black 0%, transparent 75%);
+  }
+
+  .kiosk-topbar{position:absolute; top:0; left:0; right:0; display:flex; align-items:center; justify-content:space-between; padding:20px 30px; z-index:2;}
+  .kiosk-brand{display:flex; align-items:center; gap:10px;}
+  .kiosk-brand .crest{width:32px; height:32px; border-radius:50%; background:rgba(46,230,166,0.1); border:1px solid var(--green-dim); display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--green);}
+  .kiosk-brand span{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:14px; letter-spacing:1.5px; color:var(--text-mid);}
+  .kiosk-brand b{color:var(--green);}
+  .kiosk-clock{text-align:right; font-size:12px; color:var(--text-mid);}
+  .kiosk-clock b{display:block; font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:20px; color:var(--text-hi);}
+
+  .kiosk-loc-badge{
+    position:relative; z-index:2; display:inline-flex; align-items:center; gap:8px;
+    background:var(--bg-panel-raised); border:1px solid var(--line-bright); border-radius:24px;
+    padding:8px 20px; font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:13px; letter-spacing:1px;
+    color:var(--green); margin-bottom:30px;
+  }
+  .kiosk-loc-badge svg{color:var(--green);}
+
+  .kiosk-main{position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center;}
+
+  /* IDLE STATE */
+  #stateIdle{display:flex; flex-direction:column; align-items:center;}
+  .rfid-ring{
+    width:220px; height:220px; border-radius:50%; border:3px dashed var(--green-dim);
+    display:flex; align-items:center; justify-content:center; margin-bottom:28px; position:relative;
+    animation:idlePulse 2.4s infinite;
+  }
+  @keyframes idlePulse{0%,100%{box-shadow:0 0 0 0 rgba(46,230,166,0.15);} 50%{box-shadow:0 0 0 20px rgba(46,230,166,0);}}
+  .rfid-ring .rfid-ico{color:var(--green); width:88px; height:88px;}
+  #stateIdle h1{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:26px; letter-spacing:1px; margin-bottom:8px;}
+  #stateIdle p{font-size:13px; color:var(--text-mid); max-width:340px; line-height:1.6;}
+
+  /* SCANNING STATE */
+  #stateScanning{display:none; flex-direction:column; align-items:center;}
+  .scan-ring{
+    width:220px; height:220px; border-radius:50%; border:3px solid var(--blue);
+    display:flex; align-items:center; justify-content:center; margin-bottom:28px; animation:scanSpin 1s linear infinite;
+  }
+  @keyframes scanSpin{0%{transform:rotate(0);} 100%{transform:rotate(360deg);}}
+  .scan-ring .rfid-ico{color:var(--blue); width:88px; height:88px; animation:scanSpinBack 1s linear infinite;}
+  @keyframes scanSpinBack{0%{transform:rotate(0);} 100%{transform:rotate(-360deg);}}
+  #stateScanning h1{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:22px; color:var(--blue);}
+
+  /* RESULT STATE */
+  #stateResult{display:none; flex-direction:column; align-items:center;}
+  .result-ring{width:150px; height:150px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:20px; border:3px solid var(--green); background:rgba(46,230,166,0.08); box-shadow:0 0 30px rgba(46,230,166,0.35), 0 0 60px rgba(46,230,166,0.15);}
+  .result-ring.err{border-color:var(--red); background:rgba(229,72,77,0.08); box-shadow:0 0 30px rgba(229,72,77,0.35), 0 0 60px rgba(229,72,77,0.15);}
+  .result-ring svg{width:66px; height:66px; color:var(--green);}
+  .result-ring.err svg{color:var(--red);}
+  #stateResult h1{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:24px; margin-bottom:6px;}
+  #stateResult .result-name{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:19px; color:var(--text-hi); margin-bottom:4px;}
+  #stateResult .result-detail{font-size:13px; color:var(--text-mid); margin-bottom:18px;}
+  .result-card{background:var(--bg-panel-raised); border:1px solid var(--line); border-radius:12px; padding:16px 22px; min-width:280px;}
+  .result-card .row{display:flex; justify-content:space-between; padding:5px 0; font-size:12.5px; color:var(--text-mid);}
+  .result-card .row b{color:var(--text-hi);}
+  .cp-progress-kiosk{display:flex; align-items:center; justify-content:center; gap:6px; margin-top:14px;}
+  .cp-progress-kiosk .dot{width:9px; height:9px; border-radius:50%; background:var(--line-bright);}
+  .cp-progress-kiosk .dot.done{background:var(--green);}
+  .cp-progress-kiosk .dot.current{background:var(--blue);}
+
+  /* GUDANG STEP2 */
+  #stateItemTap{display:none; flex-direction:column; align-items:center;}
+  #stateItemTap h1{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:20px; margin-bottom:6px;}
+  #stateItemTap .person-chip{
+    background:var(--bg-panel-raised); border:1px solid var(--green-dim); border-radius:20px; padding:8px 18px;
+    font-size:12.5px; color:var(--text-hi); margin-bottom:22px;
+  }
+
+  .kiosk-footer{position:absolute; bottom:20px; left:0; right:0; text-align:center; z-index:2;}
+  .sim-btn{
+    background:var(--bg-panel-raised); border:1px solid var(--line-bright); color:var(--text-mid);
+    font-family:'IBM Plex Mono'; font-size:11px; padding:9px 18px; border-radius:20px; cursor:pointer; letter-spacing:.5px;
+    transition:box-shadow .2s, border-color .2s, color .2s;
+  }
+  .sim-btn:hover{border-color:var(--green-dim); color:var(--green); box-shadow:0 0 20px rgba(46,230,166,0.3);}
+  .sim-note{font-size:9px; color:var(--text-lo); margin-top:8px; letter-spacing:.5px;}
+</style>
+</head>
+<body>
+
+  <div class="kiosk-topbar">
+    <div class="kiosk-brand"><div class="crest">⚑</div><span>COMMAND360 <b>APMS</b> · RFID READER</span></div>
+    <div class="kiosk-clock"><b id="kioskTime">--:--:--</b><span id="kioskDate">-</span></div>
+  </div>
+
+  <div class="kiosk-main">
+    <div class="kiosk-loc-badge">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6.5-6.1 6.5-11A6.5 6.5 0 0 0 5.5 10c0 4.9 6.5 11 6.5 11Z"/><circle cx="12" cy="10" r="2.2"/></svg>
+      <span id="locBadge">GATE UTAMA — MASUK</span>
+    </div>
+
+    <div id="stateIdle">
+      <div class="rfid-ring">
+        <svg class="rfid-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10a2 2 0 0 1 4 0M6.5 8a5 5 0 0 1 7 0M9.5 12h.01"/></svg>
+      </div>
+      <h1 id="idleTitle">TEMPELKAN KARTU KTA</h1>
+      <p id="idleSub">Dekatkan kartu tanda anggota (RFID) ke reader untuk tercatat otomatis.</p>
+    </div>
+
+    <div id="stateScanning">
+      <div class="scan-ring">
+        <svg class="rfid-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10a2 2 0 0 1 4 0M6.5 8a5 5 0 0 1 7 0M9.5 12h.01"/></svg>
+      </div>
+      <h1>MEMBACA KARTU...</h1>
+    </div>
+
+    <div id="stateResult">
+      <div class="result-ring" id="resultRing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="resultIcoSvg"><path d="M4 12.5 9.5 18 20 6"/></svg>
+      </div>
+      <h1 id="resultTitle">BERHASIL TERCATAT</h1>
+      <div class="result-name" id="resultName">Serda Joko Purnomo</div>
+      <div class="result-detail" id="resultDetail">Gate Utama · Masuk</div>
+      <div class="result-card">
+        <div class="row"><span>Waktu</span><b id="resultTime">-</b></div>
+        <div class="row" id="resultExtraRow" style="display:none;"><span id="resultExtraLabel">-</span><b id="resultExtraVal">-</b></div>
+      </div>
+      <div class="cp-progress-kiosk" id="resultCpProgress" style="display:none;"></div>
+    </div>
+
+    <div id="stateItemTap">
+      <div class="person-chip" id="itemPersonChip">Serda Joko Purnomo</div>
+      <div class="rfid-ring" style="border-color:var(--amber);">
+        <svg class="rfid-ico" style="color:var(--amber);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10a2 2 0 0 1 4 0M6.5 8a5 5 0 0 1 7 0M9.5 12h.01"/></svg>
+      </div>
+      <h1>TEMPELKAN TAG BARANG</h1>
+      <p style="font-size:13px; color:var(--text-mid);">Identitas dikonfirmasi. Sekarang tempelkan RFID tag pada senjata / munisi / alat yang akan dikeluarkan.</p>
+    </div>
+  </div>
+
+  <div class="kiosk-footer">
+    <button class="sim-btn" id="btnSimulate">▶ SIMULASI TAP KARTU (DEMO)</button>
+    <div class="sim-note">Tombol ini hanya untuk demo di browser — perangkat reader RFID sungguhan akan memicu proses ini otomatis saat kartu ditempelkan.</div>
+  </div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const lokasi = params.get('lokasi') || 'gate-masuk';
+
+  const LOKASI_CONFIG = {
+    'gate-masuk':    { label: 'GATE UTAMA — MASUK', idleTitle: 'TEMPELKAN KARTU KTA', kind:'gate', arah:'Masuk' },
+    'gate-keluar':   { label: 'GATE UTAMA — KELUAR', idleTitle: 'TEMPELKAN KARTU KTA', kind:'gate', arah:'Keluar' },
+    'checkpoint':    { label: (params.get('cp')||'CP1') + ' — ' + (params.get('nama')||'Pos Jaga Depan'), idleTitle: 'TEMPELKAN KARTU KTA', kind:'checkpoint' },
+    'gudang-senjata':{ label: 'GUDANG SENJATA — ' + (params.get('kompi')||'Kompi A'), idleTitle: 'TEMPELKAN KARTU KTA PEMEGANG', kind:'gudang', itemLabel:'Senjata' },
+    'gudang-munisi': { label: 'GUDANG MUNISI — ' + (params.get('kompi')||'Batalyon'), idleTitle: 'TEMPELKAN KARTU KTA PEMEGANG', kind:'gudang', itemLabel:'Munisi' },
+    'gudang-alkap':  { label: 'GUDANG ALKAP — ' + (params.get('kompi')||'Batalyon'), idleTitle: 'TEMPELKAN KARTU KTA PEMEGANG', kind:'gudang', itemLabel:'Alat/Perlengkapan' },
+  };
+  const cfg = LOKASI_CONFIG[lokasi] || LOKASI_CONFIG['gate-masuk'];
+
+  document.getElementById('locBadge').textContent = cfg.label;
+  document.getElementById('idleTitle').textContent = cfg.idleTitle;
+  if(cfg.kind === 'gudang'){
+    document.getElementById('idleSub').textContent = 'Sistem akan meminta tap tag ' + cfg.itemLabel.toLowerCase() + ' setelah kartu identitas terbaca.';
+  }
+
+  const DEMO_NAMES = ['Serda Joko Purnomo','Serka Budi Santoso','Kopda Rudi Hartono','Praka Slamet Riyadi','Sertu Dedi Kurniawan'];
+  const DEMO_ITEMS = {
+    'Senjata': ['SS2-V1 (No. Seri SS2-0451)','Pistol G2 (No. Seri PG2-0087)','Minimi (No. Seri MN-0022)'],
+    'Munisi': ['Amunisi 5,56mm — 1 kotak (100 butir)','Amunisi 7,62mm — 1 kotak (50 butir)'],
+    'Alat/Perlengkapan': ['Radio HT — Unit 04','GPS Handheld — Unit 02','Kunci Ranpur Anoa — B-1123-XY'],
+  };
+
+  let urutan = parseInt(params.get('urutan') || '1', 10);
+  let total = parseInt(params.get('total') || '5', 10);
+
+  const stateIdle = document.getElementById('stateIdle');
+  const stateScanning = document.getElementById('stateScanning');
+  const stateResult = document.getElementById('stateResult');
+  const stateItemTap = document.getElementById('stateItemTap');
+  const btnSimulate = document.getElementById('btnSimulate');
+
+  function showOnly(el){
+    [stateIdle, stateScanning, stateResult, stateItemTap].forEach(s => s.style.display = 'none');
+    el.style.display = 'flex';
+  }
+
+  function updateClock(){
+    const now = new Date();
+    document.getElementById('kioskTime').textContent = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    document.getElementById('kioskDate').textContent = now.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  function randomName(){ return DEMO_NAMES[Math.floor(Math.random()*DEMO_NAMES.length)]; }
+  function nowStr(){ return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) + ' WIB'; }
+
+  function renderCpProgress(){
+    const wrap = document.getElementById('resultCpProgress');
+    wrap.style.display = 'flex';
+    let html = '';
+    for(let i=1;i<=total;i++){
+      if(i<urutan) html += '<div class="dot done"></div>';
+      else if(i===urutan) html += '<div class="dot current"></div>';
+      else html += '<div class="dot"></div>';
+    }
+    wrap.innerHTML = html;
+  }
+
+  function doTapFlow(){
+    btnSimulate.disabled = true;
+    showOnly(stateScanning);
+
+    setTimeout(()=>{
+      const name = randomName();
+
+      if(cfg.kind === 'gudang'){
+        document.getElementById('itemPersonChip').textContent = name;
+        showOnly(stateItemTap);
+        setTimeout(()=>{
+          showOnly(stateScanning);
+          setTimeout(()=>{
+            const items = DEMO_ITEMS[cfg.itemLabel];
+            const item = items[Math.floor(Math.random()*items.length)];
+            document.getElementById('resultTitle').textContent = cfg.itemLabel.toUpperCase() + ' DIKELUARKAN';
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultDetail').textContent = cfg.label;
+            document.getElementById('resultTime').textContent = nowStr();
+            const extraRow = document.getElementById('resultExtraRow');
+            extraRow.style.display = 'flex';
+            document.getElementById('resultExtraLabel').textContent = cfg.itemLabel;
+            document.getElementById('resultExtraVal').textContent = item;
+            document.getElementById('resultCpProgress').style.display = 'none';
+            document.getElementById('resultRing').classList.remove('err');
+            showOnly(stateResult);
+            scheduleReset();
+          }, 1400);
+        }, 1600);
+        return;
+      }
+
+      if(cfg.kind === 'checkpoint'){
+        document.getElementById('resultTitle').textContent = 'CHECKPOINT TERCATAT';
+        document.getElementById('resultName').textContent = name;
+        document.getElementById('resultDetail').textContent = cfg.label;
+        document.getElementById('resultTime').textContent = nowStr();
+        document.getElementById('resultExtraRow').style.display = 'none';
+        renderCpProgress();
+        document.getElementById('resultRing').classList.remove('err');
+        showOnly(stateResult);
+        scheduleReset();
+        return;
+      }
+
+      // gate
+      document.getElementById('resultTitle').textContent = cfg.arah === 'Masuk' ? 'BERHASIL MASUK' : 'BERHASIL KELUAR';
+      document.getElementById('resultName').textContent = name;
+      document.getElementById('resultDetail').textContent = cfg.label;
+      document.getElementById('resultTime').textContent = nowStr();
+      document.getElementById('resultExtraRow').style.display = 'none';
+      document.getElementById('resultCpProgress').style.display = 'none';
+      document.getElementById('resultRing').classList.remove('err');
+      showOnly(stateResult);
+      scheduleReset();
+    }, 1400);
+  }
+
+  function scheduleReset(){
+    setTimeout(()=>{
+      showOnly(stateIdle);
+      btnSimulate.disabled = false;
+    }, 4000);
+  }
+
+  btnSimulate.addEventListener('click', doTapFlow);
+  document.body.addEventListener('click', (e)=>{
+    if(e.target === document.body && stateIdle.style.display !== 'none'){
+      doTapFlow();
+    }
+  });
+
+  showOnly(stateIdle);
+</script>
+
+</body>
+</html>

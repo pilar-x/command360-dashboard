@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>APMS — Pengeluaran / Penggudangan Senjata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#070a0d; --bg-panel:#0d1319; --bg-panel-raised:#111923;
+    --line:#1c2733; --line-bright:#2a3a4a;
+    --green:#2ee6a6; --green-dim:#1a5c48;
+    --amber:#e8b13f; --red:#e5484d; --blue:#4a9eff;
+    --text-hi:#eef3f5; --text-mid:#8fa3ab; --text-lo:#4d616b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    background:radial-gradient(ellipse 700px 500px at 50% -10%, rgba(229,72,77,0.08), transparent 60%), var(--bg-void);
+    color:var(--text-hi); font-family:'IBM Plex Mono', monospace;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;
+  }
+  .card{
+    width:100%; max-width:380px; background:var(--bg-panel); border:1px solid var(--line-bright); border-radius:18px;
+    padding:26px 24px; box-shadow:0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(46,230,166,0.08), 0 0 40px rgba(46,230,166,0.16), 0 0 80px rgba(46,230,166,0.08);
+    transition:box-shadow .3s;
+  }
+  .card:hover{
+    box-shadow:0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(46,230,166,0.18), 0 0 55px rgba(46,230,166,0.28), 0 0 100px rgba(46,230,166,0.14);
+  }
+  .brand-mini{display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:18px;}
+  .brand-mini .crest{width:26px; height:26px; border-radius:50%; background:rgba(46,230,166,0.1); border:1px solid var(--green-dim); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--green);}
+  .brand-mini span{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:13px; letter-spacing:1.5px; color:var(--text-mid);}
+  .brand-mini b{color:var(--green);}
+
+  .gate-head{text-align:center; margin-bottom:20px;}
+  .gate-icon{width:56px; height:56px; margin:0 auto 12px; border-radius:16px; background:rgba(229,72,77,0.08); border:1px solid rgba(229,72,77,0.35); display:flex; align-items:center; justify-content:center; font-size:26px; color:var(--red);}
+  .gate-head h1{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:17px; letter-spacing:.3px;}
+  .gate-head p{font-size:11px; color:var(--text-mid); margin-top:4px;}
+
+  .toggle-row{display:flex; gap:8px; margin-bottom:18px; background:var(--bg-panel-raised); border-radius:12px; padding:5px;}
+  .toggle-btn{flex:1; padding:12px; border-radius:9px; border:none; background:none; color:var(--text-mid); font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:11.5px; letter-spacing:1px; cursor:pointer;}
+  .toggle-btn.active-keluar{background:linear-gradient(180deg,#f0c157,#d99a2b); color:#1a1200;}
+  .toggle-btn.active-gudang{background:linear-gradient(180deg,#39e8ac,#1fae7e); color:#04140d;}
+
+  .field{margin-bottom:16px;}
+  .field label{font-size:10px; letter-spacing:1.5px; color:var(--text-mid); display:block; margin-bottom:7px;}
+  .input-wrap{display:flex; align-items:center; gap:10px; background:var(--bg-panel-raised); border:1px solid var(--line); border-radius:10px; padding:14px 15px;}
+  .input-wrap:focus-within{border-color:var(--green-dim);}
+  .input-wrap input, .input-wrap select{background:none; border:none; outline:none; color:var(--text-hi); font-family:'IBM Plex Mono'; font-size:14px; width:100%; appearance:none;}
+  .input-wrap input::placeholder{color:var(--text-lo);}
+  .chev{color:var(--text-mid); font-size:11px;}
+
+  .id-toggle{display:flex; gap:8px; margin-bottom:16px; background:var(--bg-panel-raised); border-radius:12px; padding:5px;}
+  .id-toggle-btn{flex:1; padding:11px; border-radius:9px; border:none; background:none; color:var(--text-mid); font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:11.5px; letter-spacing:.5px; cursor:pointer;}
+  .id-toggle-btn.active{background:var(--bg-panel); color:var(--green); box-shadow:0 0 0 1px var(--green-dim);}
+
+  .nfc-tap-area{display:flex; flex-direction:column; align-items:center; gap:12px; padding:20px 10px; margin-bottom:16px;}
+  .nfc-tap-circle{
+    width:84px; height:84px; border-radius:50%; border:2px dashed var(--blue); color:var(--blue);
+    display:flex; align-items:center; justify-content:center; animation:nfcPulse 1.8s infinite; cursor:pointer;
+  }
+  .nfc-tap-circle.reading{border-style:solid; color:var(--green); border-color:var(--green); animation:none;}
+  @keyframes nfcPulse{0%,100%{box-shadow:0 0 0 0 rgba(74,158,255,0.25);} 50%{box-shadow:0 0 0 10px rgba(74,158,255,0);}}
+  .nfc-tap-label{font-size:11px; color:var(--text-mid); text-align:center;}
+
+  .field-note{
+    background:rgba(229,72,77,0.06); border:1px dashed rgba(229,72,77,0.3); border-radius:10px;
+    padding:11px 13px; margin-bottom:18px; font-size:10.5px; color:var(--text-mid); line-height:1.5;
+  }
+
+  .btn-confirm{
+    width:100%; padding:16px; border-radius:12px; border:none; cursor:pointer;
+    background:linear-gradient(180deg,#f0c157,#d99a2b); color:#1a1200; font-family:'Chakra Petch',sans-serif;
+    font-weight:700; font-size:15px; letter-spacing:1.5px; box-shadow:0 10px 25px rgba(232,177,63,0.25);
+    transition:box-shadow .2s, transform .2s;
+  }
+  .btn-confirm:hover:not(:disabled){box-shadow:0 10px 25px rgba(232,177,63,0.3), 0 0 30px rgba(232,177,63,0.4); transform:translateY(-1px);}
+  .btn-confirm.mode-gudang{background:linear-gradient(180deg,#39e8ac,#1fae7e); color:#04140d; box-shadow:0 10px 25px rgba(46,230,166,0.25);}
+  .btn-confirm.mode-gudang:hover:not(:disabled){box-shadow:0 10px 25px rgba(46,230,166,0.3), 0 0 30px rgba(46,230,166,0.4); transform:translateY(-1px);}
+  .btn-confirm:disabled{opacity:.4; cursor:not-allowed; box-shadow:none;}
+
+  .foot-note{text-align:center; font-size:9.5px; color:var(--text-lo); margin-top:16px; letter-spacing:.5px;}
+
+  .step{display:none;}
+  .step.active{display:block;}
+
+  .success-wrap{display:none; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:10px 0 4px;}
+  .success-wrap.show{display:flex;}
+  .success-ico{width:74px; height:74px; border-radius:50%; background:rgba(232,177,63,0.1); border:2px solid var(--amber); display:flex; align-items:center; justify-content:center; font-size:34px; color:var(--amber);}
+  .success-ico.gudang{background:rgba(46,230,166,0.1); border-color:var(--green); color:var(--green);}
+  .success-wrap h2{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:18px; color:var(--text-hi);}
+  .success-detail{background:var(--bg-panel-raised); border:1px solid var(--line); border-radius:10px; padding:14px; width:100%; text-align:left; font-size:12px; margin-top:4px;}
+  .success-detail .row{display:flex; justify-content:space-between; padding:4px 0; color:var(--text-mid);}
+  .success-detail .row b{color:var(--text-hi);}
+  .btn-again{margin-top:6px; padding:12px 20px; border-radius:9px; border:1px solid var(--line-bright); background:var(--bg-panel-raised); color:var(--text-mid); font-family:'IBM Plex Mono'; font-size:11.5px; cursor:pointer;}
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="brand-mini"><div class="crest">⚑</div><span>COMMAND360 <b>APMS</b></span></div>
+
+    <div id="stepScan" class="step active">
+      <div class="gate-head">
+        <div class="gate-icon">🔫</div>
+        <h1>SENJATA — KELUAR / GUDANG</h1>
+        <p id="gudangName">Gudang Senjata Kompi A</p>
+      </div>
+
+      <div class="toggle-row">
+        <button class="toggle-btn active-keluar" id="btnModeKeluar">KELUARKAN</button>
+        <button class="toggle-btn" id="btnModeGudang">GUDANGKAN</button>
+      </div>
+
+      <div class="id-toggle">
+        <button class="id-toggle-btn active" id="btnIdManual">INPUT MANUAL</button>
+        <button class="id-toggle-btn" id="btnIdNfc">TAP KARTU NFC</button>
+      </div>
+
+      <div class="field" id="fieldManual">
+        <label>NRP / NAMA PEMEGANG</label>
+        <div class="input-wrap">
+          <input type="text" id="inputNama" placeholder="Ketik NRP atau nama Anda">
+        </div>
+      </div>
+
+      <div class="nfc-tap-area" id="fieldNfc" style="display:none;">
+        <div class="nfc-tap-circle" id="nfcTapCircle">
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="9" width="10" height="12" rx="1.5"/><path d="M9 9V6.5a3 3 0 0 1 6 0V9"/><circle cx="12" cy="14" r="2"/></svg>
+        </div>
+        <div class="nfc-tap-label" id="nfcTapLabel">Tempelkan KTA / kartu NFC ke belakang HP</div>
+      </div>
+
+      <div class="field">
+        <label>JENIS SENJATA</label>
+        <div class="input-wrap">
+          <select id="selectSenjata">
+            <option value="">Pilih jenis senjata</option>
+            <option value="SS2-V1">SS2-V1</option>
+            <option value="Pistol G2">Pistol G2</option>
+            <option value="Minimi">Minimi</option>
+            <option value="SPR-2">SPR-2 (Sniper)</option>
+            <option value="Mortir 81">Mortir 81 Tampella</option>
+            <option value="SMS">Senapan Mesin Sedang</option>
+            <option value="SMB">Senapan Mesin Berat</option>
+          </select>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>NOMOR SERI SENJATA</label>
+        <div class="input-wrap">
+          <input type="text" id="inputSeri" placeholder="Contoh: SS2-0451">
+        </div>
+      </div>
+
+      <div class="field-note">
+        Setiap pengeluaran senjata tercatat atas nama pemegang dan wajib dikembalikan sebelum akhir jam dinas. Keterlambatan akan muncul sebagai peringatan di Dashboard Logistik &amp; Intel.
+      </div>
+
+      <button class="btn-confirm" id="btnConfirm" disabled>KONFIRMASI KELUARKAN</button>
+      <div class="foot-note">Data akan tercatat otomatis ke Dashboard APMS &amp; Logistik</div>
+    </div>
+
+    <div class="success-wrap" id="stepSuccess">
+      <div class="success-ico" id="successIco">✓</div>
+      <h2 id="successTitle">Senjata Dikeluarkan</h2>
+      <div class="success-detail">
+        <div class="row"><span>Pemegang</span><b id="sumNama">-</b></div>
+        <div class="row"><span>Senjata</span><b id="sumSenjata">-</b></div>
+        <div class="row"><span>No. Seri</span><b id="sumSeri">-</b></div>
+        <div class="row"><span>Waktu</span><b id="sumWaktu">-</b></div>
+      </div>
+      <button class="btn-again" id="btnAgain">SCAN LAGI</button>
+    </div>
+  </div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  document.getElementById('gudangName').textContent = params.get('gudang') || 'Gudang Senjata Kompi A';
+
+  let mode = 'keluar';
+  const btnKeluar = document.getElementById('btnModeKeluar');
+  const btnGudang = document.getElementById('btnModeGudang');
+  const btnConfirm = document.getElementById('btnConfirm');
+  const inputNama = document.getElementById('inputNama');
+  const selectSenjata = document.getElementById('selectSenjata');
+  const inputSeri = document.getElementById('inputSeri');
+
+  function setMode(m){
+    mode = m;
+    if(m === 'keluar'){
+      btnKeluar.classList.add('active-keluar'); btnGudang.classList.remove('active-gudang');
+      btnConfirm.classList.remove('mode-gudang'); btnConfirm.textContent = 'KONFIRMASI KELUARKAN';
+    } else {
+      btnGudang.classList.add('active-gudang'); btnKeluar.classList.remove('active-keluar');
+      btnConfirm.classList.add('mode-gudang'); btnConfirm.textContent = 'KONFIRMASI GUDANGKAN';
+    }
+  }
+  btnKeluar.addEventListener('click', ()=>setMode('keluar'));
+  btnGudang.addEventListener('click', ()=>setMode('gudang'));
+
+  let idMethod = 'manual';
+  let nfcVerified = false;
+  const btnIdManual = document.getElementById('btnIdManual');
+  const btnIdNfc = document.getElementById('btnIdNfc');
+  const fieldManual = document.getElementById('fieldManual');
+  const fieldNfc = document.getElementById('fieldNfc');
+  const nfcTapCircle = document.getElementById('nfcTapCircle');
+  const nfcTapLabel = document.getElementById('nfcTapLabel');
+  const DEMO_CARD_NAMES = ['Serda Joko Purnomo','Serka Budi Santoso','Praka Slamet Riyadi'];
+
+  btnIdManual.addEventListener('click', ()=>{
+    idMethod = 'manual';
+    btnIdManual.classList.add('active'); btnIdNfc.classList.remove('active');
+    fieldManual.style.display = 'block'; fieldNfc.style.display = 'none';
+    validate();
+  });
+  btnIdNfc.addEventListener('click', ()=>{
+    idMethod = 'nfc';
+    btnIdNfc.classList.add('active'); btnIdManual.classList.remove('active');
+    fieldManual.style.display = 'none'; fieldNfc.style.display = 'flex';
+    validate();
+  });
+  nfcTapCircle.addEventListener('click', ()=>{
+    if(nfcVerified) return;
+    nfcTapLabel.textContent = 'Membaca kartu...';
+    setTimeout(()=>{
+      const name = DEMO_CARD_NAMES[Math.floor(Math.random()*DEMO_CARD_NAMES.length)];
+      inputNama.value = name;
+      nfcVerified = true;
+      nfcTapCircle.classList.add('reading');
+      nfcTapLabel.innerHTML = '✓ Kartu terbaca: <b style="color:var(--text-hi);">' + name + '</b>';
+      validate();
+    }, 900);
+  });
+
+  function validate(){
+    const idOk = idMethod === 'nfc' ? nfcVerified : inputNama.value.trim().length >= 2;
+    btnConfirm.disabled = !(idOk && selectSenjata.value && inputSeri.value.trim().length >= 2);
+  }
+  inputNama.addEventListener('input', validate);
+  selectSenjata.addEventListener('change', validate);
+  inputSeri.addEventListener('input', validate);
+
+  function logApmsEvent(evt){
+    try{
+      const key = 'apms_events';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      existing.unshift({ ...evt, ts: Date.now() });
+      localStorage.setItem(key, JSON.stringify(existing.slice(0, 100)));
+    } catch(e){ console.warn('Gagal menyimpan event APMS:', e); }
+  }
+
+  btnConfirm.addEventListener('click', ()=>{
+    const now = new Date();
+    const t = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('sumNama').textContent = inputNama.value.trim();
+    document.getElementById('sumSenjata').textContent = selectSenjata.options[selectSenjata.selectedIndex].text;
+    document.getElementById('sumSeri').textContent = inputSeri.value.trim();
+    document.getElementById('sumWaktu').textContent = t + ' WIB';
+
+    document.getElementById('successTitle').textContent = mode === 'keluar' ? 'Senjata Dikeluarkan' : 'Senjata Digudangkan';
+    const ico = document.getElementById('successIco');
+    ico.classList.toggle('gudang', mode === 'gudang');
+
+    logApmsEvent({
+      type: 'senjata',
+      nama: inputNama.value.trim(),
+      senjata: selectSenjata.options[selectSenjata.selectedIndex].text,
+      seri: inputSeri.value.trim(),
+      mode: mode,
+      waktu: t + ' WIB'
+    });
+
+    document.getElementById('stepScan').classList.remove('active');
+    document.getElementById('stepSuccess').classList.add('show');
+  });
+
+  document.getElementById('btnAgain').addEventListener('click', ()=>{
+    document.getElementById('stepSuccess').classList.remove('show');
+    document.getElementById('stepScan').classList.add('active');
+    inputNama.value = '';
+    selectSenjata.value = '';
+    inputSeri.value = '';
+    nfcVerified = false;
+    nfcTapCircle.classList.remove('reading');
+    nfcTapLabel.textContent = 'Tempelkan KTA / kartu NFC ke belakang HP';
+    btnConfirm.disabled = true;
+    setMode('keluar');
+  });
+</script>
+
+</body>
+</html>
