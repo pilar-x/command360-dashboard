@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COMMAND 360 — Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#070a0d; --bg-panel:#0d1319; --bg-panel-raised:#111923;
+    --line:#1c2733; --line-bright:#2a3a4a;
+    --green:#2ee6a6; --green-dim:#1a5c48; --green-bright:#4dffb8;
+    --amber:#e8b13f; --red:#e5484d;
+    --text-hi:#eef3f5; --text-mid:#8fa3ab; --text-lo:#4d616b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:var(--bg-void); color:var(--text-hi); font-family:'IBM Plex Mono', monospace;
+    min-height:100vh; display:flex; flex-direction:column;
+  }
+  .stage{flex:1; display:grid; grid-template-columns:1.35fr 1fr; min-height:0; position:relative; background:linear-gradient(180deg,#0a0f12 0%, #060908 55%, #04100a 100%);}
+  .stage::before{
+    content:'';
+    position:absolute; inset:0; z-index:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(46,230,166,0.045) 0px, rgba(46,230,166,0.045) 1px, transparent 1px, transparent 42px),
+      repeating-linear-gradient(90deg, rgba(46,230,166,0.045) 0px, rgba(46,230,166,0.045) 1px, transparent 1px, transparent 42px);
+  }
+  .radar-scan-wrap-full{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;}
+  .radar-scan-wrap-full .radar-bg-map{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.22; mix-blend-mode:screen;
+    -webkit-mask-image:radial-gradient(ellipse 60% 75% at calc(var(--radar-cx, 28.7%) + 1.5cm) 50%, black 25%, transparent 100%);
+    mask-image:radial-gradient(ellipse 60% 75% at calc(var(--radar-cx, 28.7%) + 1.5cm) 50%, black 25%, transparent 100%);
+  }
+  .radar-scan-wrap-full .radar-sweep{top:50%; left:calc(var(--radar-cx, 28.7%) + 1.5cm);}
+
+  /* ============ LEFT HERO ============ */
+  .hero{
+    position:relative; z-index:2; overflow:hidden;
+    background:
+      radial-gradient(circle at 30% 100%, rgba(46,230,166,0.10), transparent 55%),
+      radial-gradient(ellipse 900px 500px at 20% 0%, rgba(46,230,166,0.07), transparent 60%);
+    display:flex; flex-direction:column; align-items:center;
+    padding:40px 40px 24px;
+  }
+  .hud-panel{
+    position:absolute; z-index:3; font-family:'IBM Plex Mono', monospace; font-size:9.5px; color:var(--text-mid);
+    line-height:1.9; pointer-events:none;
+  }
+  .hud-tl{top:22px; left:24px;}
+  .hud-tr{top:22px; right:24px; text-align:right;}
+  .hud-bl{bottom:20px; left:24px;}
+  .hud-br{bottom:20px; right:24px; text-align:right; max-width:190px;}
+  .hud-title{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:10.5px; letter-spacing:1.5px; color:var(--green); margin-bottom:6px;}
+  .hud-status-line{font-size:9.5px; letter-spacing:.5px;}
+  .hud-green{color:var(--green); font-weight:600;}
+  .hud-divider{width:100%; height:1px; background:rgba(46,230,166,0.15); margin:7px 0;}
+  .hud-mini-row{display:flex; gap:14px; font-size:9px; letter-spacing:.3px; justify-content:space-between;}
+  .hud-tr .hud-mini-row{justify-content:flex-end;}
+  .hud-bar-item{display:flex; align-items:center; gap:8px; font-size:8.5px; margin-bottom:5px; justify-content:flex-end;}
+  .hud-bar-item span{width:56px; text-align:left;}
+  .hud-bar-track{width:60px; height:4px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden;}
+  .hud-bar-fill{height:100%; background:linear-gradient(90deg,var(--green-dim),var(--green)); border-radius:2px;}
+  .hud-bar-item b{width:28px; color:var(--text-hi); font-weight:600;}
+  .hud-quote{font-size:9.5px; color:var(--text-lo); line-height:1.6; margin-top:4px; font-style:italic;}
+
+  .hero-top-content{position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center; flex-shrink:0; transform:translateX(1.5cm);}
+  .hero-gap{height:70px; flex-shrink:0;}
+  .hero-pagination{position:relative; z-index:3; display:flex; gap:6px; margin-top:14px; flex-shrink:0;}
+  .hp-dot{width:6px; height:6px; border-radius:50%; background:rgba(46,230,166,0.25);}
+  .hp-dot.active{background:var(--green); box-shadow:0 0 8px var(--green);}
+
+  .radar-scan-wrap{
+    position:relative; flex:1; width:100%; min-height:220px; z-index:1; pointer-events:none;
+  }
+  .radar-bg-map{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0.2; mix-blend-mode:screen;
+    -webkit-mask-image:radial-gradient(ellipse 55% 62% at 50% 50%, black 30%, transparent 100%);
+    mask-image:radial-gradient(ellipse 55% 62% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  /* Lingkaran sapuan: ukuran piksel eksplisit (bukan aspect-ratio) supaya selalu bulat sempurna & sentris */
+  .radar-sweep{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:900px; height:900px; border-radius:50%; overflow:hidden; opacity:0.4; z-index:2;
+    animation:radarSpin 4s linear infinite;
+  }
+  .radar-sweep::before{
+    content:''; position:absolute; inset:0;
+    background:conic-gradient(from 0deg, rgba(46,230,166,0.5) 0deg, rgba(46,230,166,0.16) 18deg, transparent 55deg, transparent 360deg);
+  }
+  @keyframes radarSpin{0%{transform:translate(-50%,-50%) rotate(0);} 100%{transform:translate(-50%,-50%) rotate(360deg);}}
+
+  .radar-blip{position:absolute; transform:translate(-50%,-50%); z-index:1; display:flex; flex-direction:column; align-items:center; gap:4px;}
+  .blip-dot{
+    width:10px; height:10px; border-radius:50%; opacity:0;
+    animation:blipPulse 4s linear infinite;
+  }
+  .blip-green .blip-dot{background:#3ef2a0; box-shadow:0 0 12px #3ef2a0;}
+  .blip-red .blip-dot{background:#ff4d4d; box-shadow:0 0 12px #ff4d4d;}
+  .blip-label{
+    font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.5px; white-space:nowrap; opacity:0;
+    background:rgba(4,8,7,0.75); padding:2px 7px; border-radius:4px; border:1px solid rgba(46,230,166,0.2);
+    animation:blipLabelFade 4s linear infinite;
+  }
+  .blip-green .blip-label{color:#8dffc9;}
+  .blip-red .blip-label{color:#ff9d9d;}
+
+  /* Titik baru terlihat SETELAH disapu garis radar (delay = posisi sudut/360 * 4dtk), lalu tenggelam menunggu putaran berikutnya */
+  @keyframes blipPulse{
+    0%{opacity:0; transform:scale(0.4);}
+    4%{opacity:1; transform:scale(1.4);}
+    14%{opacity:1; transform:scale(1);}
+    28%{opacity:0; transform:scale(0.6);}
+    100%{opacity:0;}
+  }
+  @keyframes blipLabelFade{
+    0%{opacity:0;}
+    6%{opacity:1;}
+    24%{opacity:1;}
+    32%{opacity:0;}
+    100%{opacity:0;}
+  }
+
+  .crest-hero-logo{
+    position:relative; z-index:2; width:118px; height:118px; object-fit:contain;
+    filter:drop-shadow(0 0 22px rgba(46,230,166,0.35));
+  }
+  .title-block{position:relative; z-index:2; text-align:center; margin-top:6px;}
+  .metal-title-big{
+    font-family:'Orbitron', 'Chakra Petch', sans-serif;
+    font-size:56px; font-weight:900; letter-spacing:2px; margin:0;
+    line-height:1.1; transform:skewX(-6deg); display:inline-block;
+  }
+  .metal-title-big span{position:relative; display:inline-block;}
+  .metal-silver-big{
+    background:linear-gradient(180deg,#ffffff 0%,#dfe6ec 18%,#9aa7b3 42%,#4c5560 60%,#8b96a1 78%,#f2f5f8 100%),
+               linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.95) 46%, rgba(230,238,245,0.9) 50%, transparent 66%);
+    background-blend-mode:overlay;
+    background-size:100% 100%, 260% 100%;
+    background-position:0 0, 200% 0;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 2px 0 #0a0d10) drop-shadow(0 0 10px rgba(210,225,240,0.55));
+    animation:shineSweepBig 4.5s ease-in-out infinite;
+  }
+  .metal-green-big{
+    background:linear-gradient(180deg,#d8ffef 0%,#4dffb8 18%,#1a5c48 42%,#6dffc4 60%,#2ee6a6 78%,#e8fff5 100%),
+               linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.95) 46%, rgba(210,255,235,0.9) 50%, transparent 66%);
+    background-blend-mode:overlay;
+    background-size:100% 100%, 260% 100%;
+    background-position:0 0, 200% 0;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 2px 0 #04140d) drop-shadow(0 0 12px rgba(46,230,166,0.6));
+    animation:shineSweepBig 4.5s ease-in-out infinite;
+    animation-delay:0.4s;
+  }
+  @keyframes shineSweepBig{
+    0%{background-position:0 0, 200% 0;}
+    45%{background-position:0 0, -60% 0;}
+    100%{background-position:0 0, -60% 0;}
+  }
+  .hero-top-content .sub{font-family:'Orbitron','Chakra Petch',sans-serif; font-weight:600; font-size:15px; letter-spacing:6px; color:var(--text-mid); margin-top:14px;}
+  .hero-top-content .tag{font-size:11px; letter-spacing:3px; color:#e0b84a; margin-top:14px;}
+
+  .hero-nav{position:relative; z-index:2; display:flex; gap:22px; margin-top:56px; flex-wrap:wrap; justify-content:center;}
+  .hex{
+    width:70px; height:70px; position:relative; display:flex; align-items:center; justify-content:center;
+    background:rgba(13,19,25,0.7); clip-path:polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0% 50%);
+    border:1px solid var(--green-dim); font-size:18px; color:var(--green);
+  }
+  .hex-wrap{display:flex; flex-direction:column; align-items:center; gap:10px;}
+  .hex-label{font-size:8.5px; letter-spacing:1.2px; color:var(--text-mid); font-family:'Chakra Petch',sans-serif; font-weight:600; text-align:center;}
+
+  /* ============ RIGHT LOGIN ============ */
+  .login-side{position:relative; z-index:2; display:flex; align-items:center; justify-content:center; padding:28px; overflow-y:auto;}
+  .login-card{
+    width:100%; max-width:430px; background:var(--bg-panel); border:1px solid var(--line-bright); border-radius:16px;
+    padding:34px 34px 26px;
+    box-shadow:0 0 0 1px rgba(46,230,166,0.08), 0 30px 60px rgba(0,0,0,0.45), 0 0 38px rgba(46,230,166,0.16), 0 0 70px rgba(46,230,166,0.08), inset 0 1px 0 rgba(255,255,255,0.03);
+    transition:box-shadow .3s;
+  }
+  .login-card:hover{
+    box-shadow:0 0 0 1px rgba(46,230,166,0.16), 0 30px 60px rgba(0,0,0,0.5), 0 0 48px rgba(46,230,166,0.26), 0 0 90px rgba(46,230,166,0.14), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .login-head{text-align:center; margin-bottom:18px;}
+  .shield-badge{width:150px; height:auto; margin:0 auto 8px; display:block; filter:drop-shadow(0 6px 14px rgba(0,0,0,0.5));}
+  .login-head h2{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:22px; color:var(--green); letter-spacing:1px;}
+  .metal-title{
+    font-family:'Orbitron', 'Chakra Petch', sans-serif;
+    font-size:24px; font-weight:900; letter-spacing:1.5px; margin-top:4px;
+    transform:skewX(-6deg); display:inline-block;
+  }
+  .metal-title span{position:relative; display:inline-block;}
+  .metal-silver{
+    background:linear-gradient(180deg,#ffffff 0%,#dfe6ec 18%,#9aa7b3 42%,#4c5560 60%,#8b96a1 78%,#f2f5f8 100%),
+               linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.95) 46%, rgba(230,238,245,0.9) 50%, transparent 66%);
+    background-blend-mode:overlay;
+    background-size:100% 100%, 260% 100%;
+    background-position:0 0, 200% 0;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 2px 0 #0a0d10) drop-shadow(0 0 8px rgba(210,225,240,0.5));
+    animation:shineSweep 4.5s ease-in-out infinite;
+  }
+  .metal-green{
+    background:linear-gradient(180deg,#d8ffef 0%,#4dffb8 18%,#1a5c48 42%,#6dffc4 60%,#2ee6a6 78%,#e8fff5 100%),
+               linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.95) 46%, rgba(210,255,235,0.9) 50%, transparent 66%);
+    background-blend-mode:overlay;
+    background-size:100% 100%, 260% 100%;
+    background-position:0 0, 200% 0;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 2px 0 #04140d) drop-shadow(0 0 10px rgba(46,230,166,0.55));
+    animation:shineSweep 4.5s ease-in-out infinite;
+    animation-delay:0.4s;
+  }
+  @keyframes shineSweep{
+    0%{background-position:0 0, 200% 0;}
+    45%{background-position:0 0, -60% 0;}
+    100%{background-position:0 0, -60% 0;}
+  }
+  .step-indicator{display:flex; align-items:center; justify-content:center; gap:8px; margin:14px 0 20px;}
+  .step-dot{width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; font-family:'Chakra Petch',sans-serif; border:1px solid var(--line-bright); color:var(--text-mid); background:var(--bg-panel-raised);}
+  .step-dot.done{background:var(--green); color:#04140d; border-color:var(--green);}
+  .step-dot.current{border-color:var(--green); color:var(--green); box-shadow:0 0 0 3px rgba(46,230,166,0.12);}
+  .step-line{width:34px; height:1px; background:var(--line-bright);}
+  .step-line.done{background:var(--green-dim);}
+
+  .field{margin-bottom:15px;}
+  .field label{font-size:10px; letter-spacing:1.5px; color:var(--text-mid); display:block; margin-bottom:7px;}
+  .input-wrap{display:flex; align-items:center; gap:10px; background:var(--bg-panel-raised); border:1px solid var(--line); border-radius:8px; padding:12px 14px; transition:border-color .2s, box-shadow .2s;}
+  .input-wrap:focus-within{border-color:var(--green-dim); box-shadow:0 0 0 1px rgba(46,230,166,0.15), 0 0 16px rgba(46,230,166,0.2);}
+  .input-wrap .ic{color:var(--text-mid); font-size:14px; flex-shrink:0;}
+  .input-wrap input, .input-wrap select{background:none; border:none; outline:none; color:var(--text-hi); font-family:'IBM Plex Mono'; font-size:12.5px; width:100%;}
+  .input-wrap input::placeholder{color:var(--text-lo);}
+  .input-wrap select{appearance:none; cursor:pointer;}
+  .input-wrap .toggle{cursor:pointer; color:var(--text-mid); font-size:14px;}
+  .chev{color:var(--text-mid); font-size:11px;}
+
+  .btn-primary{
+    width:100%; padding:14px; border-radius:9px; border:none; cursor:pointer;
+    background:linear-gradient(180deg,#39e8ac,#1fae7e); color:#04140d; font-family:'Chakra Petch',sans-serif;
+    font-weight:700; font-size:14px; letter-spacing:2px; display:flex; align-items:center; justify-content:center; gap:10px;
+    box-shadow:0 8px 24px rgba(46,230,166,0.25); margin-top:6px; transition:box-shadow .2s, transform .2s;
+  }
+  .btn-primary:hover:not(:disabled){
+    box-shadow:0 8px 24px rgba(46,230,166,0.3), 0 0 24px rgba(46,230,166,0.45), 0 0 48px rgba(46,230,166,0.25);
+    transform:translateY(-1px);
+  }
+  .btn-primary:disabled{opacity:.45; cursor:not-allowed; box-shadow:none;}
+  .btn-secondary{width:100%; padding:11px; border-radius:9px; border:1px solid var(--line-bright); background:var(--bg-panel-raised); color:var(--text-mid); font-family:'IBM Plex Mono'; font-size:11.5px; letter-spacing:.5px; margin-top:10px; cursor:pointer;}
+  .btn-secondary:disabled{opacity:.4; cursor:not-allowed;}
+
+  .error-msg{display:none; font-size:11px; color:var(--red); background:rgba(229,72,77,0.08); border:1px solid rgba(229,72,77,0.3); padding:9px 12px; border-radius:7px; margin-bottom:14px; align-items:center; gap:8px;}
+  .error-msg.show{display:flex;}
+
+  .otp-info{background:var(--bg-panel-raised); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:18px; text-align:center;}
+  .otp-info .oi-label{font-size:9.5px; letter-spacing:1px; color:var(--text-mid); margin-bottom:6px;}
+  .otp-info .oi-phone{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:15px; color:var(--text-hi); display:flex; align-items:center; justify-content:center; gap:8px;}
+  .otp-info .oi-role{font-size:10.5px; color:var(--green); margin-top:4px;}
+
+  .demo-banner{
+    background:rgba(232,177,63,0.08); border:1px dashed rgba(232,177,63,0.4); border-radius:9px;
+    padding:11px 14px; margin-bottom:18px; font-size:10.5px; color:var(--amber); line-height:1.6;
+  }
+  .demo-banner b{font-family:'Chakra Petch',sans-serif; letter-spacing:1px;}
+  .demo-banner .demo-otp{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:20px; color:var(--amber); letter-spacing:6px; margin-top:6px; text-align:center;}
+
+  .otp-boxes{display:flex; gap:9px; justify-content:center; margin-bottom:8px;}
+  .otp-box{
+    width:44px; height:52px; text-align:center; font-size:20px; font-family:'Chakra Petch',sans-serif; font-weight:700;
+    background:var(--bg-panel-raised); border:1px solid var(--line); border-radius:9px; color:var(--text-hi); outline:none;
+  }
+  .otp-box:focus{border-color:var(--green-dim); box-shadow:0 0 0 3px rgba(46,230,166,0.1);}
+  .otp-box.err{border-color:var(--red); box-shadow:0 0 0 3px rgba(229,72,77,0.12);}
+
+  .otp-timer{text-align:center; font-size:11px; color:var(--text-mid); margin:10px 0 4px;}
+  .otp-timer b{color:var(--green); font-family:'Chakra Petch',sans-serif;}
+  .otp-timer.expired b{color:var(--red);}
+
+  .back-link{text-align:center; margin-top:14px; font-size:10.5px; color:var(--text-mid); letter-spacing:.5px; cursor:pointer;}
+  .back-link:hover{color:var(--text-hi);}
+
+  .row-between{display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; font-size:10.5px;}
+  .remember{display:flex; align-items:center; gap:8px; color:var(--text-mid); letter-spacing:.5px;}
+  .remember input{accent-color:var(--green); width:13px; height:13px;}
+  .forgot{color:var(--green); letter-spacing:.5px; text-decoration:none;}
+
+  .version{text-align:center; font-size:9.5px; color:var(--text-lo); letter-spacing:1.5px; margin-top:18px;}
+  .copyright-line{text-align:center; font-size:9px; color:var(--text-lo); letter-spacing:.5px; margin-top:6px;}
+
+  .success-wrap{display:none; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:20px 0;}
+  .success-wrap.show{display:flex;}
+  .success-ico{width:64px; height:64px; border-radius:50%; background:rgba(46,230,166,0.1); border:1px solid var(--green); display:flex; align-items:center; justify-content:center; font-size:30px; color:var(--green);}
+  .success-wrap h3{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:17px; color:var(--text-hi);}
+  .success-wrap p{font-size:11.5px; color:var(--text-mid);}
+
+  .step-panel{display:none;}
+  .step-panel.active{display:block;}
+
+  .trust-bar{display:flex; align-items:center; justify-content:center; gap:60px; flex-wrap:wrap; padding:16px 30px; border-top:1px solid var(--line); background:var(--bg-void);}
+  .trust-item{display:flex; align-items:center; gap:12px;}
+  .trust-icon{width:34px; height:34px; border-radius:8px; background:rgba(46,230,166,0.08); border:1px solid var(--green-dim); display:flex; align-items:center; justify-content:center; color:var(--green); font-size:15px; flex-shrink:0;}
+  .trust-txt .tt1{font-size:11px; font-weight:600; color:var(--text-hi); letter-spacing:.5px;}
+  .trust-txt .tt2{font-size:9.5px; color:var(--green); letter-spacing:.5px; margin-top:1px;}
+
+  @media (max-width:980px){
+    .stage{grid-template-columns:1fr;}
+    .hero{padding:36px 24px;}
+    .metal-title-big{font-size:40px;}
+    .trust-bar{gap:24px;}
+    .hud-panel{display:none;}
+    .hero-gap{height:30px;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="stage">
+
+    <div class="radar-scan-wrap-full">
+      <img class="radar-bg-map" src="radar-map-indonesia.png" alt="Peta Radar Indonesia">
+      <div class="radar-sweep"></div>
+
+      <div class="radar-blip blip-green" style="top:28%; left:calc(var(--radar-cx, 28.7%) + 1.5cm - 16%);"><div class="blip-dot" style="animation-delay:3.5s;"></div><div class="blip-label" style="animation-delay:3.5s;">ALPHA-01</div></div>
+      <div class="radar-blip blip-green" style="top:72%; left:calc(var(--radar-cx, 28.7%) + 1.5cm - 14%);"><div class="blip-dot" style="animation-delay:2.5s;"></div><div class="blip-label" style="animation-delay:2.5s;">BRAVO-02</div></div>
+      <div class="radar-blip blip-red" style="top:26%; left:calc(var(--radar-cx, 28.7%) + 1.5cm + 16%);"><div class="blip-dot" style="animation-delay:0.5s;"></div><div class="blip-label" style="animation-delay:0.5s;">GHOST-01</div></div>
+      <div class="radar-blip blip-red" style="top:70%; left:calc(var(--radar-cx, 28.7%) + 1.5cm + 14%);"><div class="blip-dot" style="animation-delay:1.5s;"></div><div class="blip-label" style="animation-delay:1.5s;">SHADOW-02</div></div>
+    </div>
+
+    <div class="hero">
+
+      <div class="hero-top-content">
+        <img class="crest-hero-logo" src="logo-command360-lg.png" alt="COMMAND360">
+        <h1 class="metal-title-big"><span class="metal-silver-big">COMMAND</span><span class="metal-green-big">360</span></h1>
+        <div class="tag">INTEGRATED &nbsp;·&nbsp; DATA DRIVEN &nbsp;·&nbsp; DECISION READY</div>
+      </div>
+
+      <div class="hero-gap"></div>
+
+      <div class="hud-panel hud-bl">
+        <div class="hud-title">COORDINATE</div>
+        <div class="hud-mini-row"><span>LAT</span><span>-02.5489</span></div>
+        <div class="hud-mini-row"><span>LON</span><span>117.0176</span></div>
+        <div class="hud-mini-row"><span>ALT</span><span>150 MSL</span></div>
+        <div class="hud-mini-row"><span>TIME</span><span id="heroClock">--:-- WIB</span></div>
+      </div>
+
+      
+      </div>
+
+    <div class="login-side">
+      <div class="login-card">
+
+        <div class="login-head">
+          <img class="shield-badge" src="login-badge-icon.png" alt="COMMAND360">
+          <h2>LOGIN</h2>
+          <h3 class="metal-title"><span class="metal-silver">COMMAND</span><span class="metal-green">360</span></h3>
+        </div>
+
+        <div class="step-indicator">
+          <div class="step-dot current" id="dotStep1">1</div>
+          <div class="step-line" id="lineStep"></div>
+          <div class="step-dot" id="dotStep2">2</div>
+        </div>
+
+        <div class="step-panel active" id="step1">
+          <div class="error-msg" id="errStep1"><span>⚠</span><span>Nama, username, password, dan role wajib diisi.</span></div>
+
+          <div class="field">
+            <label>NAMA LENGKAP</label>
+            <div class="input-wrap">
+              <span class="ic">🎖</span>
+              <input type="text" id="loginNama" placeholder="Contoh: Letkol Inf Agus Budi">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>USERNAME</label>
+            <div class="input-wrap">
+              <span class="ic">👤</span>
+              <input type="text" id="loginUsername" placeholder="Masukkan username">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>PASSWORD</label>
+            <div class="input-wrap">
+              <span class="ic">🔒</span>
+              <input type="password" id="loginPassword" placeholder="Masukkan password">
+              <span class="toggle" id="togglePw" style="color:#4a9eff; display:flex; align-items:center;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>ROLE</label>
+            <div class="input-wrap">
+              <span class="ic" style="display:flex; align-items:center;">
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6.5" r="3"/><path d="M5 20.5v-2.8a4.5 4.5 0 0 1 3.2-4.3l1.3-.4M19 20.5v-2.8a4.5 4.5 0 0 0-3.2-4.3l-1.3-.4"/><path d="M9 12.5v8M15 12.5v8"/><path d="M7.5 16h9"/></svg>
+              </span>
+              <select id="loginRole">
+                <option value="">Pilih Role</option>
+                <optgroup label="Komandan">
+                  <option value="danyon">Danyon</option>
+                  <option value="wadanyon">Wadanyon</option>
+                </optgroup>
+                <optgroup label="Staf">
+                  <option value="intel">Pasi Intelijen</option>
+                  <option value="ops">Pasi Operasi</option>
+                  <option value="pers">Pasi Personel</option>
+                  <option value="log">Pasi Logistik</option>
+                </optgroup>
+                <optgroup label="Komandan Kompi (Danki)">
+                  <option value="danki_ka">Danki A</option>
+                  <option value="danki_kb">Danki B</option>
+                  <option value="danki_kc">Danki C</option>
+                  <option value="danki_kbantuan">Danki Bantuan</option>
+                  <option value="danki_kmarkas">Danki Markas</option>
+                  <option value="danki_kpertanian">Danki Pertanian</option>
+                  <option value="danki_kpeternakan">Danki Peternakan</option>
+                  <option value="danki_kperikanan">Danki Perikanan</option>
+                  <option value="danki_kkonstruksi">Danki Konstruksi</option>
+                  <option value="danki_kkesehatan">Danki Kesehatan</option>
+                </optgroup>
+              </select>
+              <span class="chev">▾</span>
+            </div>
+          </div>
+
+          <div class="row-between">
+            <label class="remember"><input type="checkbox"> INGAT SAYA</label>
+            <a href="#" class="forgot">LUPA PASSWORD?</a>
+          </div>
+
+          <button class="btn-primary" id="btnLogin">LOGIN &nbsp;→</button>
+        </div>
+
+        <div class="step-panel" id="step2">
+          <div class="otp-info">
+            <div class="oi-label">KODE OTP DIKIRIM VIA WHATSAPP KE</div>
+            <div class="oi-phone">📱 <span id="otpPhone">+62 8xx-xxxx-xx00</span></div>
+            <div class="oi-role">Nomor terdaftar untuk role: <b id="otpRoleLabel">-</b></div>
+          </div>
+
+          <div class="demo-banner">
+            <b>⚠ MODE DEMO</b><br>
+            Prototipe ini belum tersambung ke WhatsApp Business API sungguhan, jadi kode OTP di bawah ini ditampilkan langsung untuk keperluan uji coba. Di sistem produksi, kode ini akan dikirim ke nomor WA pejabat terdaftar dan tidak ditampilkan di layar.
+            <div class="demo-otp" id="demoOtpDisplay">------</div>
+          </div>
+
+          <div class="error-msg" id="errStep2"><span>⚠</span><span>Kode OTP salah, silakan coba lagi.</span></div>
+
+          <div class="field">
+            <label style="text-align:center; display:block;">MASUKKAN KODE OTP (6 DIGIT)</label>
+            <div class="otp-boxes">
+              <input class="otp-box" maxlength="1" inputmode="numeric">
+              <input class="otp-box" maxlength="1" inputmode="numeric">
+              <input class="otp-box" maxlength="1" inputmode="numeric">
+              <input class="otp-box" maxlength="1" inputmode="numeric">
+              <input class="otp-box" maxlength="1" inputmode="numeric">
+              <input class="otp-box" maxlength="1" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="otp-timer" id="otpTimer">Kode berlaku selama <b id="otpCountdown">05:00</b></div>
+
+          <button class="btn-primary" id="btnVerify">VERIFIKASI OTP &nbsp;✓</button>
+          <button class="btn-secondary" id="btnResend" disabled>KIRIM ULANG KODE OTP</button>
+          <div class="back-link" id="btnBack">← Kembali ke halaman login</div>
+        </div>
+
+        <div class="success-wrap" id="successWrap">
+          <div class="success-ico">✓</div>
+          <h3>Verifikasi Berhasil</h3>
+          <p>Mengalihkan ke dashboard <b id="successRole">-</b>...</p>
+        </div>
+
+        <div class="version" id="versionLine">v20260724.7</div>
+        <div class="copyright-line">© 2026 PHANTOM-X. All Rights Reserved.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function updateHeroClock(){
+    const el = document.getElementById('heroClock');
+    if(!el) return;
+    const now = new Date();
+    el.textContent = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' }) + ' WIB';
+  }
+  updateHeroClock();
+  setInterval(updateHeroClock, 1000);
+
+  // Pastikan radar tetap sejajar dengan tengah panel judul, diukur langsung dari posisi asli elemen.
+  function updateRadarCenter(){
+    const stage = document.querySelector('.stage');
+    const hero = document.querySelector('.hero');
+    if(!stage || !hero) return;
+    const stageRect = stage.getBoundingClientRect();
+    const heroRect = hero.getBoundingClientRect();
+    if(stageRect.width === 0) return;
+    const heroCenterX = (heroRect.left - stageRect.left) + (heroRect.width / 2);
+    const pct = (heroCenterX / stageRect.width) * 100; // posisi presisi, sejajar persis dengan tengah judul (tanpa pergeseran manual)
+    stage.style.setProperty('--radar-cx', pct + '%');
+  }
+  updateRadarCenter();
+  window.addEventListener('resize', updateRadarCenter);
+</script>
+<script>
+  const ROLE_INFO = {
+    danyon:            { label: "Danyon",            phone: "+62 812-3456-7801" },
+    wadanyon:           { label: "Wadanyon",          phone: "+62 812-3456-7802" },
+    intel:              { label: "Pasi Intelijen",    phone: "+62 813-2233-4402" },
+    ops:                { label: "Pasi Operasi",      phone: "+62 813-2233-4403" },
+    pers:               { label: "Pasi Personel",     phone: "+62 813-2233-4404" },
+    log:                { label: "Pasi Logistik",     phone: "+62 813-2233-4405" },
+    danki_ka:           { label: "Danki A",            phone: "+62 815-6677-8801" },
+    danki_kb:           { label: "Danki B",            phone: "+62 815-6677-8802" },
+    danki_kc:           { label: "Danki C",            phone: "+62 815-6677-8803" },
+    danki_kbantuan:     { label: "Danki Bantuan",      phone: "+62 815-6677-8804" },
+    danki_kmarkas:      { label: "Danki Markas",       phone: "+62 815-6677-8805" },
+    danki_kpertanian:   { label: "Danki Pertanian",    phone: "+62 817-9900-1101" },
+    danki_kpeternakan:  { label: "Danki Peternakan",   phone: "+62 817-9900-1102" },
+    danki_kperikanan:   { label: "Danki Perikanan",    phone: "+62 817-9900-1103" },
+    danki_kkonstruksi:  { label: "Danki Konstruksi",   phone: "+62 817-9900-1104" },
+    danki_kkesehatan:   { label: "Danki Kesehatan",    phone: "+62 817-9900-1105" },
+  };
+
+  const DASHBOARD_URL = "dashboard-command360-unified.html";
+
+  let currentOtp = "";
+  let selectedRole = "";
+  let countdownInterval = null;
+  let countdownSeconds = 300;
+
+  function maskPhone(p){
+    const parts = p.split("-");
+    if(parts.length === 3){
+      return parts[0] + "-****-" + parts[2];
+    }
+    return p;
+  }
+
+  function genOtp(){
+    let code = "";
+    for(let i=0;i<6;i++) code += Math.floor(Math.random()*10);
+    return code;
+  }
+
+  function showError(id, show){
+    document.getElementById(id).classList.toggle("show", show);
+  }
+
+  const EYE_OPEN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const EYE_CLOSED = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/><line x1="3" y1="21" x2="21" y2="3"/></svg>';
+
+  document.getElementById("togglePw").addEventListener("click", ()=>{
+    const inp = document.getElementById("loginPassword");
+    const isPw = inp.type === "password";
+    inp.type = isPw ? "text" : "password";
+    document.getElementById("togglePw").innerHTML = isPw ? EYE_CLOSED : EYE_OPEN;
+  });
+
+  let selectedNama = "";
+
+  document.getElementById("btnLogin").addEventListener("click", ()=>{
+    const n = document.getElementById("loginNama").value.trim();
+    const u = document.getElementById("loginUsername").value.trim();
+    const p = document.getElementById("loginPassword").value.trim();
+    const r = document.getElementById("loginRole").value;
+    if(!n || !u || !p || !r){
+      showError("errStep1", true);
+      return;
+    }
+    showError("errStep1", false);
+    selectedNama = n;
+    selectedRole = r;
+    startOtpStep();
+  });
+
+  function startOtpStep(){
+    const info = ROLE_INFO[selectedRole];
+    document.getElementById("otpPhone").textContent = maskPhone(info.phone);
+    document.getElementById("otpRoleLabel").textContent = info.label;
+    currentOtp = genOtp();
+    document.getElementById("demoOtpDisplay").textContent = currentOtp;
+
+    document.getElementById("step1").classList.remove("active");
+    document.getElementById("step2").classList.add("active");
+    document.getElementById("dotStep1").classList.add("done");
+    document.getElementById("dotStep1").classList.remove("current");
+    document.getElementById("dotStep2").classList.add("current");
+    document.getElementById("lineStep").classList.add("done");
+
+    document.querySelectorAll(".otp-box").forEach(b=>{ b.value=""; b.classList.remove("err"); });
+    document.querySelector(".otp-box").focus();
+    showError("errStep2", false);
+
+    startCountdown();
+  }
+
+  function startCountdown(){
+    clearInterval(countdownInterval);
+    countdownSeconds = 300;
+    document.getElementById("otpTimer").classList.remove("expired");
+    document.getElementById("btnResend").disabled = true;
+    updateCountdownDisplay();
+    countdownInterval = setInterval(()=>{
+      countdownSeconds--;
+      updateCountdownDisplay();
+      if(countdownSeconds <= 0){
+        clearInterval(countdownInterval);
+        document.getElementById("otpTimer").classList.add("expired");
+        document.getElementById("otpCountdown").textContent = "00:00 — Kedaluwarsa";
+        document.getElementById("btnResend").disabled = false;
+      }
+    }, 1000);
+  }
+
+  function updateCountdownDisplay(){
+    const m = Math.floor(countdownSeconds/60).toString().padStart(2,"0");
+    const s = (countdownSeconds%60).toString().padStart(2,"0");
+    document.getElementById("otpCountdown").textContent = `${m}:${s}`;
+  }
+
+  const otpBoxes = Array.from(document.querySelectorAll(".otp-box"));
+  otpBoxes.forEach((box, idx)=>{
+    box.addEventListener("input", ()=>{
+      box.value = box.value.replace(/[^0-9]/g,"");
+      box.classList.remove("err");
+      if(box.value && idx < otpBoxes.length-1){
+        otpBoxes[idx+1].focus();
+      }
+    });
+    box.addEventListener("keydown", (e)=>{
+      if(e.key === "Backspace" && !box.value && idx > 0){
+        otpBoxes[idx-1].focus();
+      }
+    });
+    box.addEventListener("paste", (e)=>{
+      e.preventDefault();
+      const paste = (e.clipboardData || window.clipboardData).getData("text").replace(/[^0-9]/g,"").slice(0,6);
+      paste.split("").forEach((ch,i)=>{ if(otpBoxes[i]) otpBoxes[i].value = ch; });
+      if(paste.length) otpBoxes[Math.min(paste.length,6)-1].focus();
+    });
+  });
+
+  document.getElementById("btnVerify").addEventListener("click", ()=>{
+    const entered = otpBoxes.map(b=>b.value).join("");
+    if(entered.length < 6){
+      showError("errStep2", true);
+      otpBoxes.forEach(b=>{ if(!b.value) b.classList.add("err"); });
+      return;
+    }
+    if(entered !== currentOtp){
+      showError("errStep2", true);
+      otpBoxes.forEach(b=>b.classList.add("err"));
+      return;
+    }
+    showError("errStep2", false);
+    clearInterval(countdownInterval);
+
+    document.getElementById("step2").classList.remove("active");
+    document.getElementById("versionLine").style.display = "none";
+    document.querySelector(".step-indicator").style.display = "none";
+    document.getElementById("successRole").textContent = ROLE_INFO[selectedRole].label;
+    document.getElementById("successWrap").classList.add("show");
+
+    setTimeout(()=>{
+      window.location.href = `${DASHBOARD_URL}?role=${encodeURIComponent(selectedRole)}&nama=${encodeURIComponent(selectedNama)}`;
+    }, 1400);
+  });
+
+  document.getElementById("btnResend").addEventListener("click", ()=>{
+    if(document.getElementById("btnResend").disabled) return;
+    currentOtp = genOtp();
+    document.getElementById("demoOtpDisplay").textContent = currentOtp;
+    otpBoxes.forEach(b=>{ b.value=""; b.classList.remove("err"); });
+    otpBoxes[0].focus();
+    showError("errStep2", false);
+    startCountdown();
+  });
+
+  document.getElementById("btnBack").addEventListener("click", ()=>{
+    clearInterval(countdownInterval);
+    document.getElementById("step2").classList.remove("active");
+    document.getElementById("step1").classList.add("active");
+    document.getElementById("dotStep1").classList.remove("done");
+    document.getElementById("dotStep1").classList.add("current");
+    document.getElementById("dotStep2").classList.remove("current");
+    document.getElementById("lineStep").classList.remove("done");
+  });
+</script>
+
+</body>
+</html>
