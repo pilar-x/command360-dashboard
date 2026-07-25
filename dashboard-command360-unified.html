@@ -1575,28 +1575,15 @@ body{
 </div>
 
 <div class="panel">
-<div class="panel-head"><div class="panel-title">REKAPITULASI PRODUKSI — KOMPI PRODUKSI (BULAN INI)</div>
-<div style="display:flex; gap:8px; align-items:center;">
-<div class="link-more" onclick="downloadProduksiTemplate()" style="cursor:pointer;">TEMPLATE</div>
-<div class="link-more" onclick="document.getElementById('uploadProduksiInput').click()" style="cursor:pointer; color:var(--green);">⬆ UPLOAD EXCEL</div>
-<div class="link-more" onclick="resetProduksiUpload()" style="cursor:pointer;">RESET</div>
-<div class="link-more" onclick="printDataTable('tblRekapProduksi','Rekapitulasi Produksi — Kompi Produksi')" style="cursor:pointer;">CETAK</div>
+<div class="panel-head"><div class="panel-title">PRODUKSI SATUAN (RINGKASAN)</div><div class="link-more" onclick="switchToView('kpertanian')" style="cursor:pointer;">LIHAT DETAIL PER-KOMPI</div></div>
+<div class="sum-grid">
+<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-leaf"></use></svg></div><div class="s-label">KOMPI PRODUKSI AKTIF</div><div class="s-val">5</div><div class="s-tag" style="color:var(--green);">Semua Beroperasi</div></div>
+<div class="sum-cell"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-scale"></use></svg></div><div class="s-label">RATA-RATA PENCAPAIAN</div><div class="s-val" style="color:var(--amber);">86%</div><div class="s-tag" style="color:var(--amber);">Target Bulanan</div></div>
+<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-check"></use></svg></div><div class="s-label">STATUS KESELURUHAN</div><div class="s-val" style="color:var(--green); font-size:14px;">BAIK</div><div class="s-tag" style="color:var(--text-mid);">Sesuai Rencana</div></div>
 </div>
-<input type="file" id="uploadProduksiInput" accept=".xlsx,.xls" style="display:none;" onchange="handleProduksiUpload(event)">
+<div class="foot-note">Rincian komoditas per-Kompi (Pertanian, Peternakan, Perikanan, Konstruksi, Kesehatan) tersedia di dashboard masing-masing Kompi Produksi.</div>
 </div>
-<div id="uploadProduksiStatus" style="display:none; margin-bottom:10px; padding:9px 12px; border-radius:8px; font-size:11px;"></div>
-<table id="tblRekapProduksi" style="width:100%; border-collapse:collapse; font-size:11.5px;">
-<tr style="text-align:left; color:var(--text-lo); font-size:9px; letter-spacing:.5px;">
-<th style="padding-bottom:8px;">KOMPI</th><th style="padding-bottom:8px;">KOMODITAS 1</th><th style="padding-bottom:8px;">JUMLAH 1</th><th style="padding-bottom:8px;">KOMODITAS 2</th><th style="padding-bottom:8px;">JUMLAH 2</th>
-</tr>
-<tr style="border-top:1px solid var(--line);"><td style="padding:8px 8px 8px 0; color:var(--text-hi); font-weight:600;">Kompi Pertanian</td><td style="padding:8px 0;">Jagung</td><td style="padding:8px 0; color:var(--green);">2 ton</td><td style="padding:8px 0;">Padi</td><td style="padding:8px 0; color:var(--green);">5 ton</td></tr>
-<tr style="border-top:1px solid var(--line);"><td style="padding:8px 8px 8px 0; color:var(--text-hi); font-weight:600;">Kompi Peternakan</td><td style="padding:8px 0;">Telur</td><td style="padding:8px 0; color:var(--green);">850 butir</td><td style="padding:8px 0;">Susu</td><td style="padding:8px 0; color:var(--green);">120 liter</td></tr>
-<tr style="border-top:1px solid var(--line);"><td style="padding:8px 8px 8px 0; color:var(--text-hi); font-weight:600;">Kompi Perikanan</td><td style="padding:8px 0;">Lele</td><td style="padding:8px 0; color:var(--green);">500 kg</td><td style="padding:8px 0;">Nila</td><td style="padding:8px 0; color:var(--green);">350 kg</td></tr>
-<tr style="border-top:1px solid var(--line);"><td style="padding:8px 8px 8px 0; color:var(--text-hi); font-weight:600;">Kompi Konstruksi</td><td style="padding:8px 0;">Gudang</td><td style="padding:8px 0; color:var(--amber);">92% selesai</td><td style="padding:8px 0;">Drainase</td><td style="padding:8px 0; color:var(--amber);">75% selesai</td></tr>
-<tr style="border-top:1px solid var(--line);"><td style="padding:8px 8px 8px 0; color:var(--text-hi); font-weight:600;">Kompi Kesehatan</td><td style="padding:8px 0;">MCU Personel</td><td style="padding:8px 0; color:var(--green);">120 orang</td><td style="padding:8px 0;">Rujukan RS</td><td style="padding:8px 0; color:var(--text-mid);">3 orang</td></tr>
-</table>
-<div class="foot-note">Satuan/komoditas berbeda tiap Kompi sesuai bidang produksinya masing-masing. Rincian lengkap ada di dashboard Kompi terkait.</div>
-</div>
+
 
 <!-- 5. EARLY WARNING -->
 <div class="panel">
@@ -2672,7 +2659,6 @@ body{
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time">06:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Personel</div></div></div><div class="agenda-item"><div class="agenda-time">08:00</div><div class="agenda-body"><div class="a-title">Latihan Menembak Senjata Ringan</div></div></div><div class="agenda-item"><div class="agenda-time">10:00</div><div class="agenda-body"><div class="a-title">Hanmars &amp; Drill Tempur</div></div></div><div class="agenda-item"><div class="agenda-time">13:00</div><div class="agenda-body"><div class="a-title">Perawatan Senjata &amp; Perlengkapan</div></div></div><div class="agenda-item"><div class="agenda-time">15:00</div><div class="agenda-body"><div class="a-title">Evaluasi Kegiatan</div></div></div><div class="agenda-item"><div class="agenda-time">16:30</div><div class="agenda-body"><div class="a-title">Laporan Harian Kompi</div></div></div>
 </div>
-</div>
 <div class="grid3">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KENDARAAN</div><div class="link-more">LIHAT SEMUA</div></div>
@@ -2783,7 +2769,7 @@ body{
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:15 Latihan menembak sedang berlangsung di Lapangan Tembak</span><span>10:45 Cuaca cerah, kondisi aman</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:15 Latihan menembak sedang berlangsung di Lapangan Tembak</span><span>10:45 Cuaca cerah, kondisi aman</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-</div><div class="view" id="view-kb">
+</div></div><div class="view" id="view-kb">
 
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI SENAPAN B</div></div>
@@ -2836,7 +2822,6 @@ body{
 </div><div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time">06:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Personel</div></div></div><div class="agenda-item"><div class="agenda-time">08:00</div><div class="agenda-body"><div class="a-title">Latihan Taktik Lapangan</div></div></div><div class="agenda-item"><div class="agenda-time">10:00</div><div class="agenda-body"><div class="a-title">Hanmars &amp; Drill Tempur</div></div></div><div class="agenda-item"><div class="agenda-time">13:00</div><div class="agenda-body"><div class="a-title">Perawatan Senjata &amp; Perlengkapan</div></div></div><div class="agenda-item"><div class="agenda-time">15:00</div><div class="agenda-body"><div class="a-title">Evaluasi Kegiatan</div></div></div><div class="agenda-item"><div class="agenda-time">16:30</div><div class="agenda-body"><div class="a-title">Laporan Harian Kompi</div></div></div>
-</div>
 </div>
 <div class="grid3">
 <div class="panel">
@@ -2948,7 +2933,7 @@ body{
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:20 Latihan taktik lapangan berlangsung lancar</span><span>11:00 Cuaca cerah berawan, kondisi aman</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:20 Latihan taktik lapangan berlangsung lancar</span><span>11:00 Cuaca cerah berawan, kondisi aman</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-</div><div class="view" id="view-kc">
+</div></div><div class="view" id="view-kc">
 
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI SENAPAN C</div></div>
@@ -3001,7 +2986,6 @@ body{
 </div><div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time">06:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Personel</div></div></div><div class="agenda-item"><div class="agenda-time">08:00</div><div class="agenda-body"><div class="a-title">Latihan Menembak Senjata Ringan</div></div></div><div class="agenda-item"><div class="agenda-time">10:00</div><div class="agenda-body"><div class="a-title">Hanmars &amp; Drill Tempur</div></div></div><div class="agenda-item"><div class="agenda-time">13:00</div><div class="agenda-body"><div class="a-title">Perawatan Senjata &amp; Perlengkapan</div></div></div><div class="agenda-item"><div class="agenda-time">15:00</div><div class="agenda-body"><div class="a-title">Evaluasi Kegiatan</div></div></div><div class="agenda-item"><div class="agenda-time">16:30</div><div class="agenda-body"><div class="a-title">Laporan Harian Kompi</div></div></div>
-</div>
 </div>
 <div class="grid3">
 <div class="panel">
@@ -3113,7 +3097,7 @@ body{
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:10 Latihan menembak sedang berlangsung di Lapangan Tembak</span><span>10:30 Cuaca cerah, kondisi aman</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:10 Latihan menembak sedang berlangsung di Lapangan Tembak</span><span>10:30 Cuaca cerah, kondisi aman</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-<div class="view" id="view-kbantuan">
+</div><div class="view" id="view-kbantuan">
 
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI BANTUAN</div></div>
@@ -3166,7 +3150,6 @@ body{
 </div><div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time">06:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Personel</div></div></div><div class="agenda-item"><div class="agenda-time">08:00</div><div class="agenda-body"><div class="a-title">Latihan Tembak Mortir 81</div></div></div><div class="agenda-item"><div class="agenda-time">10:00</div><div class="agenda-body"><div class="a-title">Drill SMS &amp; SMB</div></div></div><div class="agenda-item"><div class="agenda-time">13:00</div><div class="agenda-body"><div class="a-title">Perawatan Senjata Bantuan</div></div></div><div class="agenda-item"><div class="agenda-time">15:00</div><div class="agenda-body"><div class="a-title">Evaluasi Kegiatan</div></div></div><div class="agenda-item"><div class="agenda-time">16:30</div><div class="agenda-body"><div class="a-title">Laporan Harian Kompi</div></div></div>
-</div>
 </div>
 <div class="grid3">
 <div class="panel">
@@ -3278,7 +3261,7 @@ body{
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:30 Latihan tembak Mortir 81 sedang berlangsung</span><span>11:15 Cuaca cerah, kondisi aman</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:30 Latihan tembak Mortir 81 sedang berlangsung</span><span>11:15 Cuaca cerah, kondisi aman</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-<div class="view" id="view-kmarkas">
+</div><div class="view" id="view-kmarkas">
 
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI MARKAS</div></div>
@@ -3335,7 +3318,6 @@ body{
 </div><div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time">06:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Personel</div></div></div><div class="agenda-item"><div class="agenda-time">08:00</div><div class="agenda-body"><div class="a-title">Pemeliharaan Jaringan Komlek</div></div></div><div class="agenda-item"><div class="agenda-time">10:00</div><div class="agenda-body"><div class="a-title">Pengecekan Kendaraan Angkutan</div></div></div><div class="agenda-item"><div class="agenda-time">13:00</div><div class="agenda-body"><div class="a-title">Pelayanan Kesehatan Satuan</div></div></div><div class="agenda-item"><div class="agenda-time">15:00</div><div class="agenda-body"><div class="a-title">Evaluasi Kegiatan</div></div></div><div class="agenda-item"><div class="agenda-time">16:30</div><div class="agenda-body"><div class="a-title">Laporan Harian Kompi</div></div></div>
-</div>
 </div>
 <div class="grid3">
 <div class="panel">
@@ -3447,7 +3429,7 @@ body{
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:40 Peleton Pioner melaksanakan perbaikan jalan kompi</span><span>11:20 Jaringan Komlek berfungsi normal di seluruh pos</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:40 Peleton Pioner melaksanakan perbaikan jalan kompi</span><span>11:20 Jaringan Komlek berfungsi normal di seluruh pos</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-<div class="view" id="view-kpertanian">
+</div><div class="view" id="view-kpertanian">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KINERJA PERTANIAN</div></div>
 <div class="sum-grid">
@@ -3480,7 +3462,6 @@ body{
 <div class="agenda-item"><div class="agenda-time" style="color:var(--amber);">09:30</div><div class="agenda-body"><div class="a-title">Pemupukan Susulan</div><div class="a-loc">Blok B</div></div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--red);">13:00</div><div class="agenda-body"><div class="a-title">Pengendalian Hama</div><div class="a-loc">Blok C</div></div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">15:30</div><div class="agenda-body"><div class="a-title">Pembersihan Gulma</div><div class="a-loc">Blok D</div></div></div>
-</div>
 </div>
 <div class="panel">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
@@ -3617,7 +3598,7 @@ body{
 <span>08:15 WIB — Curah hujan tinggi 3 hari kedepan</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-<div class="view" id="view-kpeternakan">
+</div><div class="view" id="view-kpeternakan">
 <div class="grid2">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN PETERNAKAN</div></div>
@@ -3655,7 +3636,6 @@ body{
 </div>
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">35 Orang (60%)</b></div>
-</div>
 </div>
 <div class="grid3">
 <div class="panel">
@@ -3798,7 +3778,7 @@ body{
 <span>08:15 WIB — Kelahiran 5 ekor kambing di Kandang B</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-<div class="view" id="view-kperikanan">
+</div><div class="view" id="view-kperikanan">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KINERJA PERIKANAN</div></div>
 <div class="sum-grid">
@@ -3826,7 +3806,6 @@ body{
 </div>
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">31 Orang (60%)</b></div>
-</div>
 </div>
 <div class="grid3">
 <div class="panel map-panel">
@@ -3972,7 +3951,7 @@ body{
 <span>08:15 WIB — Stok pakan diperbarui</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-<div class="view" id="view-kkonstruksi">
+</div><div class="view" id="view-kkonstruksi">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KINERJA KONSTRUKSI</div></div>
 <div class="sum-grid">
@@ -4000,7 +3979,6 @@ body{
 </div>
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">43 Orang (61%)</b></div>
-</div>
 </div>
 <div class="grid3">
 <div class="panel">
@@ -4142,7 +4120,7 @@ body{
 <span>08:15 WIB — Safety patrol area Lokasi 1 selesai</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-<div class="view" id="view-kkesehatan">
+</div><div class="view" id="view-kkesehatan">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KONDISI KESEHATAN</div></div>
 <div class="sum-grid">
@@ -4170,7 +4148,6 @@ body{
 </div>
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">37 Orang (61%)</b></div>
-</div>
 </div>
 <div class="grid3">
 <div class="panel">
@@ -4312,7 +4289,7 @@ body{
 <span>08:15 WIB — Stok obat Amoxicillin menipis</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-<div class="view" id="view-apms">
+</div><div class="view" id="view-apms">
 
 <div class="panel">
   <div class="panel-head"><div class="panel-title">RINGKASAN APMS HARI INI</div></div>
