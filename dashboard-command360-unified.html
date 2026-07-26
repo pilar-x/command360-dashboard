@@ -581,12 +581,13 @@ body{
     font-size:9px; width:16px;height:16px;border-radius:50%;
     display:flex;align-items:center;justify-content:center; font-weight:700;
   }#view-exec .grid{
-    column-count:3;
-    column-gap:14px;
-    display:block;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:14px;
+    align-items:start;
   }
   #view-exec .grid > .panel{
-    break-inside:avoid; -webkit-column-break-inside:avoid; margin-bottom:14px; display:inline-block; width:100%; vertical-align:top;
+    margin-bottom:0;
   }#view-exec .panel{
     background:var(--bg-panel);
     border:1px solid var(--line);
