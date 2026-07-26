@@ -7,19 +7,21 @@ Status: **Prototipe / Mockup Fungsional Lanjutan** — sebagian besar data adala
 
 ## 1. Isi Folder — File Aktif
 
+**PENTING — Perubahan Arsitektur (v20260726.2):** Halaman login dan dashboard sekarang **sudah digabung jadi satu file**. `dashboard-login.html` sudah tidak diperlukan lagi (boleh dihapus dari folder). Cukup buka `dashboard-command360-unified.html` — login dan seluruh dashboard ada di dalamnya, tanpa pindah halaman sama sekali.
+
 | File | Fungsi |
 |---|---|
-| `dashboard-login.html` | Halaman login (**mulai dari sini**) |
-| `dashboard-command360-unified.html` | **Dashboard utama** — seluruh role, seluruh menu, dalam satu aplikasi |
+| `index.html` | Pengalih otomatis ke dashboard (untuk alamat GitHub Pages) |
+| `dashboard-command360-unified.html` | **Satu-satunya file utama** — Login + Dashboard + seluruh role + seluruh menu, semua dalam satu aplikasi |
 | `apms-scan-gate.html` | Halaman scan HP — masuk/keluar Kesatrian |
 | `apms-scan-checkpoint.html` | Halaman scan HP — absen patroli, wajib selfie + validasi GPS |
 | `apms-scan-alat.html` | Halaman scan HP — peminjaman/pengembalian alat |
 | `apms-scan-senjata.html` | Halaman scan HP — pengeluaran/penggudangan senjata |
 | `apms-rfid-kiosk.html` | Layar kiosk untuk reader NFC fisik (gate, checkpoint, gudang) |
-| `logo-command360-lg.png` | Logo besar (halaman login) |
+| `logo-command360-lg.png` | Logo besar (layar login) |
 | `logo-command360-sm.png` | Logo kecil (sidebar dashboard) |
-| `login-badge-icon.png` | Lencana shield+gembok (halaman login) |
-| `radar-map-indonesia.png` | Latar peta radar (halaman login) |
+| `login-badge-icon.png` | Lencana shield+gembok (layar login) |
+| `radar-map-indonesia.png` | Latar peta radar (layar login) |
 | `title-command360.png` | *(cadangan, tidak lagi dipakai — judul kini teks CSS logam 3D)* |
 
 **File lain** (`dashboard-intel.html`, `dashboard-komando.html`, `dashboard-operasi.html`, `dashboard-personel.html`, `dashboard-logistik.html`, `dashboard-kompi-*.html` individual) adalah **versi awal/lama** sebelum semua digabung menjadi satu `dashboard-command360-unified.html`. **Tidak perlu dipakai** — boleh diabaikan atau dihapus, murni arsip riwayat pengembangan.
@@ -31,9 +33,10 @@ Status: **Prototipe / Mockup Fungsional Lanjutan** — sebagian besar data adala
 ## 2. Cara Menjalankan
 
 ### Opsi A — Buka langsung (cepat, tapi APMS live-update tidak berfungsi)
-1. Klik dua kali `dashboard-login.html`.
+1. Klik dua kali `dashboard-command360-unified.html`.
 2. Login dengan Nama, Username, Password bebas + pilih Role.
 3. Masukkan kode OTP yang muncul di kotak "MODE DEMO" di layar (kode acak, beda setiap kali login).
+4. Untuk keluar, klik ikon logout di topbar — otomatis kembali ke layar login (masih di file yang sama, tidak pindah halaman).
 
 ### Opsi B — Jalankan via server lokal (disarankan, agar data APMS antar-halaman tersambung)
 Buka Terminal/Command Prompt di folder ini, jalankan:
@@ -42,7 +45,7 @@ python3 -m http.server 8000
 ```
 Lalu buka browser ke:
 ```
-http://localhost:8000/dashboard-login.html
+http://localhost:8000/dashboard-command360-unified.html
 ```
 Kenapa perlu ini? Lihat bagian **§6 Alur Data APMS** di bawah.
 
