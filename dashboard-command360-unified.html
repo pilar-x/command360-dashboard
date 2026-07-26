@@ -926,7 +926,7 @@ body{
   .ring-wrap{display:flex; align-items:center; gap:18px;}#view-ops .ring-lg{width:120px;height:120px;border-radius:50%; display:flex;align-items:center;justify-content:center; position:relative; flex-shrink:0;}#view-ops .ring-lg::before{content:'';position:absolute; inset:10px; border-radius:50%; background:var(--bg-panel);}#view-ops .ring-inner{position:relative; text-align:center; z-index:1;}#view-ops .ring-inner .big{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:20px;}#view-ops .ring-inner .small{font-size:8.5px; color:var(--text-mid); letter-spacing:1px; margin-top:2px;}#view-ops .stat-list{display:flex; flex-direction:column; gap:8px; font-size:11.5px;}#view-ops .stat-row{display:flex; align-items:center; justify-content:space-between; gap:14px;}#view-ops .stat-row .k{display:flex; align-items:center; gap:8px; color:var(--text-mid);}#view-ops .stat-row .k .sw{width:7px;height:7px;border-radius:50%;}#view-ops .stat-row .v{font-weight:600; color:var(--text-hi);}#view-ops /* bars */
   .bar-row{margin-bottom:13px;}#view-ops .bar-row:last-child{margin-bottom:0;}#view-ops .bar-top{display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px; color:var(--text-hi);}#view-ops .bar-top span:last-child{color:var(--text-mid);}#view-ops .bar-track{height:6px; background:var(--bg-panel-raised); border-radius:4px; overflow:hidden;}#view-ops .bar-fill{height:100%; border-radius:4px;}#view-ops /* status ops list */
   .stat-line{display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--line); font-size:11.5px;}#view-ops .stat-line:last-child{border-bottom:none;}#view-ops .stat-line .k{color:var(--text-mid); display:flex; align-items:center; gap:8px;}#view-ops .stat-line .v{font-weight:600; color:var(--text-hi);}#view-ops /* info terkini */
-  .info-item{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:11.5px;}#view-ops .info-item:last-child{border-bottom:none;}#view-ops .info-dot{width:6px;height:6px;border-radius:50%; background:var(--green); flex-shrink:0;}#view-ops .info-time{color:var(--text-lo); font-size:10.5px; width:44px; flex-shrink:0;}#view-ops .info-txt{color:var(--text-hi);}#view-ops .ticker-bar{background:var(--bg-panel); border:1px solid var(--line); border-radius:10px; padding:11px 20px; display:flex; align-items:center; gap:16px; font-size:11px; color:var(--text-mid); flex-wrap:nowrap;}#view-ops .ticker-bar b{font-family:'Chakra Petch',sans-serif; color:var(--green); font-weight:600; letter-spacing:1px;}#view-ops .ticker-bar .auto{margin-left:auto; display:flex; align-items:center; gap:7px; font-size:9.5px; letter-spacing:1px;}#view-ops .grid3{display:grid; grid-template-columns:1.7fr 1fr 1fr; gap:14px; align-items:start;}#view-ops .grid2{display:grid; grid-template-columns:1.5fr 1fr; gap:14px; align-items:start;}#view-ops .grid4{column-count:4; column-gap:14px; display:block;}
+  .info-item{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:11.5px;}#view-ops .info-item:last-child{border-bottom:none;}#view-ops .info-dot{width:6px;height:6px;border-radius:50%; background:var(--green); flex-shrink:0;}#view-ops .info-time{color:var(--text-lo); font-size:10.5px; width:44px; flex-shrink:0;}#view-ops .info-txt{color:var(--text-hi);}#view-ops .ticker-bar{background:var(--bg-panel); border:1px solid var(--line); border-radius:10px; padding:11px 20px; display:flex; align-items:center; gap:16px; font-size:11px; color:var(--text-mid); flex-wrap:nowrap;}#view-ops .ticker-bar b{font-family:'Chakra Petch',sans-serif; color:var(--green); font-weight:600; letter-spacing:1px;}#view-ops .ticker-bar .auto{margin-left:auto; display:flex; align-items:center; gap:7px; font-size:9.5px; letter-spacing:1px;}#view-ops .grid3{display:grid; grid-template-columns:1.7fr 1fr 1fr; gap:14px; align-items:start;}#view-ops .grid2{display:grid; grid-template-columns:1.5fr 1fr; gap:14px; align-items:start;}#view-ops .grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; align-items:start;}
 #view-ops .grid4 > .panel{break-inside:avoid; -webkit-column-break-inside:avoid; margin-bottom:14px; display:inline-block; width:100%; vertical-align:top;}@media (max-width:1200px){#view-ops .grid3, #view-ops .grid2, #view-ops .grid4{grid-template-columns:1fr;}#view-ops .ring-row{flex-wrap:wrap;}#view-ops .shell{grid-template-columns:1fr;}#view-ops .sidebar{flex-direction:row; overflow-x:auto;}#view-ops .sidebar-foot{display:none;}}
 :root{
     --bg-void:#070B11; --bg-panel:#0D141C; --bg-panel-raised:#121B24;
@@ -1298,7 +1298,24 @@ body{
 
 /* ===== PENYESUAIAN LAYAR HP (di bawah tablet) ===== */
 @media (max-width:640px){
-  table{display:block; overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch;}
+  table{display:block; overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; min-width:0;}
+  .panel{min-width:0;}
+  .panel > *{min-width:0;}
+  div[style*="grid-template-columns:1fr 1fr 1fr 1fr"]{grid-template-columns:1fr !important;}
+  div[style*="grid-template-columns:1fr 1.4fr 1fr 1fr"]{grid-template-columns:1fr !important;}
+  div[style*="grid-template-columns:1fr 1fr 1.4fr 1fr"]{grid-template-columns:1fr !important;}
+  div[style*="grid-template-columns:1.4fr 1fr 1fr"]{grid-template-columns:1fr !important;}
+  div[style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr !important;}
+  div[style*="grid-template-columns:repeat(5,1fr)"]{grid-template-columns:repeat(2,1fr) !important;}
+  div[style*="grid-template-columns:repeat(6,1fr)"]{grid-template-columns:repeat(2,1fr) !important;}
+  div[style*="grid-template-columns:repeat(7,1fr)"]{grid-template-columns:repeat(2,1fr) !important;}
+  div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important;}
+  div[style*="grid-template-columns:1.3fr 1fr"]{grid-template-columns:1fr !important;}
+  div[style*="grid-template-columns:1.4fr 1fr"]{grid-template-columns:1fr !important;}
+  div[style*="grid-template-columns:2fr 1.1fr"]{grid-template-columns:1fr !important;}
+  .ticker-bar{flex-wrap:wrap !important; row-gap:6px;}
+  .ticker-bar .auto{margin-left:0 !important;}
+  .ticker-viewport{min-width:0; flex:1 1 100%; order:3;}
   .topbar{flex-direction:column; align-items:flex-start; gap:10px;}
   .clock-block{text-align:left;}
   .status-chip{width:100%; justify-content:space-between;}
@@ -1337,10 +1354,10 @@ body{
   .radar-scan-wrap-full{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;}
   .radar-scan-wrap-full .radar-bg-map{
     position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.22; mix-blend-mode:screen;
-    -webkit-mask-image:radial-gradient(ellipse 60% 75% at calc(var(--radar-cx, 28.7%) + 1.5cm) 50%, black 25%, transparent 100%);
-    mask-image:radial-gradient(ellipse 60% 75% at calc(var(--radar-cx, 28.7%) + 1.5cm) 50%, black 25%, transparent 100%);
+    -webkit-mask-image:radial-gradient(ellipse 60% 75% at calc(var(--radar-cx, 28.7%) + var(--radar-shift, 1.5cm)) 50%, black 25%, transparent 100%);
+    mask-image:radial-gradient(ellipse 60% 75% at calc(var(--radar-cx, 28.7%) + var(--radar-shift, 1.5cm)) 50%, black 25%, transparent 100%);
   }
-  .radar-scan-wrap-full .radar-sweep{top:50%; left:calc(var(--radar-cx, 28.7%) + 1.5cm);}
+  .radar-scan-wrap-full .radar-sweep{top:50%; left:calc(var(--radar-cx, 28.7%) + var(--radar-shift, 1.5cm));}
 
   /* ============ LEFT HERO ============ */
   .hero{
@@ -1372,7 +1389,7 @@ body{
   .hud-bar-item b{width:28px; color:var(--text-hi); font-weight:600;}
   .hud-quote{font-size:9.5px; color:var(--text-lo); line-height:1.6; margin-top:4px; font-style:italic;}
 
-  .hero-top-content{position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center; flex-shrink:0; transform:translateX(1.5cm);}
+  .hero-top-content{position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center; flex-shrink:0; transform:translateX(var(--radar-shift, 1.5cm));}
   .hero-gap{height:70px; flex-shrink:0;}
   .hero-pagination{position:relative; z-index:3; display:flex; gap:6px; margin-top:14px; flex-shrink:0;}
   .hp-dot{width:6px; height:6px; border-radius:50%; background:rgba(46,230,166,0.25);}
@@ -1611,7 +1628,7 @@ body{
   .trust-txt .tt2{font-size:9.5px; color:var(--green); letter-spacing:.5px; margin-top:1px;}
 
   @media (max-width:980px){
-    .stage{grid-template-columns:1fr;}
+    .stage{grid-template-columns:1fr; --radar-shift:0cm;}
     .hero{padding:36px 24px;}
     .metal-title-big{font-size:40px;}
     .trust-bar{gap:24px;}
@@ -1632,10 +1649,10 @@ body{
       <img class="radar-bg-map" src="radar-map-indonesia.png" alt="Peta Radar Indonesia">
       <div class="radar-sweep"></div>
 
-      <div class="radar-blip blip-green" style="top:28%; left:calc(var(--radar-cx, 28.7%) + 1.5cm - 16%);"><div class="blip-dot" style="animation-delay:3.5s;"></div><div class="blip-label" style="animation-delay:3.5s;">ALPHA-01</div></div>
-      <div class="radar-blip blip-green" style="top:72%; left:calc(var(--radar-cx, 28.7%) + 1.5cm - 14%);"><div class="blip-dot" style="animation-delay:2.5s;"></div><div class="blip-label" style="animation-delay:2.5s;">BRAVO-02</div></div>
-      <div class="radar-blip blip-red" style="top:26%; left:calc(var(--radar-cx, 28.7%) + 1.5cm + 16%);"><div class="blip-dot" style="animation-delay:0.5s;"></div><div class="blip-label" style="animation-delay:0.5s;">GHOST-01</div></div>
-      <div class="radar-blip blip-red" style="top:70%; left:calc(var(--radar-cx, 28.7%) + 1.5cm + 14%);"><div class="blip-dot" style="animation-delay:1.5s;"></div><div class="blip-label" style="animation-delay:1.5s;">SHADOW-02</div></div>
+      <div class="radar-blip blip-green" style="top:28%; left:calc(var(--radar-cx, 28.7%) + var(--radar-shift, 1.5cm) - 16%);"><div class="blip-dot" style="animation-delay:3.5s;"></div><div class="blip-label" style="animation-delay:3.5s;">ALPHA-01</div></div>
+      <div class="radar-blip blip-green" style="top:72%; left:calc(var(--radar-cx, 28.7%) + var(--radar-shift, 1.5cm) - 14%);"><div class="blip-dot" style="animation-delay:2.5s;"></div><div class="blip-label" style="animation-delay:2.5s;">BRAVO-02</div></div>
+      <div class="radar-blip blip-red" style="top:26%; left:calc(var(--radar-cx, 28.7%) + var(--radar-shift, 1.5cm) + 16%);"><div class="blip-dot" style="animation-delay:0.5s;"></div><div class="blip-label" style="animation-delay:0.5s;">GHOST-01</div></div>
+      <div class="radar-blip blip-red" style="top:70%; left:calc(var(--radar-cx, 28.7%) + var(--radar-shift, 1.5cm) + 14%);"><div class="blip-dot" style="animation-delay:1.5s;"></div><div class="blip-label" style="animation-delay:1.5s;">SHADOW-02</div></div>
     </div>
 
     <div class="hero">
@@ -1787,7 +1804,7 @@ body{
           <p>Mengalihkan ke dashboard <b id="successRole">-</b>...</p>
         </div>
 
-        <div class="version" id="versionLine">v20260726.3</div>
+        <div class="version" id="versionLine">v20260726.8</div>
         <div class="copyright-line">© 2026 PHANTOM-X. All Rights Reserved.</div>
       </div>
     </div>
@@ -1834,7 +1851,7 @@ body{
 <div class="sidebar-foot sidebar-contact">
 <div class="sc-label">CONTACT US</div>
 <div class="sc-wa"><svg viewbox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.2 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.5-.3Z"/><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> 0822-7227-2009</div>
-<div class="sc-version">v20260726.3</div>
+<div class="sc-version">v20260726.8</div>
 </div>
 </aside>
 <div class="main">
@@ -2034,6 +2051,7 @@ body{
 <div class="pill" style="padding:5px 12px; font-size:11px;"><span class="dot"></span>SIAGA II</div>
 </div>
 </div>
+</div>
 <div class="grid2">
 <!-- 3. AGENDA HARI INI -->
 <div class="panel">
@@ -2063,7 +2081,6 @@ body{
 </div>
 </div>
 <div class="link-more" onclick="openDetailModal('agenda')">LIHAT SEMUA AGENDA</div>
-</div>
 </div>
 <div class="panel">
 <div class="panel-head">
@@ -2795,7 +2812,7 @@ body{
 <input type="file" id="uploadPersonelInput" accept=".xlsx,.xls" style="display:none;" onchange="handlePersonelUpload(event)">
 </div>
 <div id="uploadPersonelStatus" style="display:none; margin-bottom:10px; padding:9px 12px; border-radius:8px; font-size:11px;"></div>
-<table id="tblRekapPersonel" style="width:100%; border-collapse:collapse; font-size:11.5px;">
+<table id="tblRekapPersonel" style="width:100%; border-collapse:collapse; font-size:11.5px; display:block; overflow-x:auto; -webkit-overflow-scrolling:touch;">
 <tr style="text-align:left; color:var(--text-lo); font-size:9px; letter-spacing:.5px;">
 <th style="padding-bottom:8px;">KOMPI</th><th style="padding-bottom:8px;">NYATA</th><th style="padding-bottom:8px;">SAKIT</th><th style="padding-bottom:8px;">IZIN</th><th style="padding-bottom:8px;">SIAP GERAK</th>
 </tr>
