@@ -671,15 +671,20 @@ body{
 .ms-item{display:flex; flex-direction:column; gap:5px; padding:10px 16px; min-width:110px; border-radius:8px; border:1px solid transparent;}
 .ms-item-good{background:rgba(57,255,20,0.06); border-color:rgba(57,255,20,0.18);}
 
-/* ===== MODIFIER WARNA PANEL RINGKASAN (universal, semua dashboard) ===== */
-.sum-cell{border-radius:8px; transition:background .2s;}
-.sc-good, .sc-warn, .sc-info, .sc-critical, .sc-neutral{padding-top:10px !important; padding-bottom:10px !important; border-right:none !important; margin-right:6px;}
+/* ===== MODIFIER WARNA PANEL RINGKASAN — GRADIEN TEBAL (referensi kartu berwarna) ===== */
+.sum-cell{border-radius:12px; transition:transform .18s, box-shadow .18s;}
+.sc-good, .sc-warn, .sc-info, .sc-critical, .sc-neutral{padding:16px 14px !important; border-right:none !important; margin-right:10px; position:relative; overflow:hidden;}
 .sc-good:last-child, .sc-warn:last-child, .sc-info:last-child, .sc-critical:last-child, .sc-neutral:last-child{margin-right:0;}
-.sc-good{background:rgba(57,255,20,0.055) !important; box-shadow:inset 0 0 0 1px rgba(57,255,20,0.14);}
-.sc-warn{background:rgba(255,194,71,0.055) !important; box-shadow:inset 0 0 0 1px rgba(255,194,71,0.14);}
-.sc-info{background:rgba(77,163,255,0.055) !important; box-shadow:inset 0 0 0 1px rgba(77,163,255,0.14);}
-.sc-critical{background:rgba(255,93,93,0.06) !important; box-shadow:inset 0 0 0 1px rgba(255,93,93,0.16);}
-.sc-neutral{background:rgba(255,255,255,0.02) !important; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.05);}
+.sc-good:hover, .sc-warn:hover, .sc-info:hover, .sc-critical:hover, .sc-neutral:hover{transform:translateY(-2px);}
+.sc-good{background:linear-gradient(150deg, #21c98a 0%, #0f7a56 100%) !important; box-shadow:0 8px 20px rgba(33,201,138,0.28);}
+.sc-info{background:linear-gradient(150deg, #4da3ff 0%, #1f5fb8 100%) !important; box-shadow:0 8px 20px rgba(77,163,255,0.28);}
+.sc-warn{background:linear-gradient(150deg, #ffb547 0%, #c97a12 100%) !important; box-shadow:0 8px 20px rgba(255,181,71,0.28);}
+.sc-critical{background:linear-gradient(150deg, #ff6b6b 0%, #b3282f 100%) !important; box-shadow:0 8px 20px rgba(255,107,107,0.28);}
+.sc-neutral{background:linear-gradient(150deg, #6b7f8f 0%, #384752 100%) !important; box-shadow:0 8px 20px rgba(107,127,143,0.2);}
+.sc-good .s-label, .sc-warn .s-label, .sc-info .s-label, .sc-critical .s-label, .sc-neutral .s-label{color:rgba(255,255,255,0.85) !important;}
+.sc-good .s-val, .sc-warn .s-val, .sc-info .s-val, .sc-critical .s-val, .sc-neutral .s-val{color:#ffffff !important; text-shadow:0 1px 3px rgba(0,0,0,0.25);}
+.sc-good .s-tag, .sc-warn .s-tag, .sc-info .s-tag, .sc-critical .s-tag, .sc-neutral .s-tag{color:rgba(255,255,255,0.9) !important;}
+.sc-good .sum-icon, .sc-warn .sum-icon, .sc-info .sum-icon, .sc-critical .sum-icon, .sc-neutral .sum-icon{color:#ffffff !important; opacity:0.9;}
 
 .ms-item-warn{background:rgba(255,194,71,0.06); border-color:rgba(255,194,71,0.18);}
 .ms-item-info{background:rgba(77,163,255,0.06); border-color:rgba(77,163,255,0.18);}
@@ -1848,7 +1853,7 @@ body{
           <p>Mengalihkan ke dashboard <b id="successRole">-</b>...</p>
         </div>
 
-        <div class="version" id="versionLine">v20260726.11</div>
+        <div class="version" id="versionLine">v20260726.12</div>
         <div class="copyright-line">© 2026 PHANTOM-X. All Rights Reserved.</div>
       </div>
     </div>
@@ -1895,7 +1900,7 @@ body{
 <div class="sidebar-foot sidebar-contact">
 <div class="sc-label">CONTACT US</div>
 <div class="sc-wa"><svg viewbox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.2 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.5-.3Z"/><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> 0822-7227-2009</div>
-<div class="sc-version">v20260726.11</div>
+<div class="sc-version">v20260726.12</div>
 </div>
 </aside>
 <div class="main">
