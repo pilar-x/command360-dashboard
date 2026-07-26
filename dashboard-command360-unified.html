@@ -679,6 +679,36 @@ body{
 
 /* ===== HERO MAP (peta operasional besar) ===== */
 .hero-map-panel{min-height:560px !important; height:42vh; margin-bottom:14px;}
+
+/* ===== CONTENT-AWARE ADAPTIVE GRID ===== */
+/* Setiap kartu diberi bobot ukuran sesuai kebutuhan kontennya sendiri.
+   grid-auto-flow:dense membiarkan browser menyusun ulang urutan visual
+   untuk mengisi celah dengan kartu yang pas, tanpa meregangkan kartu kecil. */
+.adaptive-grid{
+  display:grid;
+  grid-template-columns:repeat(12, 1fr);
+  grid-auto-flow:dense;
+  gap:14px;
+  align-items:start;
+}
+.ag-item{display:flex; flex-direction:column; min-width:0;}
+.ag-item > .panel, .ag-item > .panel.map-panel{margin-bottom:0; height:auto;}
+.ag-span-3{grid-column:span 3;}
+.ag-span-4{grid-column:span 4;}
+.ag-span-5{grid-column:span 5;}
+.ag-span-6{grid-column:span 6;}
+@media (max-width:1100px){
+  .adaptive-grid{grid-template-columns:repeat(6,1fr);}
+  .ag-span-3{grid-column:span 3;}
+  .ag-span-4{grid-column:span 3;}
+  .ag-span-5{grid-column:span 6;}
+  .ag-span-6{grid-column:span 6;}
+}
+@media (max-width:640px){
+  .adaptive-grid{grid-template-columns:1fr;}
+  .ag-span-3, .ag-span-4, .ag-span-5, .ag-span-6{grid-column:span 1;}
+}
+
 .hero-map-panel .map-head{padding:20px 24px 0 24px !important;}
 .hero-map-panel .map-surface{position:absolute !important; inset:0; top:56px; height:auto !important;}
 @media (max-width:900px){
@@ -1804,7 +1834,7 @@ body{
           <p>Mengalihkan ke dashboard <b id="successRole">-</b>...</p>
         </div>
 
-        <div class="version" id="versionLine">v20260726.8</div>
+        <div class="version" id="versionLine">v20260726.9</div>
         <div class="copyright-line">© 2026 PHANTOM-X. All Rights Reserved.</div>
       </div>
     </div>
@@ -1851,7 +1881,7 @@ body{
 <div class="sidebar-foot sidebar-contact">
 <div class="sc-label">CONTACT US</div>
 <div class="sc-wa"><svg viewbox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.2 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.5-.3Z"/><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> 0822-7227-2009</div>
-<div class="sc-version">v20260726.8</div>
+<div class="sc-version">v20260726.9</div>
 </div>
 </aside>
 <div class="main">
@@ -1987,8 +2017,8 @@ body{
 </div>
 </div>
 
-<div class="grid">
-<!-- 1. KEKUATAN PERSONEL -->
+<div class="adaptive-grid">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head">
 <div class="panel-title"><span class="num">01</span> KEKUATAN PERSONEL</div>
@@ -2007,7 +2037,8 @@ body{
 </div>
 <div class="foot-note">KEKUATAN PERSONEL  <b style="color:var(--amber)">83,8%</b></div>
 </div>
-<!-- 1B. KESIAPAN GERAK PERSONEL -->
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head">
 <div class="panel-title"><span class="num">1B</span> KESIAPAN GERAK PERSONEL</div>
@@ -2023,7 +2054,8 @@ body{
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">609 Orang (61%)</b></div>
 </div>
-<!-- 2. KESIAPAN OPERASIONAL -->
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head">
 <div class="panel-title"><span class="num">02</span> KESIAPAN OPERASIONAL</div>
@@ -2052,8 +2084,7 @@ body{
 </div>
 </div>
 </div>
-<div class="grid2">
-<!-- 3. AGENDA HARI INI -->
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head">
 <div class="panel-title"><span class="num">03</span> AGENDA HARI INI</div>
@@ -2082,6 +2113,8 @@ body{
 </div>
 <div class="link-more" onclick="openDetailModal('agenda')">LIHAT SEMUA AGENDA</div>
 </div>
+</div>
+<div class="ag-item ag-span-3">
 <div class="panel">
 <div class="panel-head">
 <div class="panel-title">PREDIKSI CUACA</div>
@@ -2093,8 +2126,7 @@ body{
 <div class="weather-note">Data real-time dari OpenWeatherMap.org</div>
 </div>
 </div>
-<div class="grid" style="grid-template-columns:1fr 1fr;">
-<!-- 4. INTELIGENCE -->
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head">
 <div class="panel-title"><span class="num">04</span> INTELLIGENCE SUMMARY</div>
@@ -2123,8 +2155,8 @@ body{
 </div>
 <div class="link-more" onclick="openDetailModal('intel')">DETAIL INTELIJEN</div>
 </div>
-
-
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel map-panel">
 <div class="map-head">
 <div class="panel-title">PETA DISLOKASI SATUAN</div>
@@ -2146,7 +2178,8 @@ body{
 <div class="fit-map">FIT MAP</div>
 </div>
 </div>
-
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PRODUKSI SATUAN (RINGKASAN)</div><div class="link-more" onclick="switchToView('kpertanian')" style="cursor:pointer;">LIHAT DETAIL PER-KOMPI</div></div>
 <div class="sum-grid">
@@ -2156,9 +2189,8 @@ body{
 </div>
 <div class="foot-note">Rincian komoditas per-Kompi (Pertanian, Peternakan, Perikanan, Konstruksi, Kesehatan) tersedia di dashboard masing-masing Kompi Produksi.</div>
 </div>
-
-
-<!-- 5. EARLY WARNING -->
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head">
 <div class="panel-title"><span class="num">05</span> EARLY WARNING</div>
@@ -2180,8 +2212,7 @@ body{
 </div>
 </div>
 </div>
-<div class="grid">
-<!-- 6. LOGISTIK -->
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head">
 <div class="panel-title"><span class="num">06</span> LOGISTIK</div>
@@ -2210,7 +2241,8 @@ body{
 </div>
 <div class="link-more" onclick="openDetailModal('logistik')">DETAIL LOGISTIK</div>
 </div>
-<!-- 8. KPI SATUAN -->
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head">
 <div class="panel-title"><span class="num">08</span> KEY PERFORMANCE INDICATOR</div>
@@ -2243,7 +2275,8 @@ body{
 </div>
 </div>
 </div>
-<!-- 9. NOTIFIKASI -->
+</div>
+<div class="ag-item ag-span-3">
 <div class="panel">
 <div class="panel-head">
 <div class="panel-title"><span class="num">09</span> NOTIFIKASI</div>
@@ -2274,6 +2307,7 @@ body{
 <div class="notif-dot" style="background:var(--green);"></div>
 <div class="notif-txt">Laporan intelijen harian tersedia</div>
 <div class="notif-time">2 jam</div>
+</div>
 </div>
 </div>
 </div>
