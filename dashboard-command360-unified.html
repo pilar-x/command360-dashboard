@@ -716,6 +716,8 @@ body{
 .ag-span-4{grid-column:span 4;}
 .ag-span-5{grid-column:span 5;}
 .ag-span-6{grid-column:span 6;}
+.ag-span-7{grid-column:span 7;}
+.ag-span-8{grid-column:span 8;}
 .ag-span-12{grid-column:span 12;}
 @media (max-width:1100px){
   .adaptive-grid{grid-template-columns:repeat(6,1fr);}
@@ -723,11 +725,13 @@ body{
   .ag-span-4{grid-column:span 3;}
   .ag-span-5{grid-column:span 6;}
   .ag-span-6{grid-column:span 6;}
+  .ag-span-7{grid-column:span 6;}
+  .ag-span-8{grid-column:span 6;}
   .ag-span-12{grid-column:span 6;}
 }
 @media (max-width:640px){
   .adaptive-grid{grid-template-columns:1fr;}
-  .ag-span-3, .ag-span-4, .ag-span-5, .ag-span-6, .ag-span-12{grid-column:span 1;}
+  .ag-span-3, .ag-span-4, .ag-span-5, .ag-span-6, .ag-span-7, .ag-span-8, .ag-span-12{grid-column:span 1;}
 }
 
 .hero-map-panel .map-head{padding:20px 24px 0 24px !important;}
@@ -1855,7 +1859,7 @@ body{
           <p>Mengalihkan ke dashboard <b id="successRole">-</b>...</p>
         </div>
 
-        <div class="version" id="versionLine">v20260726.13</div>
+        <div class="version" id="versionLine">v20260726.15</div>
         <div class="copyright-line">© 2026 PHANTOM-X. All Rights Reserved.</div>
       </div>
     </div>
@@ -1902,7 +1906,7 @@ body{
 <div class="sidebar-foot sidebar-contact">
 <div class="sc-label">CONTACT US</div>
 <div class="sc-wa"><svg viewbox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.2 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.5-.3Z"/><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> 0822-7227-2009</div>
-<div class="sc-version">v20260726.13</div>
+<div class="sc-version">v20260726.15</div>
 </div>
 </aside>
 <div class="main">
@@ -2832,7 +2836,8 @@ body{
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
 </div><div class="view" id="view-pers">
-<div class="grid2" style="grid-template-columns:2fr 1.1fr;">
+<div class="adaptive-grid">
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN PERSONEL</div></div>
 <div class="sum-grid">
@@ -2845,6 +2850,8 @@ body{
 <div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">PERSENTASE KEKUATAN</div><div class="s-val" style="color:var(--green);">94,1%</div><div class="s-tag">BAIK</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">AGENDA PERSONEL HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">07:00</div><div class="agenda-body"><div class="a-title">Pemeriksaan Administrasi Personel</div><div class="a-loc">Ruang Pers</div></div></div>
@@ -2854,7 +2861,7 @@ body{
 <div class="agenda-item"><div class="agenda-time" style="color:var(--red);">15:00</div><div class="agenda-body"><div class="a-title">Briefing Staf Personel</div><div class="a-loc">Ruang Staf</div></div></div>
 </div>
 </div>
-<div class="grid3">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KOMPOSISI BERDASARKAN PANGKAT</div><div class="link-more">DETAIL</div></div>
 <div class="donut-wrap">
@@ -2869,6 +2876,8 @@ body{
 </div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINCIAN TOP vs NYATA (PA / BA / TA)</div><div class="link-more" onclick="printDataTable('tblTopNyata','Rincian TOP vs Nyata (Pa/Ba/Ta)')" style="cursor:pointer;">CETAK</div></div>
 <table id="tblTopNyata" style="width:100%; border-collapse:collapse; font-size:11.5px;">
@@ -2882,6 +2891,8 @@ body{
 <tr style="border-top:1px solid var(--line-bright);"><td style="padding:9px 8px 0 0; color:var(--text-hi); font-weight:700;">TOTAL</td><td style="padding:9px 0 0; font-weight:700;">1200</td><td style="padding:9px 0 0; font-weight:700;">1006</td><td style="padding:9px 0 0; color:var(--red); font-weight:700;">194</td><td style="padding:9px 0 0;"></td></tr>
 </table>
 </div>
+</div>
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">REKAPITULASI PERSONEL &amp; SIAP GERAK — SEMUA KOMPI</div>
 <div style="display:flex; gap:8px; align-items:center;">
@@ -2907,7 +2918,7 @@ body{
 <div class="foot-note">Selisih ke total Batalyon (1.006 Nyata) merupakan personel Staf/Mako dan Kompi Produksi.</div>
 </div>
 </div>
-<div class="grid2">
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KOMPOSISI BERDASARKAN USIA</div><div class="link-more">DETAIL</div></div>
 <div class="bar-chart">
@@ -2923,6 +2934,8 @@ body{
 <div class="bc-col"><div class="bc-val">91</div><div class="bc-bar" style="height:37%;"></div><div class="bc-label">&gt; 45 Th</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KOMPOSISI BERDASARKAN PENDIDIKAN</div><div class="link-more">DETAIL</div></div>
 <div class="donut-wrap">
@@ -2940,7 +2953,7 @@ body{
 </div>
 </div>
 </div>
-<div class="grid3">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PERSONEL BERPRESTASI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="presta-item">
@@ -2959,6 +2972,8 @@ body{
 <div class="presta-score"><div class="rank"><svg class="ico-mil"><use href="#ico-star-filled"></use></svg> Terbaik 3</div><div class="val">92,50</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PERSONEL AKAN UKP</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table">
@@ -2970,6 +2985,8 @@ body{
 <tr><td>Pratu Riki Saputra</td><td>Pratu</td><td>Anggota</td><td>I / 2026</td></tr>
 </table>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PERSONEL AKAN PENSIUN</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table">
@@ -2982,7 +2999,7 @@ body{
 </table>
 </div>
 </div>
-<div class="grid3">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">CUTI &amp; IZIN</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="cuti-grid">
@@ -2992,6 +3009,8 @@ body{
 <div class="cuti-cell"><div class="cuti-icon" style="color:var(--blue);">▤</div><div class="cuti-val" style="color:var(--blue);">4</div><div class="cuti-label">PENUGASAN</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">GARJAS TRIWULAN II TA 2026</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="garjas-wrap">
@@ -3005,6 +3024,8 @@ body{
 </div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PELANGGARAN PERSONEL</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="viol-wrap">
@@ -3014,6 +3035,7 @@ body{
 <div class="v-tier"><div class="t-val" style="color:var(--red);">1</div><div class="t-lbl">Berat</div></div>
 <div class="v-tier"><div class="t-val" style="color:var(--amber);">2</div><div class="t-lbl">Sedang</div></div>
 <div class="v-tier"><div class="t-val" style="color:var(--green);">2</div><div class="t-lbl">Ringan</div></div>
+</div>
 </div>
 </div>
 </div>
@@ -3028,7 +3050,8 @@ body{
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
 </div><div class="view" id="view-log">
-<div class="grid2b">
+<div class="adaptive-grid">
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KESIAPAN LOGISTIK</div></div>
 <div class="sum-grid">
@@ -3040,6 +3063,8 @@ body{
 <div class="sum-cell sc-neutral"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-calendar"></use></svg></div><div class="s-label">PEMELIHARAAN TERJADWAL</div><div class="s-val" style="color:var(--text-hi);">12</div><div class="s-tag" style="color:var(--text-mid);">KEGIATAN</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">AGENDA LOGISTIK HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">07:30</div><div class="agenda-body"><div class="a-title">Pengecekan Kendaraan Dinas</div><div class="a-loc">Parkir Yon</div></div></div>
@@ -3049,7 +3074,7 @@ body{
 <div class="agenda-item"><div class="agenda-time" style="color:var(--red);">15:00</div><div class="agenda-body"><div class="a-title">Pemeriksaan Gudang</div><div class="a-loc">Gudang Logistik</div></div></div>
 </div>
 </div>
-<div class="grid3">
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KONDISI KENDARAAN</div><div class="link-more">DETAIL</div></div>
 <div class="donut-wrap">
@@ -3070,6 +3095,8 @@ body{
 <tr><td>Ranpur Ringan · KT 7890-03</td><td>26 Jul 2026</td></tr>
 </table>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel map-panel">
 <div class="panel-head"><div class="panel-title">PETA SEBARAN GUDANG &amp; FASILITAS LOGISTIK</div></div>
 <div class="map-surface">
@@ -3084,6 +3111,8 @@ body{
 <div class="map-node" style="top:62%; left:76%;"><div class="n-dot" style="background:var(--red); color:var(--red);"></div><div class="n-label">Gudang Senjata</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STOK KRITIS</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="stok-table">
@@ -3098,7 +3127,7 @@ body{
 </table>
 </div>
 </div>
-<div class="grid3">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STOK BBM</div><div class="link-more">DETAIL</div></div>
 <div class="fuel-wrap">
@@ -3116,6 +3145,8 @@ body{
 </div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PEMELIHARAAN TERJADWAL</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="maint-table">
@@ -3127,6 +3158,8 @@ body{
 <tr><td>28 Jul 2026</td><td>Perawatan Berkala</td><td>Genset</td><td>Bengkel Yon</td><td><span class="sched-tag">TERJADWAL</span></td></tr>
 </table>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KETERSEDIAAN PERLENGKAPAN</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="bar-row"><div class="bar-top"><span>Peralatan Perorangan</span><span>90%</span></div><div class="bar-track"><div class="bar-fill" style="width:90%; background:var(--green);"></div></div></div>
@@ -3136,13 +3169,15 @@ body{
 <div class="bar-row"><div class="bar-top"><span>Perlengkapan Lain</span><span>78%</span></div><div class="bar-track"><div class="bar-fill" style="width:78%; background:var(--amber);"></div></div></div>
 </div>
 </div>
-<div class="grid2">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">INFORMASI TERKINI</div></div>
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Stok HSD (Solar) menipis, pemesanan dalam proses.</div><div class="info-time">20 mnt lalu</div></div>
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Perawatan Randis selesai tepat waktu, 2 unit.</div><div class="info-time">45 mnt lalu</div></div>
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Penerimaan amunisi 7,62mm sebanyak 5.000 butir.</div><div class="info-time">1 jam lalu</div></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">AKSI CEPAT</div></div>
 <div class="action-grid">
@@ -3155,6 +3190,7 @@ body{
 </div>
 </div>
 </div>
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">REKAPITULASI SENJATA &amp; MUNISI — SEMUA KOMPI</div>
 <div style="display:flex; gap:8px; align-items:center;">
@@ -3179,6 +3215,8 @@ body{
 </table>
 <div class="foot-note">Data terhimpun otomatis dari laporan masing-masing Kompi  <b style="color:var(--green)">Update terakhir: <span class="live-ts-time">10:44 WIB</span></b></div>
 </div>
+</div>
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">REKAPITULASI KENDARAAN — SEMUA KOMPI</div>
 <div style="display:flex; gap:8px; align-items:center;">
@@ -3203,6 +3241,8 @@ body{
 </table>
 <div class="foot-note">Data terhimpun otomatis dari laporan masing-masing Kompi. Selisih ke total Batalyon Logistik (48 unit) merupakan kendaraan langsung di bawah Mako Yonif.</div>
 </div>
+</div>
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">REKAPITULASI KONDISI MATERIIL — SEMUA KOMPI</div>
 <div style="display:flex; gap:8px; align-items:center;">
@@ -3227,6 +3267,8 @@ body{
 </table>
 <div class="foot-note">Gabungan seluruh item materiil (Radio, Perlengkapan, Ranpur, Kendaraan) per-Kompi. Rincian per-jenis materiil ada di dashboard masing-masing Kompi.</div>
 </div>
+</div>
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">ASET &amp; LOGISTIK KOMPI PRODUKSI</div><div class="link-more">LIHAT DETAIL</div></div>
 <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px;">
@@ -3252,6 +3294,8 @@ body{
 </div>
 </div>
 </div>
+</div>
+</div>
 <div class="ticker-bar">
 <b>▶ RUNNING TEXT</b>
 <div class="ticker-viewport"><div class="ticker-track"><span>08:25 WIB — Pemeriksaan Kendaraan selesai</span>
@@ -3263,6 +3307,8 @@ body{
 </div>
 </div><div class="view" id="view-ka">
 
+<div class="adaptive-grid">
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI SENAPAN A</div></div>
 <div class="sum-grid">
@@ -3274,6 +3320,8 @@ body{
 <div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STRUKTUR ORGAS KOMPI SENAPAN A</div></div>
 <div class="org-chart">
@@ -3295,6 +3343,8 @@ body{
 </div>
 <div class="org-detail-link">LIHAT DETAIL ORGANISASI</div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel" style="max-width:560px;">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
 <div class="ring-wrap">
@@ -3311,11 +3361,15 @@ body{
 </div>
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">68 Orang (60%)</b></div>
-</div><div class="panel">
+</div>
+</div>
+<div class="ag-item ag-span-5">
+<div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time">06:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Personel</div></div></div><div class="agenda-item"><div class="agenda-time">08:00</div><div class="agenda-body"><div class="a-title">Latihan Menembak Senjata Ringan</div></div></div><div class="agenda-item"><div class="agenda-time">10:00</div><div class="agenda-body"><div class="a-title">Hanmars &amp; Drill Tempur</div></div></div><div class="agenda-item"><div class="agenda-time">13:00</div><div class="agenda-body"><div class="a-title">Perawatan Senjata &amp; Perlengkapan</div></div></div><div class="agenda-item"><div class="agenda-time">15:00</div><div class="agenda-body"><div class="a-title">Evaluasi Kegiatan</div></div></div><div class="agenda-item"><div class="agenda-time">16:30</div><div class="agenda-body"><div class="a-title">Laporan Harian Kompi</div></div></div>
 </div>
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KENDARAAN</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table2">
@@ -3328,6 +3382,8 @@ body{
 <div>TIDAK SIAP<br/><b style="color:var(--amber);">1 (12.5%)</b></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KONDISI MATERIIL</div></div>
 <div class="materiil-list">
@@ -3338,6 +3394,7 @@ body{
 </div>
 </div>
 </div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN SENJATA</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table2">
@@ -3352,6 +3409,8 @@ body{
 <div>KESEHATAN SENJATA<br/><b style="color:var(--green);">98.4%</b></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN MUNISI</div></div>
 <div class="munisi-grid"><div class="munisi-col">
@@ -3377,11 +3436,14 @@ body{
 <div class="munisi-status-badge"><svg class="ico-mil"><use href="#ico-shield"></use></svg> STATUS UMUM <b>AMAN</b></div>
 </div>
 </div>
-<div class="grid5" style="grid-template-columns:1fr 1.4fr 1fr 1fr;">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">NILAI LATIHAN TERAKHIR</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Menembak</span><span class="ni-val" style="color:var(--amber);">88</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Hanmars</span><span class="ni-val" style="color:var(--amber);">90</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Garjas</span><span class="ni-val" style="color:var(--amber);">87</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Drill Tempur</span><span class="ni-val" style="color:var(--amber);">92</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Taktik Lapangan</span><span class="ni-val" style="color:var(--amber);">89</span></div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">TREND LATIHAN (7 HARI)</div></div>
 <div class="trend-legend3">
@@ -3400,10 +3462,14 @@ body{
 <text fill="#4d616b" font-size="8" x="18" y="123">17/07</text><text fill="#4d616b" font-size="8" x="105" y="123">19/07</text><text fill="#4d616b" font-size="8" x="195" y="123">21/07</text><text fill="#4d616b" font-size="8" x="280" y="123">23/07</text>
 </svg>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">EARLY WARNING</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="ew-item2"><div class="ew-icon2" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>2 pucuk SS2 memasuki jadwal pemeliharaan.</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>Stok munisi karet tersisa 700 butir (di bawah batas min 30%).</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>1 Minimi perlu kalibrasi.</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--blue);">ℹ</div><div>Munisi 9 mm turun 15% dibanding bulan lalu.</div></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">AI ASSISTANT KOMPI SENAPAN A</div></div>
 <div class="ai-chat">
@@ -3420,6 +3486,7 @@ body{
 </div>
 </div>
 </div>
+</div>
 <div class="ticker-bar">
 <b>▶ INFORMASI TERKINI</b>
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:15 Latihan menembak sedang berlangsung di Lapangan Tembak</span><span>10:45 Cuaca cerah, kondisi aman</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:15 Latihan menembak sedang berlangsung di Lapangan Tembak</span><span>10:45 Cuaca cerah, kondisi aman</span></div></div>
@@ -3427,6 +3494,8 @@ body{
 </div>
 </div><div class="view" id="view-kb">
 
+<div class="adaptive-grid">
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI SENAPAN B</div></div>
 <div class="sum-grid">
@@ -3438,6 +3507,8 @@ body{
 <div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STRUKTUR ORGAS KOMPI SENAPAN B</div></div>
 <div class="org-chart">
@@ -3459,6 +3530,8 @@ body{
 </div>
 <div class="org-detail-link">LIHAT DETAIL ORGANISASI</div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel" style="max-width:560px;">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
 <div class="ring-wrap">
@@ -3475,11 +3548,15 @@ body{
 </div>
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">68 Orang (61%)</b></div>
-</div><div class="panel">
+</div>
+</div>
+<div class="ag-item ag-span-5">
+<div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time">06:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Personel</div></div></div><div class="agenda-item"><div class="agenda-time">08:00</div><div class="agenda-body"><div class="a-title">Latihan Taktik Lapangan</div></div></div><div class="agenda-item"><div class="agenda-time">10:00</div><div class="agenda-body"><div class="a-title">Hanmars &amp; Drill Tempur</div></div></div><div class="agenda-item"><div class="agenda-time">13:00</div><div class="agenda-body"><div class="a-title">Perawatan Senjata &amp; Perlengkapan</div></div></div><div class="agenda-item"><div class="agenda-time">15:00</div><div class="agenda-body"><div class="a-title">Evaluasi Kegiatan</div></div></div><div class="agenda-item"><div class="agenda-time">16:30</div><div class="agenda-body"><div class="a-title">Laporan Harian Kompi</div></div></div>
 </div>
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KENDARAAN</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table2">
@@ -3492,6 +3569,8 @@ body{
 <div>TIDAK SIAP<br/><b style="color:var(--amber);">1 (12.5%)</b></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KONDISI MATERIIL</div></div>
 <div class="materiil-list">
@@ -3502,6 +3581,7 @@ body{
 </div>
 </div>
 </div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN SENJATA</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table2">
@@ -3516,6 +3596,8 @@ body{
 <div>KESEHATAN SENJATA<br/><b style="color:var(--green);">98.4%</b></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN MUNISI</div></div>
 <div class="munisi-grid"><div class="munisi-col">
@@ -3541,11 +3623,14 @@ body{
 <div class="munisi-status-badge"><svg class="ico-mil"><use href="#ico-shield"></use></svg> STATUS UMUM <b>AMAN</b></div>
 </div>
 </div>
-<div class="grid5" style="grid-template-columns:1fr 1.4fr 1fr 1fr;">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">NILAI LATIHAN TERAKHIR</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Menembak</span><span class="ni-val" style="color:var(--amber);">85</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Hanmars</span><span class="ni-val" style="color:var(--amber);">88</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Garjas</span><span class="ni-val" style="color:var(--amber);">86</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Drill Tempur</span><span class="ni-val" style="color:var(--amber);">89</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Taktik Lapangan</span><span class="ni-val" style="color:var(--amber);">87</span></div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">TREND LATIHAN (7 HARI)</div></div>
 <div class="trend-legend3">
@@ -3564,10 +3649,14 @@ body{
 <text fill="#4d616b" font-size="8" x="18" y="123">17/07</text><text fill="#4d616b" font-size="8" x="105" y="123">19/07</text><text fill="#4d616b" font-size="8" x="195" y="123">21/07</text><text fill="#4d616b" font-size="8" x="280" y="123">23/07</text>
 </svg>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">EARLY WARNING</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="ew-item2"><div class="ew-icon2" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>Stok munisi karet tersisa 610 butir (di bawah batas min 30%).</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>3 pucuk SS2 memasuki jadwal pemeliharaan.</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>1 truk logistik dalam perawatan berkepanjangan.</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--blue);">ℹ</div><div>Nilai Garjas rata-rata naik 2 poin dibanding bulan lalu.</div></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">AI ASSISTANT KOMPI SENAPAN B</div></div>
 <div class="ai-chat">
@@ -3584,6 +3673,7 @@ body{
 </div>
 </div>
 </div>
+</div>
 <div class="ticker-bar">
 <b>▶ INFORMASI TERKINI</b>
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:20 Latihan taktik lapangan berlangsung lancar</span><span>11:00 Cuaca cerah berawan, kondisi aman</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:20 Latihan taktik lapangan berlangsung lancar</span><span>11:00 Cuaca cerah berawan, kondisi aman</span></div></div>
@@ -3591,6 +3681,8 @@ body{
 </div>
 </div><div class="view" id="view-kc">
 
+<div class="adaptive-grid">
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI SENAPAN C</div></div>
 <div class="sum-grid">
@@ -3602,6 +3694,8 @@ body{
 <div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STRUKTUR ORGAS KOMPI SENAPAN C</div></div>
 <div class="org-chart">
@@ -3623,6 +3717,8 @@ body{
 </div>
 <div class="org-detail-link">LIHAT DETAIL ORGANISASI</div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel" style="max-width:560px;">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
 <div class="ring-wrap">
@@ -3639,11 +3735,15 @@ body{
 </div>
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">67 Orang (60%)</b></div>
-</div><div class="panel">
+</div>
+</div>
+<div class="ag-item ag-span-5">
+<div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time">06:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Personel</div></div></div><div class="agenda-item"><div class="agenda-time">08:00</div><div class="agenda-body"><div class="a-title">Latihan Menembak Senjata Ringan</div></div></div><div class="agenda-item"><div class="agenda-time">10:00</div><div class="agenda-body"><div class="a-title">Hanmars &amp; Drill Tempur</div></div></div><div class="agenda-item"><div class="agenda-time">13:00</div><div class="agenda-body"><div class="a-title">Perawatan Senjata &amp; Perlengkapan</div></div></div><div class="agenda-item"><div class="agenda-time">15:00</div><div class="agenda-body"><div class="a-title">Evaluasi Kegiatan</div></div></div><div class="agenda-item"><div class="agenda-time">16:30</div><div class="agenda-body"><div class="a-title">Laporan Harian Kompi</div></div></div>
 </div>
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KENDARAAN</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table2">
@@ -3656,6 +3756,8 @@ body{
 <div>TIDAK SIAP<br/><b style="color:var(--amber);">1 (12.5%)</b></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KONDISI MATERIIL</div></div>
 <div class="materiil-list">
@@ -3666,6 +3768,7 @@ body{
 </div>
 </div>
 </div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN SENJATA</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table2">
@@ -3680,6 +3783,8 @@ body{
 <div>KESEHATAN SENJATA<br/><b style="color:var(--green);">98.4%</b></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN MUNISI</div></div>
 <div class="munisi-grid"><div class="munisi-col">
@@ -3705,11 +3810,14 @@ body{
 <div class="munisi-status-badge"><svg class="ico-mil"><use href="#ico-shield"></use></svg> STATUS UMUM <b>AMAN</b></div>
 </div>
 </div>
-<div class="grid5" style="grid-template-columns:1fr 1.4fr 1fr 1fr;">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">NILAI LATIHAN TERAKHIR</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Menembak</span><span class="ni-val" style="color:var(--amber);">91</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Hanmars</span><span class="ni-val" style="color:var(--amber);">93</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Garjas</span><span class="ni-val" style="color:var(--amber);">90</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Drill Tempur</span><span class="ni-val" style="color:var(--amber);">94</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Taktik Lapangan</span><span class="ni-val" style="color:var(--amber);">92</span></div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">TREND LATIHAN (7 HARI)</div></div>
 <div class="trend-legend3">
@@ -3728,10 +3836,14 @@ body{
 <text fill="#4d616b" font-size="8" x="18" y="123">17/07</text><text fill="#4d616b" font-size="8" x="105" y="123">19/07</text><text fill="#4d616b" font-size="8" x="195" y="123">21/07</text><text fill="#4d616b" font-size="8" x="280" y="123">23/07</text>
 </svg>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">EARLY WARNING</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="ew-item2"><div class="ew-icon2" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>1 pucuk Sniper perlu kalibrasi ulang.</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--blue);">ℹ</div><div>Kesiapan tempur tertinggi di antara kompi senapan bulan ini.</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--blue);">ℹ</div><div>Seluruh kendaraan dalam status siap operasi.</div></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">AI ASSISTANT KOMPI SENAPAN C</div></div>
 <div class="ai-chat">
@@ -3748,6 +3860,7 @@ body{
 </div>
 </div>
 </div>
+</div>
 <div class="ticker-bar">
 <b>▶ INFORMASI TERKINI</b>
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:10 Latihan menembak sedang berlangsung di Lapangan Tembak</span><span>10:30 Cuaca cerah, kondisi aman</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:10 Latihan menembak sedang berlangsung di Lapangan Tembak</span><span>10:30 Cuaca cerah, kondisi aman</span></div></div>
@@ -3755,6 +3868,8 @@ body{
 </div>
 </div><div class="view" id="view-kbantuan">
 
+<div class="adaptive-grid">
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI BANTUAN</div></div>
 <div class="sum-grid">
@@ -3766,6 +3881,8 @@ body{
 <div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STRUKTUR ORGAS KOMPI BANTUAN</div></div>
 <div class="org-chart">
@@ -3787,6 +3904,8 @@ body{
 </div>
 <div class="org-detail-link">LIHAT DETAIL ORGANISASI</div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel" style="max-width:560px;">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
 <div class="ring-wrap">
@@ -3803,11 +3922,15 @@ body{
 </div>
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">58 Orang (60%)</b></div>
-</div><div class="panel">
+</div>
+</div>
+<div class="ag-item ag-span-5">
+<div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time">06:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Personel</div></div></div><div class="agenda-item"><div class="agenda-time">08:00</div><div class="agenda-body"><div class="a-title">Latihan Tembak Mortir 81</div></div></div><div class="agenda-item"><div class="agenda-time">10:00</div><div class="agenda-body"><div class="a-title">Drill SMS &amp; SMB</div></div></div><div class="agenda-item"><div class="agenda-time">13:00</div><div class="agenda-body"><div class="a-title">Perawatan Senjata Bantuan</div></div></div><div class="agenda-item"><div class="agenda-time">15:00</div><div class="agenda-body"><div class="a-title">Evaluasi Kegiatan</div></div></div><div class="agenda-item"><div class="agenda-time">16:30</div><div class="agenda-body"><div class="a-title">Laporan Harian Kompi</div></div></div>
 </div>
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KENDARAAN</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table2">
@@ -3820,6 +3943,8 @@ body{
 <div>TIDAK SIAP<br/><b style="color:var(--amber);">1 (10.0%)</b></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KONDISI MATERIIL</div></div>
 <div class="materiil-list">
@@ -3830,6 +3955,7 @@ body{
 </div>
 </div>
 </div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN SENJATA</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table2">
@@ -3844,6 +3970,8 @@ body{
 <div>KESEHATAN SENJATA<br/><b style="color:var(--green);">97.9%</b></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN MUNISI</div></div>
 <div class="munisi-grid"><div class="munisi-col">
@@ -3869,11 +3997,14 @@ body{
 <div class="munisi-status-badge"><svg class="ico-mil"><use href="#ico-shield"></use></svg> STATUS UMUM <b>AMAN</b></div>
 </div>
 </div>
-<div class="grid5" style="grid-template-columns:1fr 1.4fr 1fr 1fr;">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">NILAI LATIHAN TERAKHIR</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Tembak Mortir</span><span class="ni-val" style="color:var(--amber);">89</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">SMS / SMB</span><span class="ni-val" style="color:var(--amber);">91</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Hanmars</span><span class="ni-val" style="color:var(--amber);">87</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Drill Tempur</span><span class="ni-val" style="color:var(--amber);">90</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Taktik Lapangan</span><span class="ni-val" style="color:var(--amber);">88</span></div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">TREND LATIHAN (7 HARI)</div></div>
 <div class="trend-legend3">
@@ -3892,10 +4023,14 @@ body{
 <text fill="#4d616b" font-size="8" x="18" y="123">17/07</text><text fill="#4d616b" font-size="8" x="105" y="123">19/07</text><text fill="#4d616b" font-size="8" x="195" y="123">21/07</text><text fill="#4d616b" font-size="8" x="280" y="123">23/07</text>
 </svg>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">EARLY WARNING</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="ew-item2"><div class="ew-icon2" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>Stok munisi karet tersisa 300 butir (di bawah batas min 30%).</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>2 pucuk SMS memasuki jadwal pemeliharaan.</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>1 unit Mortir 81 Tampella perlu kalibrasi laras.</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--blue);">ℹ</div><div>Latihan tembak mortir terjadwal minggu depan.</div></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">AI ASSISTANT KOMPI BANTUAN</div></div>
 <div class="ai-chat">
@@ -3912,6 +4047,7 @@ body{
 </div>
 </div>
 </div>
+</div>
 <div class="ticker-bar">
 <b>▶ INFORMASI TERKINI</b>
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:30 Latihan tembak Mortir 81 sedang berlangsung</span><span>11:15 Cuaca cerah, kondisi aman</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:30 Latihan tembak Mortir 81 sedang berlangsung</span><span>11:15 Cuaca cerah, kondisi aman</span></div></div>
@@ -3919,6 +4055,8 @@ body{
 </div>
 </div><div class="view" id="view-kmarkas">
 
+<div class="adaptive-grid">
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI MARKAS</div></div>
 <div class="sum-grid">
@@ -3930,6 +4068,8 @@ body{
 <div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STRUKTUR ORGAS KOMPI MARKAS</div></div>
 <div class="org-chart">
@@ -3955,6 +4095,8 @@ body{
 </div>
 <div class="org-detail-link">LIHAT DETAIL ORGANISASI</div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel" style="max-width:560px;">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
 <div class="ring-wrap">
@@ -3971,11 +4113,15 @@ body{
 </div>
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">72 Orang (61%)</b></div>
-</div><div class="panel">
+</div>
+</div>
+<div class="ag-item ag-span-5">
+<div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time">06:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Personel</div></div></div><div class="agenda-item"><div class="agenda-time">08:00</div><div class="agenda-body"><div class="a-title">Pemeliharaan Jaringan Komlek</div></div></div><div class="agenda-item"><div class="agenda-time">10:00</div><div class="agenda-body"><div class="a-title">Pengecekan Kendaraan Angkutan</div></div></div><div class="agenda-item"><div class="agenda-time">13:00</div><div class="agenda-body"><div class="a-title">Pelayanan Kesehatan Satuan</div></div></div><div class="agenda-item"><div class="agenda-time">15:00</div><div class="agenda-body"><div class="a-title">Evaluasi Kegiatan</div></div></div><div class="agenda-item"><div class="agenda-time">16:30</div><div class="agenda-body"><div class="a-title">Laporan Harian Kompi</div></div></div>
 </div>
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KENDARAAN</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table2">
@@ -3988,6 +4134,8 @@ body{
 <div>TIDAK SIAP<br/><b style="color:var(--amber);">1 (8.3%)</b></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KONDISI MATERIIL</div></div>
 <div class="materiil-list">
@@ -3998,6 +4146,7 @@ body{
 </div>
 </div>
 </div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN SENJATA</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="data-table2">
@@ -4012,6 +4161,8 @@ body{
 <div>KESEHATAN SENJATA<br/><b style="color:var(--green);">98.4%</b></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN MUNISI</div></div>
 <div class="munisi-grid"><div class="munisi-col">
@@ -4037,11 +4188,14 @@ body{
 <div class="munisi-status-badge"><svg class="ico-mil"><use href="#ico-shield"></use></svg> STATUS UMUM <b>AMAN</b></div>
 </div>
 </div>
-<div class="grid5" style="grid-template-columns:1fr 1.4fr 1fr 1fr;">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">NILAI LATIHAN TERAKHIR</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Menembak</span><span class="ni-val" style="color:var(--red);">82</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">P3K Lapangan</span><span class="ni-val" style="color:var(--amber);">90</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Komlek</span><span class="ni-val" style="color:var(--amber);">91</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Drill Konstruksi</span><span class="ni-val" style="color:var(--amber);">88</span></div><div class="nilai-item"><span class="ni-ico"><svg class="ico-mil"><use href="#ico-target"></use></svg></span><span class="ni-name">Taktik Lapangan</span><span class="ni-val" style="color:var(--amber);">85</span></div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">TREND LATIHAN (7 HARI)</div></div>
 <div class="trend-legend3">
@@ -4060,10 +4214,14 @@ body{
 <text fill="#4d616b" font-size="8" x="18" y="123">17/07</text><text fill="#4d616b" font-size="8" x="105" y="123">19/07</text><text fill="#4d616b" font-size="8" x="195" y="123">21/07</text><text fill="#4d616b" font-size="8" x="280" y="123">23/07</text>
 </svg>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">EARLY WARNING</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="ew-item2"><div class="ew-icon2" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>Stok munisi karet tersisa 260 butir (di bawah batas min 30%).</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>1 unit Mobile Komlek dalam pemeliharaan berkala.</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--blue);">ℹ</div><div>Peleton Kesehatan menyelesaikan stok obat P3K lapangan.</div></div><div class="ew-item2"><div class="ew-icon2" style="color:var(--blue);">ℹ</div><div>Seluruh jaringan komunikasi (Komlek) berfungsi normal.</div></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">AI ASSISTANT KOMPI MARKAS</div></div>
 <div class="ai-chat">
@@ -4080,12 +4238,15 @@ body{
 </div>
 </div>
 </div>
+</div>
 <div class="ticker-bar">
 <b>▶ INFORMASI TERKINI</b>
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:40 Peleton Pioner melaksanakan perbaikan jalan kompi</span><span>11:20 Jaringan Komlek berfungsi normal di seluruh pos</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:40 Peleton Pioner melaksanakan perbaikan jalan kompi</span><span>11:20 Jaringan Komlek berfungsi normal di seluruh pos</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
 </div><div class="view" id="view-kpertanian">
+<div class="adaptive-grid">
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KINERJA PERTANIAN</div></div>
 <div class="sum-grid">
@@ -4097,6 +4258,8 @@ body{
 <div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">KESEHATAN TANAMAN</div><div class="s-val" style="color:var(--green);">92%</div><div class="s-tag" style="color:var(--green);">Sangat Baik</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KOMPOSISI TANAMAN BERDASARKAN LUAS</div></div>
 <div class="donut-wrap">
@@ -4111,6 +4274,8 @@ body{
 </div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">07:00</div><div class="agenda-body"><div class="a-title">Apel &amp; Pengecekan Lahan</div><div class="a-loc">Lapangan Apel</div></div></div>
@@ -4119,6 +4284,8 @@ body{
 <div class="agenda-item"><div class="agenda-time" style="color:var(--red);">13:00</div><div class="agenda-body"><div class="a-title">Pengendalian Hama</div><div class="a-loc">Blok C</div></div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">15:30</div><div class="agenda-body"><div class="a-title">Pembersihan Gulma</div><div class="a-loc">Blok D</div></div></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel" style="max-width:560px;">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
 <div class="ring-wrap">
@@ -4136,8 +4303,8 @@ body{
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">39 Orang (60%)</b></div>
 </div>
-
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KONDISI CUACA</div></div>
 <div class="weather-loc">Kecamatan Sentosa</div>
@@ -4157,6 +4324,8 @@ body{
 <div class="fc-cell"><div class="fc-day">SEL</div><div class="fc-icon"><svg class="ico-mil"><use href="#ico-cloud"></use></svg></div><div class="fc-temp"><span class="hi">28°</span> <span class="lo">18°</span></div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL TANAM &amp; PANEN</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="gantt-table">
@@ -4169,6 +4338,8 @@ body{
 </table>
 <div class="gantt-legend"><span><span class="sw" style="background:var(--green);"></span>Tanam</span><span><span class="sw" style="background:var(--amber);"></span>Panen</span></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STATUS PERTUMBUHAN TANAMAN</div><div class="link-more">LIHAT DETAIL</div></div>
 <table class="data-table">
@@ -4181,7 +4352,7 @@ body{
 </table>
 </div>
 </div>
-<div class="grid2">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PRODUKSI 6 BULAN TERAKHIR</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="prod-wrap">
@@ -4203,6 +4374,8 @@ body{
 </div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">INFORMASI TERKINI</div></div>
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Pemupukan susulan Blok B selesai.</div><div class="info-time">20 mnt lalu</div></div>
@@ -4210,7 +4383,7 @@ body{
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Persiapan panen padi Blok A dalam 10 hari ke depan.</div><div class="info-time">1 jam lalu</div></div>
 </div>
 </div>
-<div class="grid2" style="grid-template-columns:1.3fr 1fr;">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PERINGATAN &amp; REKOMENDASI AI</div></div>
 <div style="display:flex; gap:20px;">
@@ -4225,6 +4398,8 @@ body{
 </div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STOK PUPUK &amp; PESTISIDA</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="stok-cols">
@@ -4245,6 +4420,7 @@ body{
 </div>
 </div>
 </div>
+</div>
 <div class="ticker-bar">
 <b>▶ RUNNING TEXT</b>
 <div class="ticker-viewport"><div class="ticker-track"><span>08:25 WIB — Pemupukan Blok B selesai</span>
@@ -4255,7 +4431,8 @@ body{
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
 </div><div class="view" id="view-kpeternakan">
-<div class="grid2">
+<div class="adaptive-grid">
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN PETERNAKAN</div></div>
 <div class="sum-grid">
@@ -4267,6 +4444,8 @@ body{
 <div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-milk"></use></svg></div><div class="s-label">PRODUKSI HARI INI</div><div class="s-val">188,5</div><div class="s-tag" style="color:var(--green);">Sangat Baik</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">07:00</div><div class="agenda-body"><div class="a-title">Pemberian Pakan Pagi</div><div class="a-loc">Kandang Sapi</div></div></div>
@@ -4276,6 +4455,7 @@ body{
 <div class="agenda-item"><div class="agenda-time" style="color:var(--red);">15:00</div><div class="agenda-body"><div class="a-title">Pemeriksaan Reproduksi</div><div class="a-loc">Kandang Sapi</div></div></div>
 </div>
 </div>
+<div class="ag-item ag-span-5">
 <div class="panel" style="max-width:560px;">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
 <div class="ring-wrap">
@@ -4293,7 +4473,8 @@ body{
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">35 Orang (60%)</b></div>
 </div>
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">POPULASI TERNAK</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="pop-row"><div class="pop-icon"><svg class="ico-mil"><use href="#ico-livestock"></use></svg></div><div class="pop-name">Sapi</div><div class="pop-val">85 Ekor</div><div class="pop-track"><div class="pop-fill" style="width:5%;"></div></div><div class="pop-pct">2,5%</div></div>
@@ -4306,6 +4487,8 @@ body{
 <div class="pop-row"><div class="pop-icon"><svg class="ico-mil"><use href="#ico-livestock"></use></svg></div><div class="pop-name">Kelinci</div><div class="pop-val">123 Ekor</div><div class="pop-track"><div class="pop-fill" style="width:7%;"></div></div><div class="pop-pct">3,6%</div></div>
 <div class="pop-total"><div class="pt-label">TOTAL POPULASI</div><div class="pt-val">3.405 Ekor</div></div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KONDISI KESEHATAN TERNAK</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="donut-wrap">
@@ -4328,7 +4511,7 @@ body{
 </div>
 </div>
 </div>
-<div class="grid2">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PRODUKSI HARIAN</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="prod4-grid">
@@ -4338,6 +4521,8 @@ body{
 <div class="prod4-cell"><div class="prod4-icon"><svg class="ico-mil"><use href="#ico-leaf"></use></svg></div><div class="prod4-label">PRODUK LAIN</div><div class="prod4-val">15,0<small style="font-size:10px;"> Kg</small></div><div class="prod4-delta">↑ 3,1%</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PRODUKSI 7 HARI TERAKHIR <span style="font-weight:400; font-size:10px; color:var(--text-mid);">(Kg/Ltr/Butir)</span></div></div>
 <div class="trend-legend">
@@ -4357,7 +4542,7 @@ body{
 </svg>
 </div>
 </div>
-<div class="grid3b">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STOK PAKAN</div><div class="link-more">LIHAT DETAIL</div></div>
 <table class="stok-table">
@@ -4369,6 +4554,8 @@ body{
 <tr><td>Mineral</td><td>320 Kg</td><td class="cukup-hijau">10 Hari</td></tr>
 </table>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL VAKSINASI</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="vax-table2">
@@ -4380,6 +4567,8 @@ body{
 <tr><td>28 Jul 2026</td><td>SE</td><td>Itik/Bebek</td><td>250</td><td><span class="sched-tag2">TERJADWAL</span></td></tr>
 </table>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">ANALISIS AI &amp; REKOMENDASI</div><div class="link-more">LIHAT DETAIL</div></div>
 <div style="display:flex; gap:14px;">
@@ -4395,7 +4584,7 @@ body{
 </div>
 </div>
 </div>
-<div class="grid3b">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">INFORMASI TERKINI</div></div>
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Pemeriksaan kesehatan rutin selesai dilakukan.</div><div class="info-time">20 mnt lalu</div></div>
@@ -4403,6 +4592,8 @@ body{
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Stok hijauan tercukupi untuk 7 hari ke depan.</div><div class="info-time">1 jam lalu</div></div>
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Produksi susu hari ini mencapai 125 Liter.</div><div class="info-time">1 jam lalu</div></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PERFORMA PETERNAKAN BULAN INI</div></div>
 <div class="perf-grid">
@@ -4413,6 +4604,8 @@ body{
 <div class="perf-cell"><div class="perf-label">MORTALITAS</div><div class="perf-val" style="color:var(--green);">0,3%</div><div class="perf-delta">Sangat Rendah</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KONDISI KANDANG</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="kdg-wrap">
@@ -4421,6 +4614,7 @@ body{
 <div class="kdg-row"><div class="k"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;"></span>Baik</div><div>8 Kandang</div></div>
 <div class="kdg-row"><div class="k"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block;margin-right:6px;"></span>Perlu Perawatan</div><div>1 Kandang</div></div>
 <div class="kdg-row"><div class="k"><span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;margin-right:6px;"></span>Perlu Perbaikan</div><div>0 Kandang</div></div>
+</div>
 </div>
 </div>
 </div>
@@ -4435,6 +4629,8 @@ body{
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
 </div><div class="view" id="view-kperikanan">
+<div class="adaptive-grid">
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KINERJA PERIKANAN</div></div>
 <div class="sum-grid">
@@ -4446,6 +4642,8 @@ body{
 <div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--text-mid);"><svg class="ico-mil"><use href="#ico-skull"></use></svg></div><div class="s-label">MORTALITAS</div><div class="s-val" style="color:var(--text-mid);">0,6%</div><div class="s-tag" style="color:var(--green);">Rendah</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel" style="max-width:560px;">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
 <div class="ring-wrap">
@@ -4463,7 +4661,8 @@ body{
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">31 Orang (60%)</b></div>
 </div>
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-7">
 <div class="panel map-panel">
 <div class="panel-head"><div class="panel-title">PETA KOLAM &amp; SAUNG</div></div>
 <div class="map-surface">
@@ -4482,6 +4681,8 @@ body{
 <div class="detail-map-btn2">LIHAT DETAIL PETA ↗</div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KUALITAS AIR (RATA-RATA)</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="wq-grid">
@@ -4509,6 +4710,7 @@ body{
 </svg>
 </div>
 </div>
+<div class="ag-item ag-span-6">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KOMPOSISI POPULASI IKAN</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="donut-wrap">
@@ -4534,7 +4736,8 @@ body{
 <tr><td>8</td><td>Patin</td><td>800</td><td>1.000</td><td><span class="pop-status">Baik</span></td></tr>
 </table>
 </div>
-<div class="grid4" style="grid-template-columns:1.4fr 1fr 1fr;">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PRODUKSI 6 BULAN TERAKHIR (Kg)</div></div>
 <div class="bars2">
@@ -4546,6 +4749,8 @@ body{
 <div class="bcol2"><div class="bval2">3.245</div><div class="bbar2" style="height:75%;"></div><div class="blabel2">JUN</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-3">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">STOK PAKAN</div><div class="link-more">DETAIL</div></div>
 <table class="feed-table">
@@ -4557,6 +4762,8 @@ body{
 <tr><td>Dedak</td><td>430</td><td>3 Hari</td></tr>
 </table>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">FCR <span style="font-weight:400; font-size:10px; color:var(--text-mid);">(Feed Conversion Ratio)</span></div><div class="link-more">DETAIL</div></div>
 <div class="fcr-wrap">
@@ -4572,7 +4779,7 @@ body{
 </div>
 </div>
 </div>
-<div class="grid2">
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">07:00</div><div class="agenda-body"><div class="a-title">Pengecekan Kualitas Air</div><div class="a-loc">Kolam 1–3</div></div></div>
@@ -4582,6 +4789,8 @@ body{
 <div class="agenda-item"><div class="agenda-time" style="color:var(--red);">15:00</div><div class="agenda-body"><div class="a-title">Pemberian Pakan Sore</div><div class="a-loc">Semua Kolam</div></div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">16:30</div><div class="agenda-body"><div class="a-title">Evaluasi Harian</div><div class="a-loc">Pos Kompi</div></div></div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PERINGATAN &amp; REKOMENDASI AI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div style="display:flex; gap:20px;">
@@ -4598,6 +4807,7 @@ body{
 </div>
 </div>
 </div>
+</div>
 <div class="ticker-bar">
 <b>▶ RUNNING TEXT</b>
 <div class="ticker-viewport"><div class="ticker-track"><span>08:25 WIB — Pengecekan kualitas air selesai</span>
@@ -4608,6 +4818,8 @@ body{
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
 </div><div class="view" id="view-kkonstruksi">
+<div class="adaptive-grid">
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KINERJA KONSTRUKSI</div></div>
 <div class="sum-grid">
@@ -4619,6 +4831,8 @@ body{
 <div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">KESELAMATAN KERJA</div><div class="s-val" style="color:var(--green);">0</div><div class="s-tag" style="color:var(--green);">Kecelakaan Hari Ini</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel" style="max-width:560px;">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
 <div class="ring-wrap">
@@ -4636,7 +4850,8 @@ body{
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">43 Orang (61%)</b></div>
 </div>
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-8">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">ALAT BERAT &amp; KENDARAAN</div><div class="link-more">DETAIL</div></div>
 <div class="equip-grid">
@@ -4656,6 +4871,8 @@ body{
 <div><div class="eq-total-label">RUSAK</div><div class="eq-total-val" style="color:var(--text-mid);">0 Unit (0%)</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PROYEK AKTIF</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="proj-table">
@@ -4687,6 +4904,8 @@ body{
 </svg>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-5">
 <div class="panel" style="grid-column: span 1;">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">07:00</div><div class="agenda-body"><div class="a-title">Apel Pagi &amp; Pengecekan Alat</div><div class="a-loc">Basecamp</div></div></div>
@@ -4697,7 +4916,7 @@ body{
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">16:30</div><div class="agenda-body"><div class="a-title">Evaluasi Harian &amp; Laporan</div><div class="a-loc">Pos Kompi</div></div></div>
 </div>
 </div>
-<div class="grid2b">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RENCANA VS REALISASI ANGGARAN</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="donut-wrap">
@@ -4715,6 +4934,8 @@ body{
 </div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KETERSEDIAAN MATERIAL UTAMA</div><div class="link-more">LIHAT DETAIL</div></div>
 <table class="mat-table">
@@ -4728,7 +4949,7 @@ body{
 </table>
 </div>
 </div>
-<div class="grid3" style="grid-template-columns:1fr 1fr 1.4fr 1fr;">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">TENAGA KERJA</div><div class="link-more">DETAIL</div></div>
 <div class="donut-wrap">
@@ -4743,6 +4964,8 @@ body{
 </div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KESELAMATAN KERJA</div></div>
 <div class="safety-item"><div class="safety-icon"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="safety-body"><div class="sf-title">Hari Tanpa Kecelakaan</div><div class="sf-val">128 Hari</div></div></div>
@@ -4750,6 +4973,8 @@ body{
 <div class="safety-item"><div class="safety-icon"><svg class="ico-mil"><use href="#ico-vest"></use></svg></div><div class="safety-body"><div class="sf-title">APD Lengkap</div><div class="sf-val">96%</div></div></div>
 <div class="safety-item"><div class="safety-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div class="safety-body"><div class="sf-title">Temuan Hari Ini</div><div class="sf-val">2 Temuan</div></div></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">DOKUMENTASI TERAKHIR</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="doc-grid">
@@ -4759,12 +4984,15 @@ body{
 <div class="doc-cell"><div class="doc-thumb"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="doc-name">Pengiriman Material</div><div class="doc-time">23 Jul 2026 07:45</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PERINGATAN &amp; REKOMENDASI AI</div></div>
 <div class="warn-item"><div class="warn-icon"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>Persediaan pasir akan menipis dalam 6 hari ke depan.</div></div>
 <div class="warn-item"><div class="warn-icon"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>Proyek Mess berpotensi terlambat 3 hari jika cuaca hujan.</div></div>
 <div class="warn-item"><div class="warn-icon"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>Produktivitas tenaga kerja meningkat 8,4% dari minggu lalu.</div></div>
 <div class="warn-item"><div class="warn-icon blue">ℹ</div><div>Rekomendasi: Percepat pekerjaan struktur Proyek Pos Jaga.</div></div>
+</div>
 </div>
 </div>
 <div class="ticker-bar">
@@ -4777,6 +5005,8 @@ body{
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
 </div><div class="view" id="view-kkesehatan">
+<div class="adaptive-grid">
+<div class="ag-item ag-span-12">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KONDISI KESEHATAN</div></div>
 <div class="sum-grid">
@@ -4788,6 +5018,8 @@ body{
 <div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-activity"></use></svg></div><div class="s-label">KEBUGARAN RATA-RATA</div><div class="s-val" style="color:var(--green);">87,4%</div><div class="s-tag" style="color:var(--green);">Baik</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel" style="max-width:560px;">
 <div class="panel-head"><div class="panel-title">DATA SIAP GERAK</div></div>
 <div class="ring-wrap">
@@ -4805,7 +5037,8 @@ body{
 </div>
 <div class="foot-note">SIAP DIGERAKKAN KE LAPANGAN  <b style="color:var(--green)">37 Orang (61%)</b></div>
 </div>
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">DISTRIBUSI STATUS KESEHATAN</div></div>
 <div class="donut-wrap">
@@ -4833,6 +5066,8 @@ body{
 <text fill="#4d616b" font-size="8" x="0" y="20">TREN 7 HARI TERAKHIR</text>
 </svg>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">10 PENYAKIT TERBANYAK (BULAN INI)</div><div class="link-more">DETAIL</div></div>
 <table class="dis-table">
@@ -4846,6 +5081,8 @@ body{
 <tr><td>7</td><td>Cephalgia <span class="small-note">(Sakit Kepala)</span></td><td>3</td><td><div class="dis-bar-wrap"><div class="dis-bar-track"><div class="dis-bar-fill" style="width:10%; background:var(--green);"></div></div>4,2%</div></td></tr>
 </table>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">JADWAL KEGIATAN HARI INI</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="agenda-item"><div class="agenda-time" style="color:var(--green);">07:00</div><div class="agenda-body"><div class="a-title">Pemeriksaan Kesehatan Harian</div><div class="a-loc">Poliklinik</div></div></div>
@@ -4855,7 +5092,7 @@ body{
 <div class="agenda-item"><div class="agenda-time" style="color:var(--red);">15:00</div><div class="agenda-body"><div class="a-title">Edukasi PHBS &amp; Kebersihan</div><div class="a-loc">Aula</div></div></div>
 </div>
 </div>
-<div class="grid3">
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PEMERIKSAAN KESEHATAN (MCU)</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="mcu-wrap">
@@ -4873,6 +5110,8 @@ body{
 <div class="vital-cell"><div class="vital-icon"><svg class="ico-mil"><use href="#ico-scale"></use></svg></div><div class="vital-val">97</div><div class="vital-label">IMT Normal</div></div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">VAKSINASI</div><div class="link-more">LIHAT SEMUA</div></div>
 <table class="vax-table">
@@ -4883,6 +5122,8 @@ body{
 <tr><td>Typhoid</td><td>150</td><td><div class="vax-bar-track"><div class="vax-bar-fill" style="width:61%; background:var(--amber);"></div></div>61%</td><td><span class="vstat" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-warning"></use></svg> Cukup</span></td></tr>
 </table>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KETERSEDIAAN OBAT KRITIS</div><div class="link-more">LIHAT DETAIL</div></div>
 <table class="obat-table">
@@ -4896,6 +5137,7 @@ body{
 <div class="obat-total"><div>TOTAL OBAT <b>156 ITEM</b></div><div class="kritis-badge">3 KRITIS</div></div>
 </div>
 </div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">KETERSEDIAAN FASILITAS</div><div class="link-more">LIHAT DETAIL</div></div>
 <div class="fas-grid">
@@ -4906,7 +5148,8 @@ body{
 <div class="fas-cell"><div class="fas-icon"><svg class="ico-mil"><use href="#ico-flask"></use></svg></div><div class="fas-name">Lab Sederhana</div><div class="fas-status"><svg class="ico-mil"><use href="#ico-check"></use></svg> Siap</div></div>
 </div>
 </div>
-<div class="grid3">
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">INFORMASI TERKINI</div></div>
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Pemeriksaan kesehatan harian selesai dilaksanakan.</div><div class="info-time">20 mnt lalu</div></div>
@@ -4914,6 +5157,8 @@ body{
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Stok obat Amoxicillin menipis, segera ajukan permintaan.</div><div class="info-time">1 jam lalu</div></div>
 <div class="info-item"><div class="info-dot"></div><div class="info-txt">Kasus ISPA meningkat 12% dibanding minggu lalu.</div><div class="info-time">2 jam lalu</div></div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PERINGATAN &amp; REKOMENDASI AI</div></div>
 <div style="display:flex; gap:20px;">
@@ -4928,12 +5173,15 @@ body{
 </div>
 </div>
 </div>
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PROGRAM KESEHATAN AKTIF</div><div class="link-more">LIHAT SEMUA</div></div>
 <div class="prog-item"><div class="prog-icon"><svg class="ico-mil"><use href="#ico-calendar"></use></svg></div><div class="prog-body"><div class="prog-title">Gerakan Hidup Bersih &amp; Sehat (PHBS)</div><div class="prog-date">01 – 31 Jul 2026</div></div><div class="prog-tag pt-berjalan">Berjalan</div></div>
 <div class="prog-item"><div class="prog-icon"><svg class="ico-mil"><use href="#ico-calendar"></use></svg></div><div class="prog-body"><div class="prog-title">Pemeriksaan Gigi Berkala</div><div class="prog-date">15 – 20 Jul 2026</div></div><div class="prog-tag pt-berjalan">Berjalan</div></div>
 <div class="prog-item"><div class="prog-icon"><svg class="ico-mil"><use href="#ico-calendar"></use></svg></div><div class="prog-body"><div class="prog-title">Edukasi Gizi &amp; Nutrisi</div><div class="prog-date">25 Jul 2026</div></div><div class="prog-tag pt-terjadwal">Terjadwal</div></div>
 <div class="prog-item"><div class="prog-icon"><svg class="ico-mil"><use href="#ico-calendar"></use></svg></div><div class="prog-body"><div class="prog-title">Donor Darah</div><div class="prog-date">05 Agu 2026</div></div><div class="prog-tag pt-terjadwal">Terjadwal</div></div>
+</div>
 </div>
 </div>
 <div class="ticker-bar">
@@ -4947,6 +5195,8 @@ body{
 </div>
 </div><div class="view" id="view-apms">
 
+<div class="adaptive-grid">
+<div class="ag-item ag-span-6">
 <div class="panel">
   <div class="panel-head"><div class="panel-title">RINGKASAN APMS HARI INI</div></div>
   <div id="apms-sum-grid">
@@ -4957,15 +5207,16 @@ body{
     <div class="apms-sum-cell"><div class="apms-sum-icon" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div class="apms-s-label">CHECKPOINT TERLEWAT</div><div class="apms-s-val" style="color:var(--red);">3</div><div class="apms-s-tag" style="color:var(--red);">Perlu tindak lanjut</div></div>
   </div>
 </div>
-
+</div>
+<div class="ag-item ag-span-4">
 <div class="panel">
   <div class="panel-head"><div class="panel-title">LOG AKTIVITAS REAL-TIME (LIVE)</div><div class="link-more" id="apmsClearLogBtn" style="cursor:pointer;">BERSIHKAN LOG</div></div>
   <div id="apmsLiveLog"></div>
   <div class="apms-live-note" id="apmsLiveNote">Memuat data dari localStorage browser ini...</div>
 </div>
-
-<div class="apms-grid2">
-  <div class="panel">
+</div>
+<div class="ag-item ag-span-5">
+<div class="panel">
     <div class="panel-head"><div class="panel-title">DASHBOARD GATE — PERSONEL DI LUAR KESATRIAN</div><div class="link-more">LIHAT SEMUA</div></div>
     <table class="apms-table">
       <tr><th>NAMA</th><th>PANGKAT</th><th>KOMPI</th><th>KELUAR</th><th>TUJUAN</th><th>EST. KEMBALI</th></tr>
@@ -4977,8 +5228,9 @@ body{
     </table>
     <div class="apms-total-row">TOTAL DI LUAR KESATRIAN <b style="color:var(--amber);">37 Orang</b></div>
   </div>
-
-  <div class="panel">
+</div>
+<div class="ag-item ag-span-5">
+<div class="panel">
     <div class="panel-head"><div class="panel-title">LOG SCAN BARCODE TERKINI</div><div class="link-more">LIHAT SEMUA</div></div>
     <div class="apms-log-item"><div class="apms-log-dot apms-dot-in"></div><div class="apms-log-body"><b>Fajar Ramadhan</b> — MASUK via Gate Utama</div><div class="apms-log-time">10:42</div></div>
     <div class="apms-log-item"><div class="apms-log-dot apms-dot-out"></div><div class="apms-log-body"><b>Eko Prasetyo</b> — KELUAR via Gate Utama (Patroli Rute 3)</div><div class="apms-log-time">09:20</div></div>
@@ -4988,9 +5240,8 @@ body{
     <div class="apms-log-item"><div class="apms-log-dot apms-dot-out"></div><div class="apms-log-body"><b>Budi Santoso</b> — KELUAR via Gate Utama (Patroli Rute 2)</div><div class="apms-log-time">08:10</div></div>
   </div>
 </div>
-
-<div class="apms-grid2" style="grid-template-columns:1.3fr 1fr;">
-  <div class="panel">
+<div class="ag-item ag-span-6">
+<div class="panel">
     <div class="panel-head"><div class="panel-title">DASHBOARD PATROLI — STATUS CHECKPOINT PER RUTE</div><div class="link-more">LIHAT SEMUA</div></div>
     <table class="apms-table">
       <tr><th>RUTE</th><th>TIM</th><th>CHECKPOINT</th><th>WAKTU SCAN</th><th>STATUS</th></tr>
@@ -5003,8 +5254,9 @@ body{
       <tr><td>CP 7 — Pos Kesehatan</td><td>—</td><td><span class="apms-status apms-pending">Menunggu</span></td></tr>
     </table>
   </div>
-
-  <div class="panel">
+</div>
+<div class="ag-item ag-span-4">
+<div class="panel">
     <div class="panel-head"><div class="panel-title">PERINGATAN CHECKPOINT TERLEWAT</div></div>
     <div class="apms-warn-item"><div class="apms-warn-ico"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div><b>CP 3 — Menara Pengawas</b><br>Rute 1 (Tim Alpha) — belum di-scan sejak 05:00 WIB, terlambat 1 jam 30 menit.</div></div>
     <div class="apms-warn-item"><div class="apms-warn-ico"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div><b>CP 8 — Pagar Barat</b><br>Rute 1 (Tim Alpha) — jadwal scan 09:00 WIB terlewat.</div></div>
@@ -5012,9 +5264,8 @@ body{
     <div class="apms-warn-note">Sistem otomatis mengirim notifikasi ke Staf Intelijen apabila checkpoint tidak di-scan dalam 30 menit dari jadwal.</div>
   </div>
 </div>
-
-<div class="apms-grid2" style="grid-template-columns:1.4fr 1fr;">
-  <div class="panel">
+<div class="ag-item ag-span-6">
+<div class="panel">
     <div class="panel-head"><div class="panel-title">GPS TRACKING — LOKASI TIM PATROLI</div><div class="link-more">LIHAT DETAIL</div></div>
     <div class="apms-map-surface">
       <div class="apms-scan-line"></div>
@@ -5031,8 +5282,9 @@ body{
       <tr><td>Tim Charlie</td><td>Sektor Selatan, dekat CP 6</td><td>10:41</td><td>44%</td><td><span class="apms-status apms-pending">Berhenti</span></td></tr>
     </table>
   </div>
-
-  <div class="panel">
+</div>
+<div class="ag-item ag-span-4">
+<div class="panel">
     <div class="panel-head"><div class="panel-title">PANIC BUTTON</div></div>
     <div class="apms-panic-ok">
       <svg class="ico-mil"><use href="#ico-shield-check"></use></svg>
@@ -5044,9 +5296,8 @@ body{
     <div class="apms-warn-note">Panic button akan mengirim lokasi GPS &amp; notifikasi ke Piket Intel dan Komandan Kompi terkait secara otomatis dalam &lt; 5 detik.</div>
   </div>
 </div>
-
-<div class="apms-grid2" style="grid-template-columns:1fr 1fr;">
-  <div class="panel">
+<div class="ag-item ag-span-6">
+<div class="panel">
     <div class="panel-head"><div class="panel-title">SELFIE VALIDATION — LOG TERKINI</div><div class="link-more">LIHAT SEMUA</div></div>
     <div class="apms-selfie-item">
       <div class="apms-selfie-thumb"><svg class="ico-mil"><use href="#ico-camera"></use></svg></div>
@@ -5073,8 +5324,9 @@ body{
       <span class="apms-status apms-ok">Cocok</span>
     </div>
   </div>
-
-  <div class="panel">
+</div>
+<div class="ag-item ag-span-4">
+<div class="panel">
     <div class="panel-head"><div class="panel-title">TINGKAT KEBERHASILAN VALIDASI</div></div>
     <div class="apms-gauge-wrap">
       <div class="apms-gauge-ring"><span>96,8%</span></div>
@@ -5087,9 +5339,8 @@ body{
     <div class="apms-warn-item" style="margin-top:6px;"><div class="apms-warn-ico"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>3 validasi wajah tidak cocok hari ini — perlu ditinjau manual oleh Piket Intel sebelum akses diberikan.</div></div>
   </div>
 </div>
-
-<div class="apms-grid2" style="grid-template-columns:1fr 1fr;">
-  <div class="panel">
+<div class="ag-item ag-span-5">
+<div class="panel">
     <div class="panel-head"><div class="panel-title">NFC ACCESS — STATUS READER PER GATE</div><div class="link-more">LIHAT SEMUA</div></div>
     <table class="apms-table">
       <tr><th>GATE</th><th>STATUS READER</th><th>TAP HARI INI</th></tr>
@@ -5102,8 +5353,9 @@ body{
     <div class="apms-log-item"><div class="apms-log-dot apms-dot-out"></div><div class="apms-log-body"><b>Rizal Firmansyah</b> — Tap Keluar, Gate Samping</div><div class="apms-log-time">10:15</div></div>
     <div class="apms-warn-note">Gate Belakang: reader NFC tidak merespons sejak 09:50 WIB — perlu pengecekan teknisi.</div>
   </div>
-
-  <div class="panel">
+</div>
+<div class="ag-item ag-span-5">
+<div class="panel">
     <div class="panel-head"><div class="panel-title">FACE RECOGNITION — LOG PENGENALAN</div><div class="link-more">LIHAT SEMUA</div></div>
     <div class="apms-selfie-item">
       <div class="apms-selfie-thumb"><svg class="ico-mil"><use href="#ico-person"></use></svg></div>
@@ -5126,7 +5378,7 @@ body{
     <div class="apms-warn-item"><div class="apms-warn-ico"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div>1 wajah tidak dikenali di Gate Samping (08:20 WIB) — akses ditahan otomatis, menunggu verifikasi Piket Intel.</div></div>
   </div>
 </div>
-
+<div class="ag-item ag-span-6">
 <div class="panel">
   <div class="panel-head"><div class="panel-title">SMART GATE BARRIER — STATUS PALANG OTOMATIS</div><div class="link-more">LIHAT DETAIL</div></div>
   <div class="apms-barrier-grid">
@@ -5151,7 +5403,8 @@ body{
   </div>
   <div class="apms-warn-note" style="margin-top:14px;">Smart Gate Barrier akan otomatis membuka hanya jika QR/NFC dan Face Recognition sama-sama tervalidasi — mengurangi risiko penyusupan menggunakan kartu/identitas orang lain.</div>
 </div>
-
+</div>
+</div>
 <div class="ticker-bar">
   <b>▶ APMS LIVE UPDATE</b>
   <div class="ticker-viewport"><div class="ticker-track"><span>10:42 WIB — Fajar Ramadhan scan masuk Gate Utama</span>
