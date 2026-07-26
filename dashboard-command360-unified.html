@@ -670,6 +670,17 @@ body{
 .ms-sep{width:1px; align-self:stretch; background:var(--line-bright); margin:0 28px;}
 .ms-item{display:flex; flex-direction:column; gap:5px; padding:10px 16px; min-width:110px; border-radius:8px; border:1px solid transparent;}
 .ms-item-good{background:rgba(57,255,20,0.06); border-color:rgba(57,255,20,0.18);}
+
+/* ===== MODIFIER WARNA PANEL RINGKASAN (universal, semua dashboard) ===== */
+.sum-cell{border-radius:8px; transition:background .2s;}
+.sc-good, .sc-warn, .sc-info, .sc-critical, .sc-neutral{padding-top:10px !important; padding-bottom:10px !important; border-right:none !important; margin-right:6px;}
+.sc-good:last-child, .sc-warn:last-child, .sc-info:last-child, .sc-critical:last-child, .sc-neutral:last-child{margin-right:0;}
+.sc-good{background:rgba(57,255,20,0.055) !important; box-shadow:inset 0 0 0 1px rgba(57,255,20,0.14);}
+.sc-warn{background:rgba(255,194,71,0.055) !important; box-shadow:inset 0 0 0 1px rgba(255,194,71,0.14);}
+.sc-info{background:rgba(77,163,255,0.055) !important; box-shadow:inset 0 0 0 1px rgba(77,163,255,0.14);}
+.sc-critical{background:rgba(255,93,93,0.06) !important; box-shadow:inset 0 0 0 1px rgba(255,93,93,0.16);}
+.sc-neutral{background:rgba(255,255,255,0.02) !important; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.05);}
+
 .ms-item-warn{background:rgba(255,194,71,0.06); border-color:rgba(255,194,71,0.18);}
 .ms-item-info{background:rgba(77,163,255,0.06); border-color:rgba(77,163,255,0.18);}
 .ms-item-label{font-size:9px; letter-spacing:1.2px; color:var(--text-lo); font-weight:600;}
@@ -1837,7 +1848,7 @@ body{
           <p>Mengalihkan ke dashboard <b id="successRole">-</b>...</p>
         </div>
 
-        <div class="version" id="versionLine">v20260726.10</div>
+        <div class="version" id="versionLine">v20260726.11</div>
         <div class="copyright-line">© 2026 PHANTOM-X. All Rights Reserved.</div>
       </div>
     </div>
@@ -1884,7 +1895,7 @@ body{
 <div class="sidebar-foot sidebar-contact">
 <div class="sc-label">CONTACT US</div>
 <div class="sc-wa"><svg viewbox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.2 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.5-.3Z"/><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> 0822-7227-2009</div>
-<div class="sc-version">v20260726.10</div>
+<div class="sc-version">v20260726.11</div>
 </div>
 </aside>
 <div class="main">
@@ -2186,9 +2197,9 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">PRODUKSI SATUAN (RINGKASAN)</div><div class="link-more" onclick="switchToView('kpertanian')" style="cursor:pointer;">LIHAT DETAIL PER-KOMPI</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-leaf"></use></svg></div><div class="s-label">KOMPI PRODUKSI AKTIF</div><div class="s-val">5</div><div class="s-tag" style="color:var(--green);">Semua Beroperasi</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-scale"></use></svg></div><div class="s-label">RATA-RATA PENCAPAIAN</div><div class="s-val" style="color:var(--amber);">86%</div><div class="s-tag" style="color:var(--amber);">Target Bulanan</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-check"></use></svg></div><div class="s-label">STATUS KESELURUHAN</div><div class="s-val" style="color:var(--green); font-size:14px;">BAIK</div><div class="s-tag" style="color:var(--text-mid);">Sesuai Rencana</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-leaf"></use></svg></div><div class="s-label">KOMPI PRODUKSI AKTIF</div><div class="s-val">5</div><div class="s-tag" style="color:var(--green);">Semua Beroperasi</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-scale"></use></svg></div><div class="s-label">RATA-RATA PENCAPAIAN</div><div class="s-val" style="color:var(--amber);">86%</div><div class="s-tag" style="color:var(--amber);">Target Bulanan</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-check"></use></svg></div><div class="s-label">STATUS KESELURUHAN</div><div class="s-val" style="color:var(--green); font-size:14px;">BAIK</div><div class="s-tag" style="color:var(--text-mid);">Sesuai Rencana</div></div>
 </div>
 <div class="foot-note">Rincian komoditas per-Kompi (Pertanian, Peternakan, Perikanan, Konstruksi, Kesehatan) tersedia di dashboard masing-masing Kompi Produksi.</div>
 </div>
@@ -2323,27 +2334,27 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN INTELIJEN HARI INI</div></div>
 <div class="summary-grid">
-<div class="sum-cell">
+<div class="sum-cell sc-info">
 <div class="s-label">KEJADIAN MENONJOL</div>
 <div class="s-val" style="color:var(--text-hi);">4</div>
 <div class="s-delta">+2 dari hari kemarin</div>
 </div>
-<div class="sum-cell">
+<div class="sum-cell sc-critical">
 <div class="s-label">ANCAMAN TERDETEKSI</div>
 <div class="s-val" style="color:var(--red);">1</div>
 <div class="s-delta">-1 dari hari kemarin</div>
 </div>
-<div class="sum-cell">
+<div class="sum-cell sc-warn">
 <div class="s-label">ISU STRATEGIS</div>
 <div class="s-val" style="color:var(--blue);">4</div>
 <div class="s-delta">+1 dari hari kemarin</div>
 </div>
-<div class="sum-cell">
+<div class="sum-cell sc-info">
 <div class="s-label">LAPORAN MASUK</div>
 <div class="s-val" style="color:var(--green);">9</div>
 <div class="s-delta">Lengkap</div>
 </div>
-<div class="sum-cell">
+<div class="sum-cell sc-info">
 <div class="s-label">INFORMASI BARU</div>
 <div class="s-val" style="color:var(--green);">15</div>
 <div class="s-delta">+3 dari hari kemarin</div>
@@ -2792,13 +2803,13 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN PERSONEL</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-menu"></use></svg></div><div class="s-label">JUMLAH PERSONEL</div><div class="s-val">1006</div><div class="s-sub">Orang</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-check"></use></svg></div><div class="s-label">HADIR</div><div class="s-val" style="color:var(--green);">947</div><div class="s-sub">94,1%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-medical"></use></svg></div><div class="s-label">SAKIT</div><div class="s-val" style="color:var(--red);">18</div><div class="s-sub">1,8%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--amber);">◑</div><div class="s-label">IZIN</div><div class="s-val" style="color:var(--amber);">19</div><div class="s-sub">1,9%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--purple);">▣</div><div class="s-label">CUTI</div><div class="s-val" style="color:var(--purple);">12</div><div class="s-sub">1,2%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--blue);"><svg class="ico-mil"><use href="#ico-ai"></use></svg></div><div class="s-label">PENUGASAN</div><div class="s-val" style="color:var(--blue);">10</div><div class="s-sub">1,0%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">PERSENTASE KEKUATAN</div><div class="s-val" style="color:var(--green);">94,1%</div><div class="s-tag">BAIK</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-menu"></use></svg></div><div class="s-label">JUMLAH PERSONEL</div><div class="s-val">1006</div><div class="s-sub">Orang</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-check"></use></svg></div><div class="s-label">HADIR</div><div class="s-val" style="color:var(--green);">947</div><div class="s-sub">94,1%</div></div>
+<div class="sum-cell sc-critical"><div class="sum-icon" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-medical"></use></svg></div><div class="s-label">SAKIT</div><div class="s-val" style="color:var(--red);">18</div><div class="s-sub">1,8%</div></div>
+<div class="sum-cell sc-warn"><div class="sum-icon" style="color:var(--amber);">◑</div><div class="s-label">IZIN</div><div class="s-val" style="color:var(--amber);">19</div><div class="s-sub">1,9%</div></div>
+<div class="sum-cell sc-warn"><div class="sum-icon" style="color:var(--purple);">▣</div><div class="s-label">CUTI</div><div class="s-val" style="color:var(--purple);">12</div><div class="s-sub">1,2%</div></div>
+<div class="sum-cell sc-warn"><div class="sum-icon" style="color:var(--blue);"><svg class="ico-mil"><use href="#ico-ai"></use></svg></div><div class="s-label">PENUGASAN</div><div class="s-val" style="color:var(--blue);">10</div><div class="s-sub">1,0%</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">PERSENTASE KEKUATAN</div><div class="s-val" style="color:var(--green);">94,1%</div><div class="s-tag">BAIK</div></div>
 </div>
 </div>
 <div class="panel">
@@ -2988,12 +2999,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KESIAPAN LOGISTIK</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">KESEHATAN MATERIIL</div><div class="s-val" style="color:var(--green);">92%</div><div class="s-tag" style="color:var(--green);">BAIK</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val" style="color:var(--green);">89%</div><div class="s-tag" style="color:var(--green);">BAIK</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val" style="color:var(--green);">97%</div><div class="s-tag" style="color:var(--green);">SANGAT BAIK</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-backpack"></use></svg></div><div class="s-label">PERLENGKAPAN</div><div class="s-val" style="color:var(--amber);">85%</div><div class="s-tag" style="color:var(--amber);">BAIK</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div class="s-label">STOK KRITIS</div><div class="s-val" style="color:var(--red);">7</div><div class="s-tag" style="color:var(--red);">ITEM</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-calendar"></use></svg></div><div class="s-label">PEMELIHARAAN TERJADWAL</div><div class="s-val" style="color:var(--text-hi);">12</div><div class="s-tag" style="color:var(--text-mid);">KEGIATAN</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">KESEHATAN MATERIIL</div><div class="s-val" style="color:var(--green);">92%</div><div class="s-tag" style="color:var(--green);">BAIK</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val" style="color:var(--green);">89%</div><div class="s-tag" style="color:var(--green);">BAIK</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val" style="color:var(--green);">97%</div><div class="s-tag" style="color:var(--green);">SANGAT BAIK</div></div>
+<div class="sum-cell sc-neutral"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-backpack"></use></svg></div><div class="s-label">PERLENGKAPAN</div><div class="s-val" style="color:var(--amber);">85%</div><div class="s-tag" style="color:var(--amber);">BAIK</div></div>
+<div class="sum-cell sc-critical"><div class="sum-icon" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-warning"></use></svg></div><div class="s-label">STOK KRITIS</div><div class="s-val" style="color:var(--red);">7</div><div class="s-tag" style="color:var(--red);">ITEM</div></div>
+<div class="sum-cell sc-neutral"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-calendar"></use></svg></div><div class="s-label">PEMELIHARAAN TERJADWAL</div><div class="s-val" style="color:var(--text-hi);">12</div><div class="s-tag" style="color:var(--text-mid);">KEGIATAN</div></div>
 </div>
 </div>
 <div class="panel">
@@ -3222,12 +3233,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI SENAPAN A</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">KEKUATAN PERSONEL</div><div class="s-val">113</div><div class="s-tag" style="color:var(--green);">Siap Gerak 68 (60%)</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-target"></use></svg></div><div class="s-label">KESIAPAN TEMPUR</div><div class="s-val" style="color:var(--green);">94%</div><div class="s-tag" style="color:var(--green);">SIAP TEMPUR</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val">7<small style="font-size:12px;color:var(--text-mid);">/8</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">87.5%</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val">120<small style="font-size:12px;color:var(--text-mid);">/122</small></div><div class="s-tag" style="color:var(--green);">98.4%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-ammo"></use></svg></div><div class="s-label">MUNISI AMAN</div><div class="s-val" style="color:var(--green);">95%</div><div class="s-tag" style="color:var(--green);">AMAN</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">KEKUATAN PERSONEL</div><div class="s-val">113</div><div class="s-tag" style="color:var(--green);">Siap Gerak 68 (60%)</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-target"></use></svg></div><div class="s-label">KESIAPAN TEMPUR</div><div class="s-val" style="color:var(--green);">94%</div><div class="s-tag" style="color:var(--green);">SIAP TEMPUR</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val">7<small style="font-size:12px;color:var(--text-mid);">/8</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">87.5%</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val">120<small style="font-size:12px;color:var(--text-mid);">/122</small></div><div class="s-tag" style="color:var(--green);">98.4%</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-ammo"></use></svg></div><div class="s-label">MUNISI AMAN</div><div class="s-val" style="color:var(--green);">95%</div><div class="s-tag" style="color:var(--green);">AMAN</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
 </div>
 </div>
 <div class="panel">
@@ -3386,12 +3397,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI SENAPAN B</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">KEKUATAN PERSONEL</div><div class="s-val">112</div><div class="s-tag" style="color:var(--green);">Siap Gerak 68 (61%)</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-target"></use></svg></div><div class="s-label">KESIAPAN TEMPUR</div><div class="s-val" style="color:var(--green);">91%</div><div class="s-tag" style="color:var(--green);">SIAP TEMPUR</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val">6<small style="font-size:12px;color:var(--text-mid);">/8</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">75.0%</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val">118<small style="font-size:12px;color:var(--text-mid);">/121</small></div><div class="s-tag" style="color:var(--green);">97.5%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-ammo"></use></svg></div><div class="s-label">MUNISI AMAN</div><div class="s-val" style="color:var(--green);">92%</div><div class="s-tag" style="color:var(--green);">AMAN</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">KEKUATAN PERSONEL</div><div class="s-val">112</div><div class="s-tag" style="color:var(--green);">Siap Gerak 68 (61%)</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-target"></use></svg></div><div class="s-label">KESIAPAN TEMPUR</div><div class="s-val" style="color:var(--green);">91%</div><div class="s-tag" style="color:var(--green);">SIAP TEMPUR</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val">6<small style="font-size:12px;color:var(--text-mid);">/8</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">75.0%</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val">118<small style="font-size:12px;color:var(--text-mid);">/121</small></div><div class="s-tag" style="color:var(--green);">97.5%</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-ammo"></use></svg></div><div class="s-label">MUNISI AMAN</div><div class="s-val" style="color:var(--green);">92%</div><div class="s-tag" style="color:var(--green);">AMAN</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
 </div>
 </div>
 <div class="panel">
@@ -3550,12 +3561,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI SENAPAN C</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">KEKUATAN PERSONEL</div><div class="s-val">111</div><div class="s-tag" style="color:var(--green);">Siap Gerak 67 (60%)</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-target"></use></svg></div><div class="s-label">KESIAPAN TEMPUR</div><div class="s-val" style="color:var(--green);">96%</div><div class="s-tag" style="color:var(--green);">SIAP TEMPUR</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val">8<small style="font-size:12px;color:var(--text-mid);">/8</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">100.0%</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val">119<small style="font-size:12px;color:var(--text-mid);">/120</small></div><div class="s-tag" style="color:var(--green);">99.2%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-ammo"></use></svg></div><div class="s-label">MUNISI AMAN</div><div class="s-val" style="color:var(--green);">97%</div><div class="s-tag" style="color:var(--green);">AMAN</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">KEKUATAN PERSONEL</div><div class="s-val">111</div><div class="s-tag" style="color:var(--green);">Siap Gerak 67 (60%)</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-target"></use></svg></div><div class="s-label">KESIAPAN TEMPUR</div><div class="s-val" style="color:var(--green);">96%</div><div class="s-tag" style="color:var(--green);">SIAP TEMPUR</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val">8<small style="font-size:12px;color:var(--text-mid);">/8</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">100.0%</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val">119<small style="font-size:12px;color:var(--text-mid);">/120</small></div><div class="s-tag" style="color:var(--green);">99.2%</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-ammo"></use></svg></div><div class="s-label">MUNISI AMAN</div><div class="s-val" style="color:var(--green);">97%</div><div class="s-tag" style="color:var(--green);">AMAN</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
 </div>
 </div>
 <div class="panel">
@@ -3714,12 +3725,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI BANTUAN</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">KEKUATAN PERSONEL</div><div class="s-val">96</div><div class="s-tag" style="color:var(--green);">Siap Gerak 58 (60%)</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-target"></use></svg></div><div class="s-label">KESIAPAN TEMPUR</div><div class="s-val" style="color:var(--green);">90%</div><div class="s-tag" style="color:var(--green);">SIAP TEMPUR</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val">6<small style="font-size:12px;color:var(--text-mid);">/7</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">85.7%</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val">63<small style="font-size:12px;color:var(--text-mid);">/66</small></div><div class="s-tag" style="color:var(--green);">95.5%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-ammo"></use></svg></div><div class="s-label">MUNISI AMAN</div><div class="s-val" style="color:var(--green);">91%</div><div class="s-tag" style="color:var(--green);">AMAN</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">KEKUATAN PERSONEL</div><div class="s-val">96</div><div class="s-tag" style="color:var(--green);">Siap Gerak 58 (60%)</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-target"></use></svg></div><div class="s-label">KESIAPAN TEMPUR</div><div class="s-val" style="color:var(--green);">90%</div><div class="s-tag" style="color:var(--green);">SIAP TEMPUR</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val">6<small style="font-size:12px;color:var(--text-mid);">/7</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">85.7%</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val">63<small style="font-size:12px;color:var(--text-mid);">/66</small></div><div class="s-tag" style="color:var(--green);">95.5%</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-ammo"></use></svg></div><div class="s-label">MUNISI AMAN</div><div class="s-val" style="color:var(--green);">91%</div><div class="s-tag" style="color:var(--green);">AMAN</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
 </div>
 </div>
 <div class="panel">
@@ -3878,12 +3889,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI MARKAS</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">KEKUATAN PERSONEL</div><div class="s-val">118</div><div class="s-tag" style="color:var(--green);">Siap Gerak 72 (61%)</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-target"></use></svg></div><div class="s-label">KESIAPAN TEMPUR</div><div class="s-val" style="color:var(--green);">88%</div><div class="s-tag" style="color:var(--green);">SIAP TEMPUR</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val">9<small style="font-size:12px;color:var(--text-mid);">/10</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">90.0%</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val">74<small style="font-size:12px;color:var(--text-mid);">/78</small></div><div class="s-tag" style="color:var(--green);">94.9%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-ammo"></use></svg></div><div class="s-label">MUNISI AMAN</div><div class="s-val" style="color:var(--green);">90%</div><div class="s-tag" style="color:var(--green);">AMAN</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">KEKUATAN PERSONEL</div><div class="s-val">118</div><div class="s-tag" style="color:var(--green);">Siap Gerak 72 (61%)</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-target"></use></svg></div><div class="s-label">KESIAPAN TEMPUR</div><div class="s-val" style="color:var(--green);">88%</div><div class="s-tag" style="color:var(--green);">SIAP TEMPUR</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-truck"></use></svg></div><div class="s-label">KENDARAAN SIAP</div><div class="s-val">9<small style="font-size:12px;color:var(--text-mid);">/10</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">90.0%</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-rifle"></use></svg></div><div class="s-label">SENJATA SIAP</div><div class="s-val">74<small style="font-size:12px;color:var(--text-mid);">/78</small></div><div class="s-tag" style="color:var(--green);">94.9%</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-ammo"></use></svg></div><div class="s-label">MUNISI AMAN</div><div class="s-val" style="color:var(--green);">90%</div><div class="s-tag" style="color:var(--green);">AMAN</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">STATUS</div><div class="s-val" style="color:var(--green); font-size:14px;">SIAP<br/>OPERASI</div></div>
 </div>
 </div>
 <div class="panel">
@@ -4045,12 +4056,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KINERJA PERTANIAN</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-leaf"></use></svg></div><div class="s-label">LUAS LAHAN AKTIF</div><div class="s-val">12,4 <small style="font-size:12px;">Ha</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Total Lahan</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-leaf"></use></svg></div><div class="s-label">LAHAN PRODUKTIF</div><div class="s-val" style="color:var(--green);">11,2 <small style="font-size:12px;">Ha</small></div><div class="s-tag" style="color:var(--green);">90,3%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-box"></use></svg></div><div class="s-label">TOTAL PRODUKSI</div><div class="s-val" style="color:var(--amber);">28,7 <small style="font-size:12px;">Ton</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Bulan Ini</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-trend-up"></use></svg></div><div class="s-label">PRODUKTIVITAS</div><div class="s-val" style="color:var(--green);">2,31</div><div class="s-tag" style="color:var(--green);">Sangat Baik</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">TENAGA KERJA</div><div class="s-val">42 <small style="font-size:12px;">Org</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Aktif</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">KESEHATAN TANAMAN</div><div class="s-val" style="color:var(--green);">92%</div><div class="s-tag" style="color:var(--green);">Sangat Baik</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-leaf"></use></svg></div><div class="s-label">LUAS LAHAN AKTIF</div><div class="s-val">12,4 <small style="font-size:12px;">Ha</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Total Lahan</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-leaf"></use></svg></div><div class="s-label">LAHAN PRODUKTIF</div><div class="s-val" style="color:var(--green);">11,2 <small style="font-size:12px;">Ha</small></div><div class="s-tag" style="color:var(--green);">90,3%</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-box"></use></svg></div><div class="s-label">TOTAL PRODUKSI</div><div class="s-val" style="color:var(--amber);">28,7 <small style="font-size:12px;">Ton</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Bulan Ini</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-trend-up"></use></svg></div><div class="s-label">PRODUKTIVITAS</div><div class="s-val" style="color:var(--green);">2,31</div><div class="s-tag" style="color:var(--green);">Sangat Baik</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">TENAGA KERJA</div><div class="s-val">42 <small style="font-size:12px;">Org</small></div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Aktif</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">KESEHATAN TANAMAN</div><div class="s-val" style="color:var(--green);">92%</div><div class="s-tag" style="color:var(--green);">Sangat Baik</div></div>
 </div>
 </div>
 <div class="panel">
@@ -4215,12 +4226,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN PETERNAKAN</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-livestock"></use></svg></div><div class="s-label">TOTAL TERNAK</div><div class="s-val">3.405</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Ekor</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-heart"></use></svg></div><div class="s-label">TERNAK SEHAT</div><div class="s-val" style="color:var(--green);">3.285</div><div class="s-tag" style="color:var(--green);">96,5%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-medical"></use></svg></div><div class="s-label">TERNAK SAKIT</div><div class="s-val" style="color:var(--red);">42</div><div class="s-tag" style="color:var(--red);">1,2%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--text-mid);"><svg class="ico-mil"><use href="#ico-skull"></use></svg></div><div class="s-label">TERNAK MATI</div><div class="s-val" style="color:var(--text-mid);">8</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">0,3%</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-livestock"></use></svg></div><div class="s-label">KELAHIRAN (BLN INI)</div><div class="s-val" style="color:var(--amber);">78</div><div class="s-tag" style="color:var(--green);">↑ 12%</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-milk"></use></svg></div><div class="s-label">PRODUKSI HARI INI</div><div class="s-val">188,5</div><div class="s-tag" style="color:var(--green);">Sangat Baik</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-livestock"></use></svg></div><div class="s-label">TOTAL TERNAK</div><div class="s-val">3.405</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Ekor</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-heart"></use></svg></div><div class="s-label">TERNAK SEHAT</div><div class="s-val" style="color:var(--green);">3.285</div><div class="s-tag" style="color:var(--green);">96,5%</div></div>
+<div class="sum-cell sc-critical"><div class="sum-icon" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-medical"></use></svg></div><div class="s-label">TERNAK SAKIT</div><div class="s-val" style="color:var(--red);">42</div><div class="s-tag" style="color:var(--red);">1,2%</div></div>
+<div class="sum-cell sc-critical"><div class="sum-icon" style="color:var(--text-mid);"><svg class="ico-mil"><use href="#ico-skull"></use></svg></div><div class="s-label">TERNAK MATI</div><div class="s-val" style="color:var(--text-mid);">8</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">0,3%</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-livestock"></use></svg></div><div class="s-label">KELAHIRAN (BLN INI)</div><div class="s-val" style="color:var(--amber);">78</div><div class="s-tag" style="color:var(--green);">↑ 12%</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-milk"></use></svg></div><div class="s-label">PRODUKSI HARI INI</div><div class="s-val">188,5</div><div class="s-tag" style="color:var(--green);">Sangat Baik</div></div>
 </div>
 </div>
 <div class="panel">
@@ -4394,12 +4405,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KINERJA PERIKANAN</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-wave"></use></svg></div><div class="s-label">TOTAL KOLAM</div><div class="s-val">15</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Aktif 14 · Non Aktif 1</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-fish"></use></svg></div><div class="s-label">TOTAL POPULASI</div><div class="s-val" style="color:var(--green);">25.800</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Ekor</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-basket"></use></svg></div><div class="s-label">PRODUKSI BULAN INI</div><div class="s-val" style="color:var(--amber);">3.245</div><div class="s-tag" style="color:var(--green);">↑ 8,2% bulan lalu</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-scale"></use></svg></div><div class="s-label">FEED CONVERSION</div><div class="s-val">1,28</div><div class="s-tag" style="color:var(--green);">FCR · Sangat Baik</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--blue);"><svg class="ico-mil"><use href="#ico-droplet"></use></svg></div><div class="s-label">KELAYAKAN AIR</div><div class="s-val" style="color:var(--blue);">93%</div><div class="s-tag" style="color:var(--green);">Sangat Baik</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--text-mid);"><svg class="ico-mil"><use href="#ico-skull"></use></svg></div><div class="s-label">MORTALITAS</div><div class="s-val" style="color:var(--text-mid);">0,6%</div><div class="s-tag" style="color:var(--green);">Rendah</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-wave"></use></svg></div><div class="s-label">TOTAL KOLAM</div><div class="s-val">15</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Aktif 14 · Non Aktif 1</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-fish"></use></svg></div><div class="s-label">TOTAL POPULASI</div><div class="s-val" style="color:var(--green);">25.800</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Ekor</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-basket"></use></svg></div><div class="s-label">PRODUKSI BULAN INI</div><div class="s-val" style="color:var(--amber);">3.245</div><div class="s-tag" style="color:var(--green);">↑ 8,2% bulan lalu</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-scale"></use></svg></div><div class="s-label">FEED CONVERSION</div><div class="s-val">1,28</div><div class="s-tag" style="color:var(--green);">FCR · Sangat Baik</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--blue);"><svg class="ico-mil"><use href="#ico-droplet"></use></svg></div><div class="s-label">KELAYAKAN AIR</div><div class="s-val" style="color:var(--blue);">93%</div><div class="s-tag" style="color:var(--green);">Sangat Baik</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--text-mid);"><svg class="ico-mil"><use href="#ico-skull"></use></svg></div><div class="s-label">MORTALITAS</div><div class="s-val" style="color:var(--text-mid);">0,6%</div><div class="s-tag" style="color:var(--green);">Rendah</div></div>
 </div>
 </div>
 <div class="panel" style="max-width:560px;">
@@ -4567,12 +4578,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KINERJA KONSTRUKSI</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-crane"></use></svg></div><div class="s-label">PROYEK AKTIF</div><div class="s-val">7</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">↑ 2 dari bulan lalu</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);">◎</div><div class="s-label">PROGRESS RATA-RATA</div><div class="s-val" style="color:var(--green);">72,6%</div><div class="s-tag" style="color:var(--green);">↑ 8,4% bulan lalu</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-money"></use></svg></div><div class="s-label">TOTAL ANGGARAN</div><div class="s-val" style="color:var(--amber);">4,85 M</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Tahun Anggaran 2026</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-card"></use></svg></div><div class="s-label">REALISASI ANGGARAN</div><div class="s-val" style="color:var(--green);">2,94 M</div><div class="s-tag" style="color:var(--green);">60,6% · Baik</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">TENAGA KERJA</div><div class="s-val">58</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Hadir 54 (93,1%)</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">KESELAMATAN KERJA</div><div class="s-val" style="color:var(--green);">0</div><div class="s-tag" style="color:var(--green);">Kecelakaan Hari Ini</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-crane"></use></svg></div><div class="s-label">PROYEK AKTIF</div><div class="s-val">7</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">↑ 2 dari bulan lalu</div></div>
+<div class="sum-cell sc-neutral"><div class="sum-icon" style="color:var(--green);">◎</div><div class="s-label">PROGRESS RATA-RATA</div><div class="s-val" style="color:var(--green);">72,6%</div><div class="s-tag" style="color:var(--green);">↑ 8,4% bulan lalu</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-money"></use></svg></div><div class="s-label">TOTAL ANGGARAN</div><div class="s-val" style="color:var(--amber);">4,85 M</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Tahun Anggaran 2026</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-card"></use></svg></div><div class="s-label">REALISASI ANGGARAN</div><div class="s-val" style="color:var(--green);">2,94 M</div><div class="s-tag" style="color:var(--green);">60,6% · Baik</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-people"></use></svg></div><div class="s-label">TENAGA KERJA</div><div class="s-val">58</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">Hadir 54 (93,1%)</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-shield"></use></svg></div><div class="s-label">KESELAMATAN KERJA</div><div class="s-val" style="color:var(--green);">0</div><div class="s-tag" style="color:var(--green);">Kecelakaan Hari Ini</div></div>
 </div>
 </div>
 <div class="panel" style="max-width:560px;">
@@ -4736,12 +4747,12 @@ body{
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KONDISI KESEHATAN</div></div>
 <div class="sum-grid">
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-heart"></use></svg></div><div class="s-label">PERSONEL SEHAT</div><div class="s-val" style="color:var(--green);">725</div><div class="s-tag" style="color:var(--green);">97,7% · Sangat Baik</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-sick"></use></svg></div><div class="s-label">SAKIT RINGAN</div><div class="s-val" style="color:var(--amber);">12</div><div class="s-tag" style="color:var(--amber);">1,6% · Ringan</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-medical"></use></svg></div><div class="s-label">SAKIT BERAT</div><div class="s-val" style="color:var(--red);">3</div><div class="s-tag" style="color:var(--red);">0,4% · Berat</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--blue);"><svg class="ico-mil"><use href="#ico-bed"></use></svg></div><div class="s-label">RAWAT INAP</div><div class="s-val" style="color:var(--blue);">2</div><div class="s-tag" style="color:var(--blue);">0,3% · Dirawat</div></div>
-<div class="sum-cell"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-medical"></use></svg></div><div class="s-label">MCU BULAN INI</div><div class="s-val">128</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">85% Target</div></div>
-<div class="sum-cell"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-activity"></use></svg></div><div class="s-label">KEBUGARAN RATA-RATA</div><div class="s-val" style="color:var(--green);">87,4%</div><div class="s-tag" style="color:var(--green);">Baik</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-heart"></use></svg></div><div class="s-label">PERSONEL SEHAT</div><div class="s-val" style="color:var(--green);">725</div><div class="s-tag" style="color:var(--green);">97,7% · Sangat Baik</div></div>
+<div class="sum-cell sc-critical"><div class="sum-icon" style="color:var(--amber);"><svg class="ico-mil"><use href="#ico-sick"></use></svg></div><div class="s-label">SAKIT RINGAN</div><div class="s-val" style="color:var(--amber);">12</div><div class="s-tag" style="color:var(--amber);">1,6% · Ringan</div></div>
+<div class="sum-cell sc-critical"><div class="sum-icon" style="color:var(--red);"><svg class="ico-mil"><use href="#ico-medical"></use></svg></div><div class="s-label">SAKIT BERAT</div><div class="s-val" style="color:var(--red);">3</div><div class="s-tag" style="color:var(--red);">0,4% · Berat</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon" style="color:var(--blue);"><svg class="ico-mil"><use href="#ico-bed"></use></svg></div><div class="s-label">RAWAT INAP</div><div class="s-val" style="color:var(--blue);">2</div><div class="s-tag" style="color:var(--blue);">0,3% · Dirawat</div></div>
+<div class="sum-cell sc-info"><div class="sum-icon"><svg class="ico-mil"><use href="#ico-medical"></use></svg></div><div class="s-label">MCU BULAN INI</div><div class="s-val">128</div><div class="s-tag" style="color:var(--text-mid); font-weight:400;">85% Target</div></div>
+<div class="sum-cell sc-good"><div class="sum-icon" style="color:var(--green);"><svg class="ico-mil"><use href="#ico-activity"></use></svg></div><div class="s-label">KEBUGARAN RATA-RATA</div><div class="s-val" style="color:var(--green);">87,4%</div><div class="s-tag" style="color:var(--green);">Baik</div></div>
 </div>
 </div>
 <div class="panel" style="max-width:560px;">
