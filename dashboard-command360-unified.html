@@ -327,6 +327,7 @@ body{
 .sidebar-contact{display:flex; flex-direction:column; gap:6px; align-items:center;}
 .sc-label{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:8px; letter-spacing:1.5px; color:var(--text-mid);}
 .sc-wa{display:flex; align-items:center; gap:5px; font-size:9px; color:var(--green); letter-spacing:.3px;}
+.sc-version{font-size:7.5px; color:var(--text-lo); letter-spacing:.5px; margin-top:6px; opacity:.6;}
 
 /* ===== SHARED TOPBAR ===== */
 .main{display:flex; flex-direction:column; gap:14px; min-width:0;}
@@ -651,7 +652,36 @@ body{
   }#view-exec .ring-sm::before{content:'';position:absolute; inset:7px; border-radius:50%; background:var(--bg-panel);}#view-exec .ring-sm span{position:relative; z-index:1; font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:14px;}#view-exec .siaga-row{margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}#view-exec .siaga-row .lbl{font-size:10.5px; color:var(--text-mid); letter-spacing:1px;}#view-exec /* agenda */
   .agenda-item{display:flex; gap:12px; padding:9px 0; border-bottom:1px solid var(--line);}#view-exec .agenda-item:last-child{border-bottom:none;}#view-exec .agenda-time{font-family:'Chakra Petch',sans-serif; font-weight:600; font-size:12.5px; color:var(--green); width:44px; flex-shrink:0;}#view-exec .agenda-body .a-title{font-size:12.5px; font-weight:600; color:var(--text-hi); display:flex; align-items:center; gap:6px;}#view-exec .agenda-body .a-loc{font-size:10.5px; color:var(--text-mid); margin-top:1px;}#view-exec /* intel */
   .intel-item{display:flex; gap:11px; padding:8px 0; border-bottom:1px solid var(--line);}#view-exec .intel-item:last-child{border-bottom:none;}#view-exec .intel-icon{width:26px;height:26px;border-radius:6px; flex-shrink:0; display:flex;align-items:center;justify-content:center; font-size:12px;}#view-exec .intel-body .i-title{font-size:12px; font-weight:600; color:var(--text-hi);}#view-exec .intel-body .i-sub{font-size:10.5px; color:var(--text-mid); margin-top:1px;}#view-exec /* map */
-  .map-panel{grid-column:span 1; position:relative; padding:0; overflow:hidden; min-height:340px;}#view-exec .map-head{padding:18px 20px 0 20px; display:flex; align-items:center; justify-content:space-between;}#view-exec .map-surface{
+  .map-panel{grid-column:span 1; position:relative; padding:0; overflow:hidden; min-height:340px;}
+
+/* ===== MISSION STATUS PANEL ===== */
+.mission-status-panel{
+  display:flex; align-items:center; gap:0; background:linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-panel-raised) 100%);
+  border:1px solid var(--line-bright); border-radius:12px; padding:22px 28px; margin-bottom:14px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(57,255,20,0.05);
+  flex-wrap:wrap; row-gap:16px;
+}
+.ms-main{display:flex; flex-direction:column; gap:4px; padding-right:28px;}
+.ms-main-label{font-family:'Chakra Petch',sans-serif; font-size:10.5px; letter-spacing:2px; color:var(--text-mid); font-weight:600;}
+.ms-main-value{font-family:'Chakra Petch',sans-serif; font-size:32px; font-weight:800; color:var(--green); letter-spacing:1px; line-height:1;}
+.ms-sep{width:1px; align-self:stretch; background:var(--line-bright); margin:0 28px;}
+.ms-item{display:flex; flex-direction:column; gap:5px; padding-right:28px; min-width:110px;}
+.ms-item-label{font-size:9px; letter-spacing:1.2px; color:var(--text-lo); font-weight:600;}
+.ms-item-value{font-family:'Chakra Petch',sans-serif; font-size:19px; font-weight:700; color:var(--text-hi); letter-spacing:.5px;}
+@media (max-width:1100px){
+  .mission-status-panel{flex-direction:column; align-items:flex-start;}
+  .ms-sep{display:none;}
+  .ms-main{padding-right:0;}
+}
+
+/* ===== HERO MAP (peta operasional besar) ===== */
+.hero-map-panel{min-height:560px !important; height:42vh; margin-bottom:14px;}
+.hero-map-panel .map-head{padding:20px 24px 0 24px !important;}
+.hero-map-panel .map-surface{position:absolute !important; inset:0; top:56px; height:auto !important;}
+@media (max-width:900px){
+  .hero-map-panel{height:38vh; min-height:400px !important;}
+}
+#view-exec .map-head{padding:18px 20px 0 20px; display:flex; align-items:center; justify-content:space-between;}#view-exec .map-surface{
     position:relative; flex:1; margin:14px 16px 0 16px; border-radius:8px; overflow:hidden;
     background:
       radial-gradient(circle at 30% 30%, rgba(57,255,20,0.10), transparent 55%),
@@ -1315,6 +1345,7 @@ body{
 <div class="sidebar-foot sidebar-contact">
 <div class="sc-label">CONTACT US</div>
 <div class="sc-wa"><svg viewbox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.2 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.5-.3Z"/><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> 0822-7227-2009</div>
+<div class="sc-version">v20260726.1</div>
 </div>
 </aside>
 <div class="main">
@@ -1393,6 +1424,63 @@ body{
   </div>
 </div>
 <div class="view active" id="view-exec">
+
+<!-- ===== MISSION STATUS ===== -->
+<div class="mission-status-panel">
+  <div class="ms-main">
+    <div class="ms-main-label">MISSION STATUS</div>
+    <div class="ms-main-value">READY</div>
+  </div>
+  <div class="ms-sep"></div>
+  <div class="ms-item">
+    <div class="ms-item-label">THREAT LEVEL</div>
+    <div class="ms-item-value" style="color:var(--amber);">SEDANG</div>
+  </div>
+  <div class="ms-item">
+    <div class="ms-item-label">OPERATIONAL READINESS</div>
+    <div class="ms-item-value">91%</div>
+  </div>
+  <div class="ms-item">
+    <div class="ms-item-label">PERSONNEL</div>
+    <div class="ms-item-value" style="color:var(--green);">READY</div>
+  </div>
+  <div class="ms-item">
+    <div class="ms-item-label">EQUIPMENT</div>
+    <div class="ms-item-value" style="color:var(--green);">READY</div>
+  </div>
+  <div class="ms-item">
+    <div class="ms-item-label">WEATHER</div>
+    <div class="ms-item-value" id="msWeatherVal">CERAH</div>
+  </div>
+  <div class="ms-item">
+    <div class="ms-item-label">STATUS SIAGA</div>
+    <div class="ms-item-value" style="color:var(--green);">SIAGA II</div>
+  </div>
+</div>
+
+<!-- ===== LARGE OPERATIONAL MAP ===== -->
+<div class="panel map-panel hero-map-panel">
+<div class="map-head">
+<div class="panel-title">PETA OPERASIONAL — KESADARAN SITUASI</div>
+</div>
+<div class="map-surface">
+<div class="scan-line"></div>
+<div class="map-node" style="top:20%; left:14%;"><div class="n-dot" style="background:var(--green); color:var(--green);"></div><div class="n-label">KOMPI SENAPAN A</div></div>
+<div class="map-node" style="top:52%; left:22%;"><div class="n-dot" style="background:var(--green); color:var(--green);"></div><div class="n-label">KOMPI SENAPAN B</div></div>
+<div class="map-node" style="top:44%; left:52%;"><div class="n-dot" style="background:var(--amber); color:var(--amber); width:12px; height:12px;"></div><div class="n-label">MAKO YONIF</div></div>
+<div class="map-node" style="top:38%; left:74%;"><div class="n-dot" style="background:var(--green); color:var(--green);"></div><div class="n-label">KOMPI SENAPAN C</div></div>
+<div class="map-node" style="top:28%; left:40%;"><div class="n-dot" style="background:var(--green); color:var(--green);"></div><div class="n-label">KOMPI BANTUAN</div></div>
+<div class="map-node" style="top:58%; left:46%;"><div class="n-dot" style="background:var(--green); color:var(--green);"></div><div class="n-label">KOMPI MARKAS</div></div>
+<div class="map-node" style="top:78%; left:18%;"><div class="n-dot" style="background:var(--blue); color:var(--blue);"></div><div class="n-label">KOMPI PERTANIAN</div></div>
+<div class="map-node" style="top:84%; left:38%;"><div class="n-dot" style="background:var(--blue); color:var(--blue);"></div><div class="n-label">KOMPI PETERNAKAN</div></div>
+<div class="map-node" style="top:8%; left:48%;"><div class="n-dot" style="background:var(--blue); color:var(--blue);"></div><div class="n-label">KOMPI PERIKANAN</div></div>
+<div class="map-node" style="top:62%; left:80%;"><div class="n-dot" style="background:var(--blue); color:var(--blue);"></div><div class="n-label">KOMPI KONSTRUKSI</div></div>
+<div class="map-node" style="top:24%; left:62%;"><div class="n-dot" style="background:var(--blue); color:var(--blue);"></div><div class="n-label">KOMPI KESEHATAN</div></div>
+<div class="map-node" style="top:16%; left:82%;"><div class="n-dot" style="background:var(--red); color:var(--red);"></div><div class="n-label">POTENSI</div></div>
+<div class="map-node" style="top:70%; left:64%;"><div class="n-dot" style="background:var(--red); color:var(--red);"></div><div class="n-label">POTENSI</div></div>
+</div>
+</div>
+
 <div class="grid">
 <!-- 1. KEKUATAN PERSONEL -->
 <div class="panel">
@@ -1499,7 +1587,7 @@ body{
 <div class="weather-note">Data real-time dari OpenWeatherMap.org</div>
 </div>
 </div>
-<div class="grid" style="grid-template-columns:1fr 1.4fr 1fr;">
+<div class="grid" style="grid-template-columns:1fr 1fr;">
 <!-- 4. INTELIGENCE -->
 <div class="panel">
 <div class="panel-head">
@@ -1529,28 +1617,7 @@ body{
 </div>
 <div class="link-more" onclick="openDetailModal('intel')">DETAIL INTELIJEN</div>
 </div>
-<!-- 7. PETA DIGITAL -->
-<div class="panel map-panel">
-<div class="map-head">
-<div class="panel-title"><span class="num">07</span> PETA DIGITAL</div>
-</div>
-<div class="map-surface">
-<div class="scan-line"></div>
-<div class="map-node" style="top:20%; left:14%;"><div class="n-dot" style="background:var(--green); color:var(--green);"></div><div class="n-label">KOMPI SENAPAN A</div></div>
-<div class="map-node" style="top:52%; left:22%;"><div class="n-dot" style="background:var(--green); color:var(--green);"></div><div class="n-label">KOMPI SENAPAN B</div></div>
-<div class="map-node" style="top:44%; left:52%;"><div class="n-dot" style="background:var(--amber); color:var(--amber); width:12px; height:12px;"></div><div class="n-label">MAKO YONIF</div></div>
-<div class="map-node" style="top:38%; left:74%;"><div class="n-dot" style="background:var(--green); color:var(--green);"></div><div class="n-label">KOMPI SENAPAN C</div></div>
-<div class="map-node" style="top:28%; left:40%;"><div class="n-dot" style="background:var(--green); color:var(--green);"></div><div class="n-label">KOMPI BANTUAN</div></div>
-<div class="map-node" style="top:58%; left:46%;"><div class="n-dot" style="background:var(--green); color:var(--green);"></div><div class="n-label">KOMPI MARKAS</div></div>
-<div class="map-node" style="top:78%; left:18%;"><div class="n-dot" style="background:var(--blue); color:var(--blue);"></div><div class="n-label">KOMPI PERTANIAN</div></div>
-<div class="map-node" style="top:84%; left:38%;"><div class="n-dot" style="background:var(--blue); color:var(--blue);"></div><div class="n-label">KOMPI PETERNAKAN</div></div>
-<div class="map-node" style="top:8%; left:48%;"><div class="n-dot" style="background:var(--blue); color:var(--blue);"></div><div class="n-label">KOMPI PERIKANAN</div></div>
-<div class="map-node" style="top:62%; left:80%;"><div class="n-dot" style="background:var(--blue); color:var(--blue);"></div><div class="n-label">KOMPI KONSTRUKSI</div></div>
-<div class="map-node" style="top:24%; left:62%;"><div class="n-dot" style="background:var(--blue); color:var(--blue);"></div><div class="n-label">KOMPI KESEHATAN</div></div>
-<div class="map-node" style="top:16%; left:82%;"><div class="n-dot" style="background:var(--red); color:var(--red);"></div><div class="n-label">POTENSI</div></div>
-<div class="map-node" style="top:70%; left:64%;"><div class="n-dot" style="background:var(--red); color:var(--red);"></div><div class="n-label">POTENSI</div></div>
-</div>
-</div>
+
 
 <div class="panel map-panel">
 <div class="map-head">
@@ -2769,7 +2836,7 @@ body{
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:15 Latihan menembak sedang berlangsung di Lapangan Tembak</span><span>10:45 Cuaca cerah, kondisi aman</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:15 Latihan menembak sedang berlangsung di Lapangan Tembak</span><span>10:45 Cuaca cerah, kondisi aman</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-</div></div><div class="view" id="view-kb">
+</div><div class="view" id="view-kb">
 
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI SENAPAN B</div></div>
@@ -2933,7 +3000,7 @@ body{
 <div class="ticker-viewport"><div class="ticker-track"><span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:20 Latihan taktik lapangan berlangsung lancar</span><span>11:00 Cuaca cerah berawan, kondisi aman</span> <span>08:30 Apel pagi selesai dilaksanakan di Lapangan Mako Yonif</span><span>09:20 Latihan taktik lapangan berlangsung lancar</span><span>11:00 Cuaca cerah berawan, kondisi aman</span></div></div>
 <div class="auto">DATA TERAKHIR: <span class="live-ts-full">24 JULI 2026 09:00 WIB</span> ⟳</div>
 </div>
-</div></div><div class="view" id="view-kc">
+</div><div class="view" id="view-kc">
 
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KOMPI SENAPAN C</div></div>
@@ -4720,6 +4787,8 @@ Fokus Komandan Hari Ini:
     <div class="brief-focus-item"><span class="fn">3</span> Tindak lanjut checkpoint patroli terlewat</div>
     <div class="brief-focus-item"><span class="fn">4</span> Monitoring cuaca &amp; pengamanan kesatrian</div>
   </div>
+</div>
+</div>
 </div>
 </div>
 </div>
