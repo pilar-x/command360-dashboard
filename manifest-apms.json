@@ -1,0 +1,25 @@
+{
+  "name": "APMS - Access & Patrol Management System",
+  "short_name": "APMS",
+  "description": "Sistem manajemen akses dan patroli — Batalyon Infanteri COMMAND360",
+  "start_url": "./apms-app.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070B11",
+  "theme_color": "#070B11",
+  "icons": [
+    {
+      "src": "icon-apms-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-apms-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
