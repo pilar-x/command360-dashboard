@@ -130,6 +130,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="APMS">
 <link rel="apple-touch-icon" href="icon-apms-192.png">
+<script src="apms-sync.js"></script>
 </head>
 <body>
 
@@ -316,6 +317,15 @@ refreshRingkasan();
 // refresh berkala kalau ada scan dari perangkat lain (sinkron via storage event, sesama origin)
 window.addEventListener('storage', (e)=>{ if(e.key === 'apms_events') refreshRingkasan(); });
 setInterval(refreshRingkasan, 20000);
+
+// ===== SINKRON DENGAN SERVER — ambil data dari HP/tablet lain =====
+async function apmsSyncFromServer(){
+  if (typeof apmsMergeServerEvents !== 'function') return;
+  const newCount = await apmsMergeServerEvents();
+  if (newCount > 0) refreshRingkasan(); // ada data baru dari perangkat lain, segarkan tampilan
+}
+apmsSyncFromServer(); // sekali saat halaman dibuka
+setInterval(apmsSyncFromServer, 15000); // lalu tiap 15 detik
 
 // ===== STATUS SENJATA — hitung status terkini tiap senjata dari riwayat scan =====
 // Senjata diidentifikasi dari kombinasi (jenis + nomor seri). Status ditentukan dari
