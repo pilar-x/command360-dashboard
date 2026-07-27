@@ -1872,7 +1872,7 @@ body{
           <p>Mengalihkan ke dashboard <b id="successRole">-</b>...</p>
         </div>
 
-        <div class="version" id="versionLine">v20260726.29</div>
+        <div class="version" id="versionLine">v20260726.30</div>
         <div class="copyright-line">© 2026 PHANTOM-X. All Rights Reserved.</div>
       </div>
     </div>
@@ -1919,7 +1919,7 @@ body{
 <div class="sidebar-foot sidebar-contact">
 <div class="sc-label">CONTACT US</div>
 <div class="sc-wa"><svg viewbox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.2 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.5-.3Z"/><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> 0822-7227-2009</div>
-<div class="sc-version">v20260726.29</div>
+<div class="sc-version">v20260726.30</div>
 </div>
 </aside>
 <div class="main">
@@ -2580,6 +2580,35 @@ body{
 <span>08:15 WIB | Tidak ada kejadian menonjol</span></div></div>
 <div class="auto"><span class="dot"></span>UPDATE OTOMATIS: 30 DETIK</div>
 </div>
+
+<div class="panel">
+<div class="panel-head"><div class="panel-title">KELOLA TITIK CHECKPOINT PATROLI</div></div>
+<div style="overflow-x:auto; margin-bottom:16px;">
+<table style="width:100%; border-collapse:collapse; font-size:11.5px;">
+<thead><tr style="text-align:left; color:var(--text-mid); font-size:9.5px; letter-spacing:.5px;">
+<th style="padding-bottom:8px;">ID</th><th style="padding-bottom:8px;">NAMA</th><th style="padding-bottom:8px;">KOORDINAT</th><th style="padding-bottom:8px;">RADIUS</th><th style="padding-bottom:8px;"></th>
+</tr></thead>
+<tbody id="cpManageTableBody"><tr><td colspan="5" style="padding:14px 0; color:var(--text-mid);">Memuat...</td></tr></tbody>
+</table>
+</div>
+
+<div style="border-top:1px solid var(--line); padding-top:16px;">
+<div style="font-size:10.5px; color:var(--text-mid); letter-spacing:.5px; margin-bottom:10px;" id="cpFormTitle">TAMBAH CHECKPOINT BARU</div>
+<div style="display:grid; grid-template-columns:1fr 2fr 1fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+<input id="cpFormId" placeholder="ID (mis. CP1)" style="background:rgba(255,255,255,0.03); border:1px solid var(--line); padding:9px 10px; color:var(--text-hi); font-family:'IBM Plex Mono',monospace; font-size:11.5px;">
+<input id="cpFormNama" placeholder="Nama lokasi" style="background:rgba(255,255,255,0.03); border:1px solid var(--line); padding:9px 10px; color:var(--text-hi); font-family:'IBM Plex Mono',monospace; font-size:11.5px;">
+<input id="cpFormLat" placeholder="Latitude" style="background:rgba(255,255,255,0.03); border:1px solid var(--line); padding:9px 10px; color:var(--text-hi); font-family:'IBM Plex Mono',monospace; font-size:11.5px;">
+<input id="cpFormLng" placeholder="Longitude" style="background:rgba(255,255,255,0.03); border:1px solid var(--line); padding:9px 10px; color:var(--text-hi); font-family:'IBM Plex Mono',monospace; font-size:11.5px;">
+<input id="cpFormRadius" placeholder="Radius (m)" value="100" style="background:rgba(255,255,255,0.03); border:1px solid var(--line); padding:9px 10px; color:var(--text-hi); font-family:'IBM Plex Mono',monospace; font-size:11.5px;">
+</div>
+<div style="display:flex; gap:10px;">
+<button id="cpFormSaveBtn" onclick="handleSaveCheckpoint()" style="background:var(--green-dim); border:1px solid var(--green); color:var(--green); padding:9px 18px; font-family:'Chakra Petch',sans-serif; font-weight:600; font-size:11px; letter-spacing:.5px; cursor:pointer;">SIMPAN</button>
+<button onclick="resetCheckpointForm()" style="background:transparent; border:1px solid var(--line); color:var(--text-mid); padding:9px 18px; font-family:'Chakra Petch',sans-serif; font-weight:600; font-size:11px; letter-spacing:.5px; cursor:pointer;">BATAL</button>
+</div>
+<div id="cpFormMsg" style="font-size:10.5px; margin-top:8px;"></div>
+</div>
+</div>
+
 </div><div class="view" id="view-ops">
 <div class="panel">
 <div class="panel-head"><div class="panel-title">RINGKASAN KESIAPAN OPERASI</div></div>
@@ -6632,6 +6661,92 @@ renderApmsLiveLog();
 setInterval(renderApmsLiveLog, 5000); // auto-refresh tampilan tiap 5 detik (baca localStorage lokal, cepat)
 apmsMainDashboardSync(); // sekali saat halaman dibuka
 setInterval(apmsMainDashboardSync, 15000); // lalu tarik data server tiap 15 detik
+
+// ===== KELOLA CHECKPOINT PATROLI =====
+let cpEditingId = null; // null = mode tambah baru, terisi = mode edit
+
+async function loadCheckpointManageTable(){
+  const tbody = document.getElementById('cpManageTableBody');
+  if (!tbody) return;
+  if (typeof apmsFetchCheckpoints !== 'function'){
+    tbody.innerHTML = '<tr><td colspan="5" style="padding:14px 0; color:var(--red);">apms-sync.js belum termuat.</td></tr>';
+    return;
+  }
+  const list = await apmsFetchCheckpoints();
+  if (list.length === 0){
+    tbody.innerHTML = '<tr><td colspan="5" style="padding:14px 0; color:var(--text-mid);">Belum ada checkpoint terdaftar. Tambahkan lewat form di bawah.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(cp => `
+    <tr style="border-top:1px solid var(--line);">
+      <td style="padding:8px 0;"><b>${cp.id}</b></td>
+      <td style="padding:8px 0;">${cp.nama}</td>
+      <td style="padding:8px 0; color:var(--text-mid);">${cp.lat.toFixed(5)}, ${cp.lng.toFixed(5)}</td>
+      <td style="padding:8px 0; color:var(--text-mid);">${cp.radius || 100}m</td>
+      <td style="padding:8px 0; text-align:right; white-space:nowrap;">
+        <span style="color:var(--blue); cursor:pointer; margin-right:12px;" onclick='editCheckpoint(${JSON.stringify(cp)})'>EDIT</span>
+        <span style="color:var(--red); cursor:pointer;" onclick="deleteCheckpointRow('${cp.id}')">HAPUS</span>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function editCheckpoint(cp){
+  cpEditingId = cp.id;
+  document.getElementById('cpFormTitle').textContent = 'EDIT CHECKPOINT: ' + cp.id;
+  document.getElementById('cpFormId').value = cp.id;
+  document.getElementById('cpFormId').disabled = true;
+  document.getElementById('cpFormNama').value = cp.nama;
+  document.getElementById('cpFormLat').value = cp.lat;
+  document.getElementById('cpFormLng').value = cp.lng;
+  document.getElementById('cpFormRadius').value = cp.radius || 100;
+  document.getElementById('cpFormMsg').textContent = '';
+}
+
+function resetCheckpointForm(){
+  cpEditingId = null;
+  document.getElementById('cpFormTitle').textContent = 'TAMBAH CHECKPOINT BARU';
+  document.getElementById('cpFormId').disabled = false;
+  ['cpFormId','cpFormNama','cpFormLat','cpFormLng'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('cpFormRadius').value = '100';
+  document.getElementById('cpFormMsg').textContent = '';
+}
+
+async function handleSaveCheckpoint(){
+  const id = document.getElementById('cpFormId').value.trim();
+  const nama = document.getElementById('cpFormNama').value.trim();
+  const lat = parseFloat(document.getElementById('cpFormLat').value);
+  const lng = parseFloat(document.getElementById('cpFormLng').value);
+  const radius = parseInt(document.getElementById('cpFormRadius').value, 10) || 100;
+  const msgEl = document.getElementById('cpFormMsg');
+
+  if (!id || !nama || isNaN(lat) || isNaN(lng)){
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = 'Lengkapi ID, Nama, Latitude, dan Longitude dengan benar.';
+    return;
+  }
+  msgEl.style.color = 'var(--text-mid)';
+  msgEl.textContent = 'Menyimpan...';
+  const ok = await apmsSaveCheckpoint({ id, nama, lat, lng, radius });
+  if (ok){
+    msgEl.style.color = 'var(--green)';
+    msgEl.textContent = `Checkpoint ${id} berhasil disimpan.`;
+    resetCheckpointForm();
+    loadCheckpointManageTable();
+  } else {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = 'Gagal menyimpan — cek koneksi ke server.';
+  }
+}
+
+async function deleteCheckpointRow(id){
+  if (!confirm(`Hapus checkpoint ${id}? Tindakan ini tidak bisa dibatalkan.`)) return;
+  const ok = await apmsDeleteCheckpoint(id);
+  if (ok) loadCheckpointManageTable();
+  else alert('Gagal menghapus — cek koneksi ke server.');
+}
+
+loadCheckpointManageTable();
 
 async function fetchWeather(){
   ['weatherWidget','weatherWidgetExec'].forEach(id=>{
