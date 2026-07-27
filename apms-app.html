@@ -435,8 +435,12 @@ function renderRiwayat(){
 
 // ===== SERVICE WORKER — supaya app bisa di-install & tetap jalan walau sinyal putus-putus =====
 if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('apms-sw.js').catch(e => console.warn('SW gagal daftar:', e));
+  window.addEventListener('load', async ()=>{
+    try{
+      const reg = await navigator.serviceWorker.register('apms-sw.js');
+      // Paksa cek versi baru tiap kali app dibuka, supaya tidak nyangkut di versi lama (kasus Safari)
+      reg.update();
+    } catch(e){ console.warn('SW gagal daftar:', e); }
   });
 }
 
