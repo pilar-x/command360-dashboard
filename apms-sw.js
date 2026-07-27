@@ -2,7 +2,7 @@
 // Cache-first untuk file inti app supaya tetap bisa dipakai walau sinyal putus-putus
 // (penting untuk titik patroli / gerbang yang sinyalnya kadang lemah)
 
-const CACHE_NAME = 'apms-cache-v1';
+const CACHE_NAME = 'apms-cache-v2';
 const CORE_FILES = [
   './apms-app.html',
   './apms-scan-gate.html',
@@ -38,6 +38,15 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request).then((cached) => {
       const networkFetch = fetch(event.request)
         .then((response) => {
+          // Safari menolak Service Worker meneruskan respons yang sempat "redirected" apa adanya
+          // (beda dengan Chrome) — jadi kita bikin ulang Response bersih dari isinya kalau begitu.
+          if (response && response.redirected) {
+            response = new Response(response.body, {
+              status: response.status,
+              statusText: response.statusText,
+              headers: response.headers,
+            });
+          }
           if (response && response.status === 200 && event.request.url.startsWith(self.location.origin)) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
