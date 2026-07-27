@@ -8,29 +8,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-void:#070a0d; --bg-panel:#0d1319; --bg-panel-raised:#111923;
-    --line:#1c2733; --line-bright:#2a3a4a;
-    --green:#2ee6a6; --green-dim:#1a5c48;
-    --amber:#e8b13f; --red:#e5484d; --blue:#4a9eff;
+    --bg-void:#070B11; --bg-panel:#0D141C; --bg-panel-raised:#121B24;
+    --line:#1A2733; --line-bright:#243646;
+    --green:#39FF14; --green-dim:#1f5c0f;
+    --amber:#FFC247; --red:#FF5D5D; --blue:#4a9eff;
     --text-hi:#eef3f5; --text-mid:#8fa3ab; --text-lo:#4d616b;
   }
   *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
   html,body{height:100%;}
   body{
-    background:radial-gradient(ellipse 700px 500px at 50% -10%, rgba(46,230,166,0.08), transparent 60%), var(--bg-void);
+    background:radial-gradient(ellipse 700px 500px at 50% -10%, rgba(57,255,20,0.08), transparent 60%), var(--bg-void);
     color:var(--text-hi); font-family:'IBM Plex Mono', monospace;
     min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;
   }
   .card{
     width:100%; max-width:380px; background:var(--bg-panel); border:1px solid var(--line-bright); border-radius:18px;
-    padding:26px 24px; box-shadow:0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(46,230,166,0.08), 0 0 40px rgba(46,230,166,0.16), 0 0 80px rgba(46,230,166,0.08);
+    padding:26px 24px; box-shadow:0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(57,255,20,0.08), 0 0 40px rgba(57,255,20,0.16), 0 0 80px rgba(57,255,20,0.08);
     transition:box-shadow .3s;
   }
   .card:hover{
-    box-shadow:0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(46,230,166,0.18), 0 0 55px rgba(46,230,166,0.28), 0 0 100px rgba(46,230,166,0.14);
+    box-shadow:0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(57,255,20,0.18), 0 0 55px rgba(57,255,20,0.28), 0 0 100px rgba(57,255,20,0.14);
   }
   .brand-mini{display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:18px;}
-  .brand-mini .crest{width:26px; height:26px; border-radius:50%; background:rgba(46,230,166,0.1); border:1px solid var(--green-dim); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--green);}
+  .brand-mini .crest{width:26px; height:26px; border-radius:50%; background:rgba(57,255,20,0.1); border:1px solid var(--green-dim); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--green);}
   .brand-mini span{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:13px; letter-spacing:1.5px; color:var(--text-mid);}
   .brand-mini b{color:var(--green);}
 
@@ -59,7 +59,7 @@
   .chev{color:var(--text-mid); font-size:11px;}
 
   .field-note{
-    background:rgba(232,177,63,0.06); border:1px dashed rgba(232,177,63,0.3); border-radius:10px;
+    background:rgba(255,194,71,0.06); border:1px dashed rgba(255,194,71,0.3); border-radius:10px;
     padding:11px 13px; margin-bottom:18px; font-size:10.5px; color:var(--text-mid); line-height:1.5;
   }
 
@@ -92,21 +92,21 @@
   .gps-status svg{color:var(--text-lo); flex-shrink:0;}
   .gps-status.ok{border-color:var(--green-dim);}
   .gps-status.ok svg{color:var(--green);}
-  .gps-status.err{border-color:rgba(229,72,77,0.35);}
+  .gps-status.err{border-color:rgba(255,93,93,0.35);}
   .gps-status.err svg{color:var(--red);}
 
   .btn-confirm{
     width:100%; padding:16px; border-radius:12px; border:none; cursor:pointer;
     background:linear-gradient(180deg,#39e8ac,#1fae7e); color:#04140d; font-family:'Chakra Petch',sans-serif;
-    font-weight:700; font-size:15px; letter-spacing:1.5px; box-shadow:0 10px 25px rgba(46,230,166,0.25);
+    font-weight:700; font-size:15px; letter-spacing:1.5px; box-shadow:0 10px 25px rgba(57,255,20,0.25);
     transition:box-shadow .2s, transform .2s;
   }
-  .btn-confirm:hover:not(:disabled){box-shadow:0 10px 25px rgba(46,230,166,0.3), 0 0 30px rgba(46,230,166,0.4); transform:translateY(-1px);}
+  .btn-confirm:hover:not(:disabled){box-shadow:0 10px 25px rgba(57,255,20,0.3), 0 0 30px rgba(57,255,20,0.4); transform:translateY(-1px);}
   .btn-confirm:disabled{opacity:.4; cursor:not-allowed; box-shadow:none;}
-  .btn-confirm.mode-blocked{background:linear-gradient(180deg,#e5484d,#b93a3e); box-shadow:0 10px 25px rgba(229,72,77,0.25); opacity:1;}
+  .btn-confirm.mode-blocked{background:linear-gradient(180deg,#FF5D5D,#b93a3e); box-shadow:0 10px 25px rgba(255,93,93,0.25); opacity:1;}
   .anomaly-btn{
-    width:100%; padding:12px; margin-top:10px; border-radius:10px; border:1px dashed rgba(229,72,77,0.4);
-    background:rgba(229,72,77,0.06); color:var(--red); font-family:'IBM Plex Mono'; font-size:11px; letter-spacing:.5px; cursor:pointer;
+    width:100%; padding:12px; margin-top:10px; border-radius:10px; border:1px dashed rgba(255,93,93,0.4);
+    background:rgba(255,93,93,0.06); color:var(--red); font-family:'IBM Plex Mono'; font-size:11px; letter-spacing:.5px; cursor:pointer;
   }
 
   .foot-note{text-align:center; font-size:9.5px; color:var(--text-lo); margin-top:16px; letter-spacing:.5px;}
@@ -116,13 +116,13 @@
 
   .success-wrap{display:none; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:10px 0 4px;}
   .success-wrap.show{display:flex;}
-  .success-ico{width:74px; height:74px; border-radius:50%; background:rgba(46,230,166,0.1); border:2px solid var(--green); display:flex; align-items:center; justify-content:center; font-size:34px; color:var(--green);}
+  .success-ico{width:74px; height:74px; border-radius:50%; background:rgba(57,255,20,0.1); border:2px solid var(--green); display:flex; align-items:center; justify-content:center; font-size:34px; color:var(--green);}
   .success-wrap h2{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:18px; color:var(--text-hi);}
   .success-detail{background:var(--bg-panel-raised); border:1px solid var(--line); border-radius:10px; padding:14px; width:100%; text-align:left; font-size:12px; margin-top:4px;}
   .success-detail .row{display:flex; justify-content:space-between; padding:4px 0; color:var(--text-mid);}
   .success-detail .row b{color:var(--text-hi);}
   .btn-again{margin-top:6px; padding:12px 20px; border-radius:9px; border:1px solid var(--line-bright); background:var(--bg-panel-raised); color:var(--text-mid); font-family:'IBM Plex Mono'; font-size:11.5px; cursor:pointer;}
-  .next-hint{width:100%; text-align:center; font-size:11px; color:var(--green); background:rgba(46,230,166,0.06); border:1px solid var(--green-dim); border-radius:9px; padding:10px; line-height:1.5;}
+  .next-hint{width:100%; text-align:center; font-size:11px; color:var(--green); background:rgba(57,255,20,0.06); border:1px solid var(--green-dim); border-radius:9px; padding:10px; line-height:1.5;}
 </style>
 </head>
 <body>
@@ -295,19 +295,39 @@
 
   // ===== SELFIE CAPTURE =====
   let selfieTaken = false;
-  let selfieDataUrl = null;
+  let selfieDataUrl = null; // versi terkompres (dipakai untuk preview & disimpan ke event)
   const selfieBox = document.getElementById('selfieBox');
   const selfieInput = document.getElementById('selfieInput');
   const selfieEmpty = document.getElementById('selfieEmpty');
   const selfiePreview = document.getElementById('selfiePreview');
+
+  // Kompres foto sebelum disimpan — foto asli dari kamera HP bisa 3-8MB,
+  // terlalu besar untuk disimpan di localStorage (batasnya cuma ~5-10MB TOTAL).
+  // Dikecilkan ke maks 480px + kualitas JPEG 65% -> biasanya jadi ~20-50KB per foto.
+  function compressImage(dataUrl, maxDim = 480, quality = 0.65){
+    return new Promise((resolve)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        let { width, height } = img;
+        if(width > height && width > maxDim){ height = height * (maxDim/width); width = maxDim; }
+        else if(height > maxDim){ width = width * (maxDim/height); height = maxDim; }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = ()=> resolve(dataUrl); // kalau gagal kompres, pakai versi asli sebagai fallback
+      img.src = dataUrl;
+    });
+  }
 
   selfieBox.addEventListener('click', ()=> selfieInput.click());
   selfieInput.addEventListener('change', (e)=>{
     const file = e.target.files[0];
     if(!file) return;
     const reader = new FileReader();
-    reader.onload = (ev)=>{
-      selfieDataUrl = ev.target.result;
+    reader.onload = async (ev)=>{
+      selfieDataUrl = await compressImage(ev.target.result);
       selfiePreview.src = selfieDataUrl;
       selfiePreview.style.display = 'block';
       selfieEmpty.style.display = 'none';
@@ -419,7 +439,9 @@
       tim: selectTim.value,
       checkpoint: cpId + ' — ' + cpName,
       anomali: !!isAnomaly,
-      waktu: t + ' WIB'
+      waktu: t + ' WIB',
+      selfie: selfieDataUrl,
+      gps: gpsLabel + (gpsDistance !== null ? ' · ' + gpsDistance + 'm dari titik' : '')
     });
 
     const thumb = document.getElementById('successSelfieThumb');
@@ -432,7 +454,7 @@
     const titleEl = document.querySelector('#stepSuccess h2');
     if(isAnomaly){
       icoCp.textContent = '⚠';
-      icoCp.style.background = 'rgba(229,72,77,0.1)';
+      icoCp.style.background = 'rgba(255,93,93,0.1)';
       icoCp.style.borderColor = 'var(--red)';
       icoCp.style.color = 'var(--red)';
       titleEl.textContent = 'Tercatat Sebagai Anomali';
@@ -450,7 +472,7 @@
     if(isAnomaly){
       hint.textContent = '⚠ Laporan ini otomatis dikirim ke Staf Intelijen untuk verifikasi lanjutan karena lokasi tidak sesuai.';
       hint.style.color = 'var(--red)';
-      hint.style.background = 'rgba(229,72,77,0.06)';
+      hint.style.background = 'rgba(255,93,93,0.06)';
       hint.style.borderColor = 'var(--red)';
     } else if(urutan < total){
       hint.textContent = '→ Lanjutkan ke Checkpoint ' + (urutan + 1) + ' dari ' + total + '. Tetap semangat!';
