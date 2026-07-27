@@ -213,18 +213,30 @@
 
 <script>
   const params = new URLSearchParams(window.location.search);
-  const cpName = params.get('nama') || 'Pos Jaga Depan';
+  let cpName = params.get('nama') || 'Pos Jaga Depan';
   const cpId = params.get('cp') || 'CP1';
   const routeName = params.get('rute') || 'Rute 1 — Sektor Utara';
   const urutan = parseInt(params.get('urutan') || '1', 10);
   const total = parseInt(params.get('total') || '5', 10);
-  // Koordinat sah checkpoint ini (ditanam di dalam QR code fisik di lokasi, bukan dimasukkan anggota)
-  const cpLat = params.get('lat') ? parseFloat(params.get('lat')) : -6.17511;
-  const cpLng = params.get('lng') ? parseFloat(params.get('lng')) : 106.82716;
-  const cpRadius = parseInt(params.get('radius') || '100', 10); // meter, toleransi akurasi GPS
+  // Koordinat checkpoint: default dulu dari URL (kalau ada) atau titik dummy,
+  // lalu diperbarui otomatis dari server (data resmi yang diatur di Dashboard Intelijen).
+  let cpLat = params.get('lat') ? parseFloat(params.get('lat')) : -6.17511;
+  let cpLng = params.get('lng') ? parseFloat(params.get('lng')) : 106.82716;
+  let cpRadius = parseInt(params.get('radius') || '100', 10); // meter, toleransi akurasi GPS
 
   document.getElementById('cpName').textContent = cpId + ' — ' + cpName;
   document.getElementById('cpRoute').textContent = routeName;
+
+  // Ambil data checkpoint resmi dari server (kalau ada sinyal) — menimpa default/URL di atas
+  (async () => {
+    if (typeof apmsFetchCheckpoints !== 'function') return;
+    const list = await apmsFetchCheckpoints();
+    const match = list.find(c => c.id === cpId);
+    if (match) {
+      cpName = match.nama; cpLat = match.lat; cpLng = match.lng; cpRadius = match.radius || 100;
+      document.getElementById('cpName').textContent = cpId + ' — ' + cpName;
+    }
+  })();
 
   const progWrap = document.getElementById('cpProgress');
   let dotsHtml = '';

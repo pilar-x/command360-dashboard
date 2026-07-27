@@ -89,3 +89,42 @@ async function apmsMergeServerEvents() {
   }
   return newFromServer.length;
 }
+
+// ===== KELOLA CHECKPOINT (titik patroli) =====
+async function apmsFetchCheckpoints() {
+  try {
+    const res = await fetch(`${APMS_API_BASE}/api/checkpoints`, {
+      headers: { 'X-API-Key': APMS_API_KEY },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.checkpoints || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+async function apmsSaveCheckpoint(cp) {
+  try {
+    const res = await fetch(`${APMS_API_BASE}/api/checkpoints`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': APMS_API_KEY },
+      body: JSON.stringify(cp),
+    });
+    return res.ok;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function apmsDeleteCheckpoint(id) {
+  try {
+    const res = await fetch(`${APMS_API_BASE}/api/checkpoints?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: { 'X-API-Key': APMS_API_KEY },
+    });
+    return res.ok;
+  } catch (e) {
+    return false;
+  }
+}
