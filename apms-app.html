@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>APMS — Access & Patrol Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#070B11; --bg-panel:#0D141C; --bg-panel-raised:#121B24;
+    --line:#1A2733; --line-bright:#243646;
+    --green:#39FF14; --green-dim:#1f5c0f;
+    --amber:#FFC247; --red:#FF5D5D; --blue:#4DA3FF;
+    --text-hi:#eef3f5; --text-mid:#8fa3ab; --text-lo:#4d616b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; user-select:none;}
+  html,body{height:100%; overscroll-behavior:none;}
+  body{
+    background:radial-gradient(ellipse 900px 600px at 50% -10%, rgba(57,255,20,0.07), transparent 60%), var(--bg-void);
+    color:var(--text-hi); font-family:'IBM Plex Mono', monospace;
+    height:100vh; display:flex; flex-direction:column; overflow:hidden;
+  }
+
+  /* ===== TOPBAR APP ===== */
+  .app-topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px calc(14px + env(safe-area-inset-top)) 18px; padding-top:calc(14px + env(safe-area-inset-top));
+    background:var(--bg-panel); border-bottom:1px solid var(--line); flex-shrink:0;
+  }
+  .app-brand{display:flex; align-items:center; gap:10px;}
+  .app-brand-icon{width:32px; height:32px; border-radius:9px; background:rgba(57,255,20,0.1); border:1px solid var(--green-dim); display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--green);}
+  .app-brand-text{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:14px; letter-spacing:.5px;}
+  .app-brand-text b{color:var(--green);}
+  .app-clock{font-size:11px; color:var(--text-mid); font-weight:600;}
+
+  /* ===== OFFLINE BANNER ===== */
+  .offline-banner{
+    display:none; align-items:center; gap:8px; padding:8px 16px;
+    background:rgba(255,93,93,0.12); border-bottom:1px solid rgba(255,93,93,0.3);
+    font-size:10.5px; color:var(--red); font-weight:600; letter-spacing:.3px; flex-shrink:0;
+  }
+  .offline-banner.show{display:flex;}
+  .offline-dot{width:7px; height:7px; border-radius:50%; background:var(--red); animation:offlinePulse 1.4s infinite;}
+  @keyframes offlinePulse{0%,100%{opacity:1;} 50%{opacity:.3;}}
+
+  /* ===== PATROL LATENESS ALERT ===== */
+  .lateness-alert{
+    display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px;
+    margin-bottom:14px; font-size:11px; font-weight:600;
+  }
+  .lateness-alert.warn{background:rgba(255,194,71,0.1); border:1px solid rgba(255,194,71,0.3); color:var(--amber);}
+  .lateness-alert.critical{background:rgba(255,93,93,0.1); border:1px solid rgba(255,93,93,0.3); color:var(--red);}
+  .lateness-alert.ok{background:rgba(57,255,20,0.06); border:1px solid var(--green-dim); color:var(--green);}
+
+  /* ===== EXPORT BUTTON ===== */
+  .export-btn{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    background:var(--bg-panel-raised); border:1px solid var(--line); border-radius:9px;
+    padding:9px; color:var(--text-hi); font-family:'Chakra Petch',sans-serif; font-weight:600;
+    font-size:10.5px; letter-spacing:.5px; cursor:pointer; margin-top:10px;
+  }
+  .export-btn:hover{border-color:var(--green-dim); color:var(--green);}
+
+  /* ===== SCREENS ===== */
+  .app-body{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  .app-screen{display:none; padding:16px; padding-bottom:24px;}
+  .app-screen.active{display:block;}
+
+  .panel{
+    background:rgba(13,20,28,0.92); border:1px solid rgba(120,215,255,0.18); border-radius:14px;
+    padding:16px; margin-bottom:14px;
+  }
+  .panel-title{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:12px; letter-spacing:.8px; color:var(--text-hi); margin-bottom:12px; display:flex; align-items:center; gap:8px;}
+
+  .stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .stat-cell{background:rgba(255,255,255,0.02); border-radius:10px; padding:12px; text-align:center;}
+  .stat-val{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:22px;}
+  .stat-lbl{font-size:8.5px; color:var(--text-mid); letter-spacing:.5px; margin-top:3px;}
+
+  .activity-item{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line);}
+  .activity-item:last-child{border-bottom:none;}
+  .activity-icon{width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;}
+  .activity-text{flex:1; min-width:0;}
+  .activity-name{font-size:11.5px; font-weight:600; color:var(--text-hi);}
+  .activity-sub{font-size:9.5px; color:var(--text-mid); margin-top:1px;}
+  .activity-time{font-size:9px; color:var(--text-lo); white-space:nowrap;}
+  .empty-state{text-align:center; padding:24px 12px; color:var(--text-mid); font-size:11px; line-height:1.7;}
+
+  .riwayat-filter-btn{
+    padding:6px 12px; border-radius:20px; border:1px solid var(--line); font-size:9.5px; font-weight:600;
+    color:var(--text-mid); letter-spacing:.5px; cursor:pointer; transition:.15s;
+  }
+  .riwayat-filter-btn.active{background:rgba(57,255,20,0.1); border-color:var(--green-dim); color:var(--green);}
+
+  /* ===== BOTTOM NAV ===== */
+  .app-nav{
+    display:flex; background:var(--bg-panel); border-top:1px solid var(--line);
+    padding-bottom:env(safe-area-inset-bottom); flex-shrink:0;
+  }
+  .nav-btn{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding:10px 4px 8px; color:var(--text-mid); cursor:pointer; transition:color .15s;
+  }
+  .nav-btn.active{color:var(--green);}
+  .nav-btn-icon{font-size:18px;}
+  .nav-btn-lbl{font-size:8.5px; letter-spacing:.5px; font-weight:600;}
+
+  /* ===== IFRAME WRAP untuk scan pages ===== */
+  .iframe-screen{display:none; position:absolute; inset:0; background:var(--bg-void); flex-direction:column; z-index:10;}
+  .iframe-screen.active{display:flex;}
+  .iframe-topbar{
+    display:flex; align-items:center; gap:12px; padding:12px 16px; padding-top:calc(12px + env(safe-area-inset-top));
+    background:var(--bg-panel); border-bottom:1px solid var(--line); flex-shrink:0;
+  }
+  .btn-back{
+    display:flex; align-items:center; gap:6px; background:var(--bg-panel-raised); border:1px solid var(--line);
+    border-radius:8px; padding:7px 12px; color:var(--text-hi); font-family:'Chakra Petch',sans-serif;
+    font-weight:600; font-size:11.5px; cursor:pointer; letter-spacing:.5px;
+  }
+  .btn-back:hover{border-color:var(--green-dim); color:var(--green);}
+  .iframe-title{font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:12.5px; letter-spacing:.5px;}
+  .app-iframe{flex:1; width:100%; border:none;}
+
+  #appRoot{position:relative; flex:1; display:flex; flex-direction:column; min-height:0;}
+</style>
+<link rel="manifest" href="manifest-apms.json">
+<meta name="theme-color" content="#070B11">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="APMS">
+<link rel="apple-touch-icon" href="icon-apms-192.png">
+</head>
+<body>
+
+<div class="app-topbar">
+  <div class="app-brand" id="topbarBrand">
+    <div class="app-brand-icon">◈</div>
+    <div class="app-brand-text">APMS <b>COMMAND360</b></div>
+  </div>
+  <div class="app-brand" id="topbarRiwayat" style="display:none;">
+    <div class="btn-back" onclick="closeRiwayat()">← RINGKASAN</div>
+    <div class="app-brand-text">RIWAYAT</div>
+  </div>
+  <div class="app-clock" id="appClock">--:--</div>
+</div>
+
+<div class="offline-banner" id="offlineBanner">
+  <div class="offline-dot"></div>
+  <span>OFFLINE — data tersimpan lokal, akan tersinkron otomatis saat sinyal kembali</span>
+</div>
+
+<div id="appRoot">
+
+  <div class="app-body">
+    <!-- ===== SCREEN: RINGKASAN ===== -->
+    <div class="app-screen active" id="screen-ringkasan">
+      <div id="latenessAlert"></div>
+
+      <div class="panel">
+        <div class="panel-title">📊 RINGKASAN HARI INI</div>
+        <div class="stat-grid">
+          <div class="stat-cell"><div class="stat-val" id="statDiLuar" style="color:var(--amber);">0</div><div class="stat-lbl">DI LUAR KESATRIAN</div></div>
+          <div class="stat-cell"><div class="stat-val" id="statScanHariIni" style="color:var(--green);">0</div><div class="stat-lbl">SCAN HARI INI</div></div>
+          <div class="stat-cell"><div class="stat-val" id="statGate">0</div><div class="stat-lbl">AKTIVITAS GATE</div></div>
+          <div class="stat-cell"><div class="stat-val" id="statPatroli">0</div><div class="stat-lbl">CHECKPOINT PATROLI</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">🔫 STATUS SENJATA</div>
+        <div class="stat-grid">
+          <div class="stat-cell"><div class="stat-val" id="statSenjataLuar" style="color:var(--red);">0</div><div class="stat-lbl">SEDANG DI LUAR</div></div>
+          <div class="stat-cell"><div class="stat-val" id="statSenjataGudang" style="color:var(--green);">0</div><div class="stat-lbl">DI GUDANG</div></div>
+        </div>
+        <div id="senjataLuarList" style="margin-top:12px;"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>🕒 AKTIVITAS TERBARU</span>
+          <span style="font-size:9.5px; color:var(--green); cursor:pointer; letter-spacing:.5px;" onclick="openRiwayat()">LIHAT SEMUA →</span>
+        </div>
+        <div id="activityList">
+          <div class="empty-state">Belum ada aktivitas tercatat.<br>Aktivitas akan muncul otomatis setelah ada yang scan di menu Gate / Patroli / Alat / Senjata.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN: RIWAYAT ===== -->
+    <div class="app-screen" id="screen-riwayat">
+      <div class="panel" style="margin-bottom:10px;">
+        <input type="text" id="riwayatSearch" placeholder="Cari nama..." style="width:100%; background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:9px; padding:11px 14px; color:var(--text-hi); font-family:'IBM Plex Mono',monospace; font-size:12px; margin-bottom:10px;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <div class="riwayat-filter-btn active" data-type="all" onclick="setRiwayatFilter('all')">SEMUA</div>
+          <div class="riwayat-filter-btn" data-type="gate" onclick="setRiwayatFilter('gate')">GATE</div>
+          <div class="riwayat-filter-btn" data-type="checkpoint" onclick="setRiwayatFilter('checkpoint')">PATROLI</div>
+          <div class="riwayat-filter-btn" data-type="alat" onclick="setRiwayatFilter('alat')">ALAT</div>
+          <div class="riwayat-filter-btn" data-type="senjata" onclick="setRiwayatFilter('senjata')">SENJATA</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title" id="riwayatCount">RIWAYAT LENGKAP</div>
+        <div id="riwayatList"></div>
+        <div class="export-btn" onclick="exportRiwayatCSV()">⬇ EXPORT KE CSV</div>
+      </div>
+    </div>
+
+    <!-- Screen lain (Gate/Patroli/Alat/Senjata) dimuat via iframe overlay, lihat #iframeScreen -->
+  </div>
+
+  <div class="app-nav">
+    <div class="nav-btn active" data-screen="ringkasan" onclick="goHome()">
+      <div class="nav-btn-icon">📊</div><div class="nav-btn-lbl">RINGKASAN</div>
+    </div>
+    <div class="nav-btn" onclick="openScanner('apms-scan-gate.html','Scan Gate')">
+      <div class="nav-btn-icon">🚪</div><div class="nav-btn-lbl">GATE</div>
+    </div>
+    <div class="nav-btn" onclick="openScanner('apms-scan-checkpoint.html','Patroli')">
+      <div class="nav-btn-icon">📍</div><div class="nav-btn-lbl">PATROLI</div>
+    </div>
+    <div class="nav-btn" onclick="openScanner('apms-scan-alat.html','Scan Alat')">
+      <div class="nav-btn-icon">🧰</div><div class="nav-btn-lbl">ALAT</div>
+    </div>
+    <div class="nav-btn" onclick="openScanner('apms-scan-senjata.html','Scan Senjata')">
+      <div class="nav-btn-icon">🔫</div><div class="nav-btn-lbl">SENJATA</div>
+    </div>
+  </div>
+
+  <div class="iframe-screen" id="iframeScreen">
+    <div class="iframe-topbar">
+      <div class="btn-back" onclick="closeScanner()">← KEMBALI</div>
+      <div class="iframe-title" id="iframeTitle">—</div>
+    </div>
+    <iframe class="app-iframe" id="appIframe" src=""></iframe>
+  </div>
+
+</div>
+
+<script>
+function updateClock(){
+  const now = new Date();
+  document.getElementById('appClock').textContent = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) + ' WIB';
+}
+updateClock();
+setInterval(updateClock, 15000);
+
+function openScanner(file, title){
+  document.getElementById('appIframe').src = file;
+  document.getElementById('iframeTitle').textContent = title;
+  document.getElementById('iframeScreen').classList.add('active');
+}
+function closeScanner(){
+  document.getElementById('iframeScreen').classList.remove('active');
+  document.getElementById('appIframe').src = '';
+  refreshRingkasan(); // update ringkasan setelah kemungkinan ada aktivitas baru
+}
+function goHome(){
+  document.getElementById('iframeScreen').classList.remove('active');
+  document.getElementById('appIframe').src = '';
+  if(document.getElementById('screen-riwayat').classList.contains('active')){
+    closeRiwayat();
+  }
+  refreshRingkasan();
+}
+
+// ===== RINGKASAN — baca dari localStorage apms_events (diisi oleh halaman scan) =====
+function isToday(ts){
+  const d = new Date(ts);
+  const now = new Date();
+  return d.toDateString() === now.toDateString();
+}
+const TYPE_ICON = { gate:'🚪', checkpoint:'📍', alat:'🧰', senjata:'🔫' };
+const TYPE_COLOR = { gate:'var(--blue)', checkpoint:'var(--green)', alat:'var(--amber)', senjata:'var(--red)' };
+
+function refreshRingkasan(){
+  let events = [];
+  try{ events = JSON.parse(localStorage.getItem('apms_events') || '[]'); } catch(e){ events = []; }
+  checkPatrolLateness();
+  refreshStatusSenjata();
+
+  const todayEvents = events.filter(e => isToday(e.ts));
+
+  // Di Luar Kesatrian: hitung net MASUK vs KELUAR gate hari ini (sederhana: KELUAR - MASUK, minimal 0)
+  const gateOut = todayEvents.filter(e => e.type === 'gate' && e.arah === 'KELUAR').length;
+  const gateIn = todayEvents.filter(e => e.type === 'gate' && e.arah === 'MASUK').length;
+  document.getElementById('statDiLuar').textContent = Math.max(0, gateOut - gateIn);
+  document.getElementById('statScanHariIni').textContent = todayEvents.length;
+  document.getElementById('statGate').textContent = todayEvents.filter(e => e.type === 'gate').length;
+  document.getElementById('statPatroli').textContent = todayEvents.filter(e => e.type === 'checkpoint').length;
+
+  const list = document.getElementById('activityList');
+  if(events.length === 0){
+    list.innerHTML = '<div class="empty-state">Belum ada aktivitas tercatat.<br>Aktivitas akan muncul otomatis setelah ada yang scan di menu Gate / Patroli / Alat / Senjata.</div>';
+    return;
+  }
+  list.innerHTML = events.slice(0, 15).map(e => {
+    const icon = TYPE_ICON[e.type] || '•';
+    const color = TYPE_COLOR[e.type] || 'var(--text-mid)';
+    const name = e.nama || '—';
+    const subParts = [e.gate, e.arah, e.checkpoint, e.alat, e.senjata].filter(Boolean);
+    if(e.type === 'checkpoint' && e.anomali) subParts.push('⚠ ANOMALI');
+    const sub = subParts.join(' · ') || (e.type || '').toUpperCase();
+    const time = new Date(e.ts).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+    const photoThumb = e.selfie
+      ? `<img src="${e.selfie}" style="width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0;" alt="selfie">`
+      : `<div class="activity-icon" style="background:rgba(255,255,255,0.05); color:${color};">${icon}</div>`;
+    return `<div class="activity-item">
+      ${photoThumb}
+      <div class="activity-text"><div class="activity-name">${name}</div><div class="activity-sub">${sub}</div></div>
+      <div class="activity-time">${time}</div>
+    </div>`;
+  }).join('');
+}
+refreshRingkasan();
+// refresh berkala kalau ada scan dari perangkat lain (sinkron via storage event, sesama origin)
+window.addEventListener('storage', (e)=>{ if(e.key === 'apms_events') refreshRingkasan(); });
+setInterval(refreshRingkasan, 20000);
+
+// ===== STATUS SENJATA — hitung status terkini tiap senjata dari riwayat scan =====
+// Senjata diidentifikasi dari kombinasi (jenis + nomor seri). Status ditentukan dari
+// scan TERAKHIR untuk kombinasi itu: mode 'keluar' -> sedang di luar, 'gudang' -> sudah kembali.
+function getWeaponInventory(){
+  let events = [];
+  try{ events = JSON.parse(localStorage.getItem('apms_events') || '[]'); } catch(e){ events = []; }
+  const senjataEvents = events.filter(e => e.type === 'senjata' && e.senjata && e.seri)
+                               .sort((a,b) => a.ts - b.ts); // urut lama->baru supaya "terakhir menang"
+
+  const statusMap = new Map(); // key: "senjata|seri" -> event terakhir
+  senjataEvents.forEach(e => statusMap.set(`${e.senjata}|${e.seri}`, e));
+
+  const luar = [];
+  const gudang = [];
+  statusMap.forEach((e) => {
+    if(e.mode === 'keluar') luar.push(e); else gudang.push(e);
+  });
+  return { luar, gudang };
+}
+
+function refreshStatusSenjata(){
+  const { luar, gudang } = getWeaponInventory();
+  document.getElementById('statSenjataLuar').textContent = luar.length;
+  document.getElementById('statSenjataGudang').textContent = gudang.length;
+
+  const list = document.getElementById('senjataLuarList');
+  if(luar.length === 0){
+    list.innerHTML = '<div class="empty-state" style="padding:10px;">Semua senjata tercatat ada di gudang.</div>';
+    return;
+  }
+  list.innerHTML = luar.map(e => `
+    <div class="activity-item">
+      <div class="activity-icon" style="background:rgba(255,93,93,0.08); color:var(--red);">🔫</div>
+      <div class="activity-text"><div class="activity-name">${e.senjata} — ${e.seri}</div><div class="activity-sub">Dibawa: ${e.nama || '—'}</div></div>
+      <div class="activity-time">${new Date(e.ts).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</div>
+    </div>
+  `).join('');
+}
+refreshStatusSenjata();
+window.addEventListener('storage', (e)=>{ if(e.key === 'apms_events') refreshStatusSenjata(); });
+
+// ===== LAYAR RIWAYAT =====
+let riwayatFilter = 'all';
+let riwayatSearchTerm = '';
+
+function openRiwayat(){
+  document.getElementById('screen-ringkasan').classList.remove('active');
+  document.getElementById('screen-riwayat').classList.add('active');
+  document.getElementById('topbarBrand').style.display = 'none';
+  document.getElementById('topbarRiwayat').style.display = 'flex';
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  renderRiwayat();
+}
+function closeRiwayat(){
+  document.getElementById('screen-riwayat').classList.remove('active');
+  document.getElementById('screen-ringkasan').classList.add('active');
+  document.getElementById('topbarBrand').style.display = 'flex';
+  document.getElementById('topbarRiwayat').style.display = 'none';
+  document.querySelector('.nav-btn[data-screen="ringkasan"]').classList.add('active');
+}
+function setRiwayatFilter(type){
+  riwayatFilter = type;
+  document.querySelectorAll('.riwayat-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+  renderRiwayat();
+}
+document.getElementById('riwayatSearch').addEventListener('input', (e)=>{
+  riwayatSearchTerm = e.target.value.trim().toLowerCase();
+  renderRiwayat();
+});
+
+function renderRiwayat(){
+  let events = [];
+  try{ events = JSON.parse(localStorage.getItem('apms_events') || '[]'); } catch(e){ events = []; }
+
+  let filtered = events;
+  if(riwayatFilter !== 'all') filtered = filtered.filter(e => e.type === riwayatFilter);
+  if(riwayatSearchTerm) filtered = filtered.filter(e => (e.nama || '').toLowerCase().includes(riwayatSearchTerm));
+
+  document.getElementById('riwayatCount').textContent = `RIWAYAT LENGKAP (${filtered.length})`;
+
+  const list = document.getElementById('riwayatList');
+  if(filtered.length === 0){
+    list.innerHTML = '<div class="empty-state">Tidak ada riwayat yang cocok.</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(e => {
+    const icon = TYPE_ICON[e.type] || '•';
+    const color = TYPE_COLOR[e.type] || 'var(--text-mid)';
+    const name = e.nama || '—';
+    const subParts = [e.gate, e.arah, e.checkpoint, e.alat, e.senjata].filter(Boolean);
+    if(e.type === 'checkpoint' && e.anomali) subParts.push('⚠ ANOMALI');
+    const sub = subParts.join(' · ') || (e.type || '').toUpperCase();
+    const dt = new Date(e.ts);
+    const dateStr = dt.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+    const timeStr = dt.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+    const photoThumb = e.selfie
+      ? `<img src="${e.selfie}" style="width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0;" alt="selfie">`
+      : `<div class="activity-icon" style="background:rgba(255,255,255,0.05); color:${color};">${icon}</div>`;
+    return `<div class="activity-item">
+      ${photoThumb}
+      <div class="activity-text"><div class="activity-name">${name}</div><div class="activity-sub">${sub}</div></div>
+      <div class="activity-time">${dateStr}<br>${timeStr}</div>
+    </div>`;
+  }).join('');
+}
+
+// ===== SERVICE WORKER — supaya app bisa di-install & tetap jalan walau sinyal putus-putus =====
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('apms-sw.js').catch(e => console.warn('SW gagal daftar:', e));
+  });
+}
+
+// ===== INDIKATOR STATUS OFFLINE =====
+function updateOnlineStatus(){
+  document.getElementById('offlineBanner').classList.toggle('show', !navigator.onLine);
+}
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+
+// ===== ALARM KETERLAMBATAN PATROLI =====
+// Catatan: sistem belum punya data rute/jadwal checkpoint baku, jadi peringatan ini
+// berbasis "sudah berapa lama sejak checkpoint TERAKHIR di-scan" (siapapun, di manapun),
+// bukan per-titik spesifik. Kalau nanti ada data rute resmi, ini bisa dipertajam per-checkpoint.
+const LATENESS_WARN_MIN = 45;   // kuning: sudah lewat 45 menit tanpa checkpoint
+const LATENESS_CRITICAL_MIN = 90; // merah: sudah lewat 90 menit tanpa checkpoint
+
+function checkPatrolLateness(){
+  let events = [];
+  try{ events = JSON.parse(localStorage.getItem('apms_events') || '[]'); } catch(e){ events = []; }
+  const checkpointEvents = events.filter(e => e.type === 'checkpoint');
+  const el = document.getElementById('latenessAlert');
+
+  if(checkpointEvents.length === 0){
+    el.innerHTML = `<div class="lateness-alert warn">⚠ Belum ada checkpoint yang di-scan sejak app dibuka.</div>`;
+    return;
+  }
+  const lastTs = Math.max(...checkpointEvents.map(e => e.ts));
+  const minutesSince = Math.floor((Date.now() - lastTs) / 60000);
+
+  let cls = 'ok', msg = `✓ Checkpoint terakhir ${minutesSince} menit lalu — dalam batas wajar.`;
+  if(minutesSince >= LATENESS_CRITICAL_MIN){
+    cls = 'critical'; msg = `🚨 Sudah ${minutesSince} menit tanpa checkpoint — kemungkinan patroli terlewat, perlu dicek.`;
+  } else if(minutesSince >= LATENESS_WARN_MIN){
+    cls = 'warn'; msg = `⚠ Sudah ${minutesSince} menit sejak checkpoint terakhir — mendekati batas waktu.`;
+  }
+  el.innerHTML = `<div class="lateness-alert ${cls}">${msg}</div>`;
+}
+checkPatrolLateness();
+setInterval(checkPatrolLateness, 60000);
+
+// ===== EXPORT RIWAYAT KE CSV =====
+function exportRiwayatCSV(){
+  let events = [];
+  try{ events = JSON.parse(localStorage.getItem('apms_events') || '[]'); } catch(e){ events = []; }
+
+  let filtered = events;
+  if(riwayatFilter !== 'all') filtered = filtered.filter(e => e.type === riwayatFilter);
+  if(riwayatSearchTerm) filtered = filtered.filter(e => (e.nama || '').toLowerCase().includes(riwayatSearchTerm));
+
+  if(filtered.length === 0){ alert('Tidak ada data untuk di-export.'); return; }
+
+  const headers = ['Tanggal', 'Jam', 'Jenis', 'Nama', 'Detail', 'Status'];
+  const rows = filtered.map(e => {
+    const dt = new Date(e.ts);
+    const detail = [e.gate, e.arah, e.checkpoint, e.alat, e.senjata].filter(Boolean).join(' / ');
+    const status = (e.type === 'checkpoint' && e.anomali) ? 'ANOMALI' : 'Normal';
+    return [
+      dt.toLocaleDateString('id-ID'),
+      dt.toLocaleTimeString('id-ID'),
+      e.type || '',
+      e.nama || '',
+      detail,
+      status
+    ];
+  });
+
+  const csvContent = [headers, ...rows]
+    .map(row => row.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(','))
+    .join('\n');
+
+  const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' }); // BOM supaya Excel baca UTF-8 dgn benar
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `riwayat-apms-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
