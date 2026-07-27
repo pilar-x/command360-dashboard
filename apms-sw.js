@@ -2,13 +2,8 @@
 // Cache-first untuk file inti app supaya tetap bisa dipakai walau sinyal putus-putus
 // (penting untuk titik patroli / gerbang yang sinyalnya kadang lemah)
 
-const CACHE_NAME = 'apms-cache-v2';
+const CACHE_NAME = 'apms-cache-v3';
 const CORE_FILES = [
-  './apms-app.html',
-  './apms-scan-gate.html',
-  './apms-scan-checkpoint.html',
-  './apms-scan-alat.html',
-  './apms-scan-senjata.html',
   './manifest-apms.json',
   './icon-apms-192.png',
   './icon-apms-512.png',
@@ -31,15 +26,22 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Hanya tangani request GET dari origin sendiri (font Google tetap lewat jaringan seperti biasa)
+  // Hanya tangani request GET dari origin sendiri
   if (event.request.method !== 'GET') return;
 
+  // PENTING: untuk permintaan navigasi/dokumen HTML (buka halaman/masuk iframe),
+  // biarkan Safari tangani langsung TANPA campur tangan Service Worker sama sekali.
+  // Ini yang jadi sumber bug "Response served by service worker has redirections" di Safari —
+  // menyerahkan ke browser langsung untuk jenis request ini menghindari bug itu di akarnya.
+  if (event.request.mode === 'navigate' || event.request.destination === 'document' || event.request.destination === 'iframe') {
+    return; // tidak respondWith() sama sekali → Safari/browser tangani seperti biasa
+  }
+
+  // Untuk aset statis (ikon, manifest, dll) — tetap cache-first seperti biasa
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const networkFetch = fetch(event.request)
         .then((response) => {
-          // Safari menolak Service Worker meneruskan respons yang sempat "redirected" apa adanya
-          // (beda dengan Chrome) — jadi kita bikin ulang Response bersih dari isinya kalau begitu.
           if (response && response.redirected) {
             response = new Response(response.body, {
               status: response.status,
@@ -53,9 +55,8 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => cached); // offline → pakai versi cache kalau ada
+        .catch(() => cached);
 
-      // Cache-first untuk file inti, network-first untuk sisanya
       return cached || networkFetch;
     })
   );
