@@ -124,6 +124,8 @@
   .btn-again{margin-top:6px; padding:12px 20px; border-radius:9px; border:1px solid var(--line-bright); background:var(--bg-panel-raised); color:var(--text-mid); font-family:'IBM Plex Mono'; font-size:11.5px; cursor:pointer;}
   .next-hint{width:100%; text-align:center; font-size:11px; color:var(--green); background:rgba(57,255,20,0.06); border:1px solid var(--green-dim); border-radius:9px; padding:10px; line-height:1.5;}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script src="apms-sync.js"></script>
 </head>
 <body>
@@ -190,6 +192,12 @@
         <span id="gpsText">Mencari lokasi GPS...</span>
       </div>
 
+      <div id="cpMap" style="height:180px; border-radius:12px; overflow:hidden; margin-bottom:14px; border:1px solid var(--line-bright); display:none;"></div>
+      <div id="cpMapLegend" style="display:none; justify-content:space-between; font-size:9.5px; color:var(--text-mid); margin-bottom:14px; margin-top:-8px;">
+        <span>🔴 Titik Checkpoint</span>
+        <span>🔵 Posisi Anda</span>
+      </div>
+
       <button class="btn-confirm" id="btnConfirm" disabled>KONFIRMASI CHECKPOINT</button>
       <button class="anomaly-btn" id="anomalyBtn" style="display:none;">TETAP LAPORKAN (TERTANDAI ANOMALI)</button>
       <div class="foot-note">Data akan tercatat otomatis ke Dashboard APMS Staf Intelijen</div>
@@ -227,16 +235,20 @@
   document.getElementById('cpName').textContent = cpId + ' — ' + cpName;
   document.getElementById('cpRoute').textContent = routeName;
 
-  // Ambil data checkpoint resmi dari server (kalau ada sinyal) — menimpa default/URL di atas
-  (async () => {
+  // Ambil data checkpoint resmi dari server (kalau ada sinyal) — menimpa default/URL di atas.
+  // PENTING: ini harus SELESAI dulu sebelum captureGps() dipanggil, supaya jarak dihitung
+  // terhadap koordinat checkpoint yang BENAR, bukan nilai dummy/lama.
+  async function loadCheckpointFromServer(){
     if (typeof apmsFetchCheckpoints !== 'function') return;
-    const list = await apmsFetchCheckpoints();
-    const match = list.find(c => c.id === cpId);
-    if (match) {
-      cpName = match.nama; cpLat = match.lat; cpLng = match.lng; cpRadius = match.radius || 100;
-      document.getElementById('cpName').textContent = cpId + ' — ' + cpName;
-    }
-  })();
+    try{
+      const list = await apmsFetchCheckpoints();
+      const match = list.find(c => c.id === cpId);
+      if (match) {
+        cpName = match.nama; cpLat = match.lat; cpLng = match.lng; cpRadius = match.radius || 100;
+        document.getElementById('cpName').textContent = cpId + ' — ' + cpName;
+      }
+    } catch(e){ /* offline/gagal — tetap pakai default/URL sebagai fallback */ }
+  }
 
   const progWrap = document.getElementById('cpProgress');
   let dotsHtml = '';
@@ -359,6 +371,33 @@
   const gpsStatusEl = document.getElementById('gpsStatus');
   const gpsTextEl = document.getElementById('gpsText');
 
+  // ===== PETA CHECKPOINT (Leaflet + OpenStreetMap, gratis tanpa API key) =====
+  let cpMap = null, cpMarker = null, userMarker = null, radiusCircle = null;
+
+  function initCheckpointMap(){
+    if (typeof L === 'undefined') return; // Leaflet gagal dimuat (mis. offline) — lewati, tidak fatal
+    const mapEl = document.getElementById('cpMap');
+    const legendEl = document.getElementById('cpMapLegend');
+    mapEl.style.display = 'block';
+    legendEl.style.display = 'flex';
+
+    cpMap = L.map('cpMap', { zoomControl: false, attributionControl: false }).setView([cpLat, cpLng], 17);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(cpMap);
+
+    const redIcon = L.divIcon({ className: '', html: '<div style="width:14px;height:14px;background:#FF5D5D;border:2px solid #fff;border-radius:50%;box-shadow:0 0 4px rgba(0,0,0,0.4);"></div>', iconSize:[14,14] });
+    cpMarker = L.marker([cpLat, cpLng], { icon: redIcon }).addTo(cpMap);
+    radiusCircle = L.circle([cpLat, cpLng], { radius: cpRadius, color:'#39FF14', fillColor:'#39FF14', fillOpacity:0.08, weight:1 }).addTo(cpMap);
+  }
+
+  function updateUserPositionOnMap(lat, lng){
+    if (!cpMap) return;
+    const blueIcon = L.divIcon({ className: '', html: '<div style="width:14px;height:14px;background:#4DA3FF;border:2px solid #fff;border-radius:50%;box-shadow:0 0 6px #4DA3FF;"></div>', iconSize:[14,14] });
+    if (userMarker) userMarker.setLatLng([lat, lng]);
+    else userMarker = L.marker([lat, lng], { icon: blueIcon }).addTo(cpMap);
+    const bounds = L.latLngBounds([[cpLat, cpLng], [lat, lng]]);
+    cpMap.fitBounds(bounds, { padding:[30,30], maxZoom:18 });
+  }
+
   // Rumus Haversine — hitung jarak antara 2 koordinat (meter)
   function hitungJarak(lat1, lng1, lat2, lng2){
     const R = 6371000;
@@ -386,16 +425,17 @@
         const acc = Math.round(pos.coords.accuracy);
         gpsDistance = Math.round(hitungJarak(lat, lng, cpLat, cpLng));
         gpsLabel = lat.toFixed(5) + ', ' + lng.toFixed(5) + ' (±' + acc + 'm)';
+        updateUserPositionOnMap(lat, lng);
         gpsCaptured = true;
 
         if(gpsDistance <= cpRadius){
           gpsWithinRange = true;
-          gpsTextEl.textContent = 'Lokasi terverifikasi — ' + gpsDistance + 'm dari titik checkpoint.';
+          gpsTextEl.innerHTML = `Lokasi terverifikasi — <b>${gpsDistance}m</b> dari titik checkpoint.<br><span style="opacity:.7; font-size:10px;">Posisi Anda: ${gpsLabel}</span>`;
           gpsStatusEl.classList.add('ok');
           gpsStatusEl.classList.remove('err');
         } else {
           gpsWithinRange = false;
-          gpsTextEl.textContent = '⚠ Anda terdeteksi ' + gpsDistance + 'm dari ' + cpId + ' — di luar radius ' + cpRadius + 'm yang diizinkan.';
+          gpsTextEl.innerHTML = `⚠ Anda terdeteksi <b>${gpsDistance}m</b> dari ${cpId} — di luar radius ${cpRadius}m yang diizinkan.<br><span style="opacity:.7; font-size:10px;">Posisi Anda: ${gpsLabel}</span>`;
           gpsStatusEl.classList.add('err');
           gpsStatusEl.classList.remove('ok');
         }
@@ -411,7 +451,13 @@
       { enableHighAccuracy:true, timeout:10000 }
     );
   }
-  captureGps();
+  // Urutan penting: tunggu koordinat checkpoint resmi dari server dulu, BARU ambil GPS —
+  // supaya jarak yang dihitung selalu terhadap titik yang benar.
+  (async () => {
+    await loadCheckpointFromServer();
+    initCheckpointMap(); // gambar peta setelah tahu titik checkpoint yang benar
+    captureGps();
+  })();
 
   function updateConfirmState(){
     if(gpsCaptured && !gpsWithinRange){
