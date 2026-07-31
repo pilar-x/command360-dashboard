@@ -1894,7 +1894,7 @@ body{
           <p>Mengalihkan ke dashboard <b id="successRole">-</b>...</p>
         </div>
 
-        <div class="version" id="versionLine">v20260726.35</div>
+        <div class="version" id="versionLine">v20260726.36</div>
         <div class="copyright-line">© 2026 PHANTOM-X. All Rights Reserved.</div>
       </div>
     </div>
@@ -1941,7 +1941,7 @@ body{
 <div class="sidebar-foot sidebar-contact">
 <div class="sc-label">CONTACT US</div>
 <div class="sc-wa"><svg viewbox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2.1 3.2 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.5-.3Z"/><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg> 0822-7227-2009</div>
-<div class="sc-version">v20260726.35</div>
+<div class="sc-version">v20260726.36</div>
 </div>
 </aside>
 <div class="main">
@@ -6776,7 +6776,6 @@ loadCheckpointManageTable();
 // ===== KONVERSI GAUGE CINCIN PENUH -> SETENGAH LINGKARAN + JARUM (gaya AI Studio Tactical) =====
 function convertRingsToHalfGauges(){
   document.querySelectorAll('.ring[style*="conic-gradient"], .ring-sm[style*="conic-gradient"], .ring-lg[style*="conic-gradient"], .ring-mini[style*="conic-gradient"]').forEach(ringEl => {
-    if(ringEl.dataset.gaugeConverted) return;
     const styleAttr = ringEl.getAttribute('style') || '';
     const match = styleAttr.match(/conic-gradient\(\s*(var\(--[a-z]+\)|#[0-9a-fA-F]{3,6})\s+0%\s+([\d.]+)%/);
     if(!match) return;
@@ -6795,10 +6794,13 @@ function convertRingsToHalfGauges(){
     const needleX = cx + needleLen * Math.cos(angleRad);
     const needleY = cy + needleLen * Math.sin(angleRad);
 
-    ringEl.setAttribute('style', 'width:' + size + 'px; height:' + Math.round(size*0.62) + 'px; position:relative; flex-shrink:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;');
-    ringEl.dataset.gaugeConverted = '1';
-    ringEl.innerHTML =
-      '<svg viewBox="0 0 100 58" style="width:100%; overflow:visible;">' +
+    // Elemen BARU sepenuhnya (class beda) — supaya CSS ::before (lingkaran donat) versi lama
+    // dari .ring/.ring-sm/.ring-lg tidak ikut aktif dan menumpuk di atasnya.
+    const gaugeEl = document.createElement('div');
+    gaugeEl.className = 'half-gauge-el';
+    gaugeEl.style.cssText = 'width:' + size + 'px; height:' + Math.round(size*0.58) + 'px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; margin-top:6px;';
+    gaugeEl.innerHTML =
+      '<svg viewBox="0 0 100 58" style="width:100%; display:block;">' +
       '<path d="M 8 50 A ' + r + ' ' + r + ' 0 0 1 92 50" fill="none" stroke="var(--line)" stroke-width="' + strokeW + '" stroke-linecap="round"/>' +
       '<path d="M 8 50 A ' + r + ' ' + r + ' 0 0 1 92 50" fill="none" stroke="' + colorCss + '" stroke-width="' + strokeW + '" stroke-linecap="round" stroke-dasharray="' + circumference.toFixed(1) + '" stroke-dashoffset="' + dashOffset.toFixed(1) + '"/>' +
       '<line x1="' + cx + '" y1="' + cy + '" x2="' + needleX.toFixed(1) + '" y2="' + needleY.toFixed(1) + '" stroke="var(--text-hi)" stroke-width="2" stroke-linecap="round"/>' +
@@ -6807,8 +6809,9 @@ function convertRingsToHalfGauges(){
     if(innerEl){
       innerEl.style.position = 'static';
       innerEl.style.marginTop = '2px';
-      ringEl.appendChild(innerEl);
+      gaugeEl.appendChild(innerEl);
     }
+    ringEl.replaceWith(gaugeEl);
   });
 }
 convertRingsToHalfGauges();
