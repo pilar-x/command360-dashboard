@@ -19,7 +19,11 @@
   body{
     background:radial-gradient(ellipse 900px 600px at 50% -10%, rgba(57,255,20,0.07), transparent 60%), var(--bg-void);
     color:var(--text-hi); font-family:'IBM Plex Mono', monospace;
-    height:100vh; display:flex; flex-direction:column; overflow:hidden;
+    /* position:fixed lebih andal daripada height:100vh+overflow:hidden khusus di Safari (iPhone/iPad) —
+       overflow:hidden pada body kadang tidak benar-benar mencegah scroll di Safari, membuat menu
+       navigasi bawah bisa "terdorong" keluar layar. Fixed memastikan body selalu pas di layar. */
+    position:fixed; inset:0;
+    display:flex; flex-direction:column;
   }
 
   /* ===== TOPBAR APP ===== */
@@ -63,7 +67,7 @@
   .export-btn:hover{border-color:var(--green-dim); color:var(--green);}
 
   /* ===== SCREENS ===== */
-  .app-body{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  .app-body{flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;}
   .app-screen{display:none; padding:16px; padding-bottom:24px;}
   .app-screen.active{display:block;}
 
