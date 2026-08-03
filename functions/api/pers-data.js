@@ -28,7 +28,8 @@ export async function onRequestGet(context) {
   const { env } = context;
   try {
     const prestasi = await env.DB.prepare('SELECT * FROM pers_prestasi ORDER BY updated_at DESC').all();
-    return json({ ok: true, prestasi: prestasi.results });
+    const pendidikan = await env.DB.prepare('SELECT * FROM pers_pendidikan ORDER BY urutan').all();
+    return json({ ok: true, prestasi: prestasi.results, pendidikan: pendidikan.results });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -39,6 +40,18 @@ export async function onRequestPost(context) {
   if (!checkAuth(request, env)) return json({ error: 'Unauthorized' }, 401);
   try {
     const body = await request.json();
+
+    if (body.type === 'pendidikan') {
+      if (!body.id || !body.nama_program) return json({ error: 'Data tidak lengkap (perlu: id, nama_program).' }, 400);
+      await env.DB.prepare(`
+        INSERT INTO pers_pendidikan (id, nama_program, personel, urutan, updated_at)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          nama_program = excluded.nama_program, personel = excluded.personel, urutan = excluded.urutan, updated_at = excluded.updated_at
+      `).bind(body.id, body.nama_program, body.personel || '', body.urutan ?? 0, Date.now()).run();
+      return json({ ok: true });
+    }
+
     if (!body.id || !body.nama || !body.prestasi) {
       return json({ error: 'Data tidak lengkap (perlu: id, nama, prestasi).' }, 400);
     }
@@ -60,8 +73,13 @@ export async function onRequestDelete(context) {
   try {
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
+    const type = url.searchParams.get('type');
     if (!id) return json({ error: 'Perlu parameter id.' }, 400);
-    await env.DB.prepare('DELETE FROM pers_prestasi WHERE id = ?').bind(id).run();
+    if (type === 'pendidikan') {
+      await env.DB.prepare('DELETE FROM pers_pendidikan WHERE id = ?').bind(id).run();
+    } else {
+      await env.DB.prepare('DELETE FROM pers_prestasi WHERE id = ?').bind(id).run();
+    }
     return json({ ok: true });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
