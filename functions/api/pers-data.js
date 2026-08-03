@@ -1,8 +1,8 @@
 /**
- * APMS COMMAND360 — API Data Staf Personel (Prestasi)
- * GET    /api/pers-data       — ambil semua data prestasi
- * POST   /api/pers-data       — tambah/edit 1 prestasi
- * DELETE /api/pers-data?id=X  — hapus 1 prestasi
+ * APMS COMMAND360 — API Data Staf Personel
+ * GET    /api/pers-data       — ambil semua data (prestasi, pendidikan, stats, notes, records)
+ * POST   /api/pers-data       — tambah/edit (body.type menentukan tabel tujuan)
+ * DELETE /api/pers-data?type=X&id=Y — hapus 1 data
  */
 
 const CORS_HEADERS = {
@@ -29,7 +29,13 @@ export async function onRequestGet(context) {
   try {
     const prestasi = await env.DB.prepare('SELECT * FROM pers_prestasi ORDER BY updated_at DESC').all();
     const pendidikan = await env.DB.prepare('SELECT * FROM pers_pendidikan ORDER BY urutan').all();
-    return json({ ok: true, prestasi: prestasi.results, pendidikan: pendidikan.results });
+    const stats = await env.DB.prepare('SELECT * FROM pers_stats').all();
+    const notes = await env.DB.prepare('SELECT * FROM pers_notes ORDER BY section, updated_at').all();
+    const records = await env.DB.prepare('SELECT * FROM pers_records ORDER BY updated_at DESC').all();
+    return json({
+      ok: true, prestasi: prestasi.results, pendidikan: pendidikan.results,
+      stats: stats.results, notes: notes.results, records: records.results,
+    });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -42,24 +48,46 @@ export async function onRequestPost(context) {
     const body = await request.json();
 
     if (body.type === 'pendidikan') {
-      if (!body.id || !body.nama_program) return json({ error: 'Data tidak lengkap (perlu: id, nama_program).' }, 400);
+      if (!body.id || !body.nama_program) return json({ error: 'Data tidak lengkap.' }, 400);
       await env.DB.prepare(`
-        INSERT INTO pers_pendidikan (id, nama_program, personel, urutan, updated_at)
-        VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT(id) DO UPDATE SET
-          nama_program = excluded.nama_program, personel = excluded.personel, urutan = excluded.urutan, updated_at = excluded.updated_at
+        INSERT INTO pers_pendidikan (id, nama_program, personel, urutan, updated_at) VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET nama_program=excluded.nama_program, personel=excluded.personel, urutan=excluded.urutan, updated_at=excluded.updated_at
       `).bind(body.id, body.nama_program, body.personel || '', body.urutan ?? 0, Date.now()).run();
       return json({ ok: true });
     }
 
-    if (!body.id || !body.nama || !body.prestasi) {
-      return json({ error: 'Data tidak lengkap (perlu: id, nama, prestasi).' }, 400);
+    if (body.type === 'stat') {
+      if (!body.key || !body.label || body.value === undefined) return json({ error: 'Data tidak lengkap.' }, 400);
+      await env.DB.prepare(`
+        INSERT INTO pers_stats (stat_key, label, value, keterangan, updated_at) VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(stat_key) DO UPDATE SET label=excluded.label, value=excluded.value, keterangan=excluded.keterangan, updated_at=excluded.updated_at
+      `).bind(body.key, body.label, body.value, body.keterangan || '', Date.now()).run();
+      return json({ ok: true });
     }
+
+    if (body.type === 'note') {
+      if (!body.id || !body.section || !body.judul) return json({ error: 'Data tidak lengkap.' }, 400);
+      await env.DB.prepare(`
+        INSERT INTO pers_notes (id, section, judul, isi, updated_at) VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET section=excluded.section, judul=excluded.judul, isi=excluded.isi, updated_at=excluded.updated_at
+      `).bind(body.id, body.section, body.judul, body.isi || '', Date.now()).run();
+      return json({ ok: true });
+    }
+
+    if (body.type === 'record') {
+      if (!body.id || !body.nama) return json({ error: 'Data tidak lengkap.' }, 400);
+      await env.DB.prepare(`
+        INSERT INTO pers_records (id, nama, nrp, jabatan, status, updated_at) VALUES (?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET nama=excluded.nama, nrp=excluded.nrp, jabatan=excluded.jabatan, status=excluded.status, updated_at=excluded.updated_at
+      `).bind(body.id, body.nama, body.nrp || '', body.jabatan || '', body.status || '', Date.now()).run();
+      return json({ ok: true });
+    }
+
+    // default: prestasi
+    if (!body.id || !body.nama || !body.prestasi) return json({ error: 'Data tidak lengkap.' }, 400);
     await env.DB.prepare(`
-      INSERT INTO pers_prestasi (id, nama, prestasi, keterangan, updated_at)
-      VALUES (?, ?, ?, ?, ?)
-      ON CONFLICT(id) DO UPDATE SET
-        nama = excluded.nama, prestasi = excluded.prestasi, keterangan = excluded.keterangan, updated_at = excluded.updated_at
+      INSERT INTO pers_prestasi (id, nama, prestasi, keterangan, updated_at) VALUES (?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET nama=excluded.nama, prestasi=excluded.prestasi, keterangan=excluded.keterangan, updated_at=excluded.updated_at
     `).bind(body.id, body.nama, body.prestasi, body.keterangan || '', Date.now()).run();
     return json({ ok: true });
   } catch (err) {
@@ -75,11 +103,14 @@ export async function onRequestDelete(context) {
     const id = url.searchParams.get('id');
     const type = url.searchParams.get('type');
     if (!id) return json({ error: 'Perlu parameter id.' }, 400);
-    if (type === 'pendidikan') {
-      await env.DB.prepare('DELETE FROM pers_pendidikan WHERE id = ?').bind(id).run();
-    } else {
-      await env.DB.prepare('DELETE FROM pers_prestasi WHERE id = ?').bind(id).run();
-    }
+
+    const tableMap = {
+      pendidikan: 'pers_pendidikan', stat: 'pers_stats', note: 'pers_notes',
+      record: 'pers_records', prestasi: 'pers_prestasi',
+    };
+    const table = tableMap[type] || 'pers_prestasi';
+    const col = type === 'stat' ? 'stat_key' : 'id';
+    await env.DB.prepare(`DELETE FROM ${table} WHERE ${col} = ?`).bind(id).run();
     return json({ ok: true });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
