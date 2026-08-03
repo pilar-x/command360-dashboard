@@ -29,7 +29,8 @@ export async function onRequestGet(context) {
   try {
     const stats = await env.DB.prepare('SELECT * FROM intel_stats').all();
     const violations = await env.DB.prepare('SELECT * FROM intel_violations ORDER BY tanggal DESC').all();
-    return json({ ok: true, stats: stats.results, violations: violations.results });
+    const reports = await env.DB.prepare('SELECT * FROM intel_reports ORDER BY tanggal DESC').all();
+    return json({ ok: true, stats: stats.results, violations: violations.results, reports: reports.results });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -75,7 +76,24 @@ export async function onRequestPost(context) {
       return json({ ok: true });
     }
 
-    return json({ error: 'type harus "stat" atau "violation".' }, 400);
+    if (body.type === 'report') {
+      if (!body.id || !body.judul) {
+        return json({ error: 'Data laporan tidak lengkap (perlu: id, judul).' }, 400);
+      }
+      await env.DB.prepare(`
+        INSERT INTO intel_reports (id, judul, jenis, tanggal, pembuat, status, clearance, ringkasan, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          judul = excluded.judul, jenis = excluded.jenis, tanggal = excluded.tanggal, pembuat = excluded.pembuat,
+          status = excluded.status, clearance = excluded.clearance, ringkasan = excluded.ringkasan, updated_at = excluded.updated_at
+      `).bind(
+        body.id, body.judul, body.jenis || '', body.tanggal || '', body.pembuat || '',
+        body.status || '', body.clearance || '', body.ringkasan || '', Date.now()
+      ).run();
+      return json({ ok: true });
+    }
+
+    return json({ error: 'type harus "stat", "violation", atau "report".' }, 400);
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -95,8 +113,10 @@ export async function onRequestDelete(context) {
       await env.DB.prepare('DELETE FROM intel_violations WHERE id = ?').bind(id).run();
     } else if (type === 'stat') {
       await env.DB.prepare('DELETE FROM intel_stats WHERE stat_key = ?').bind(id).run();
+    } else if (type === 'report') {
+      await env.DB.prepare('DELETE FROM intel_reports WHERE id = ?').bind(id).run();
     } else {
-      return json({ error: 'type harus "stat" atau "violation".' }, 400);
+      return json({ error: 'type harus "stat", "violation", atau "report".' }, 400);
     }
     return json({ ok: true });
   } catch (err) {
