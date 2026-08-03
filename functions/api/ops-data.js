@@ -6,8 +6,9 @@
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+  'Access-Control-Allow-Methods': 'GET,POST,DELETE,OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, X-API-Key',
+  'Access-Control-Max-Age': '86400',
 };
 
 function json(data, status = 200) {
@@ -26,7 +27,8 @@ export async function onRequestGet(context) {
   const { env } = context;
   try {
     const stats = await env.DB.prepare('SELECT * FROM ops_stats').all();
-    return json({ ok: true, stats: stats.results });
+    const kegiatan = await env.DB.prepare('SELECT * FROM ops_kegiatan ORDER BY updated_at DESC').all();
+    return json({ ok: true, stats: stats.results, kegiatan: kegiatan.results });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -37,6 +39,21 @@ export async function onRequestPost(context) {
   if (!checkAuth(request, env)) return json({ error: 'Unauthorized' }, 401);
   try {
     const body = await request.json();
+
+    if (body.type === 'kegiatan') {
+      if (!body.id || !body.judul || !body.jenis) {
+        return json({ error: 'Data kegiatan tidak lengkap (perlu: id, jenis, judul).' }, 400);
+      }
+      await env.DB.prepare(`
+        INSERT INTO ops_kegiatan (id, jenis, judul, keterangan, updated_at)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          jenis = excluded.jenis, judul = excluded.judul, keterangan = excluded.keterangan, updated_at = excluded.updated_at
+      `).bind(body.id, body.jenis, body.judul, body.keterangan || '', Date.now()).run();
+      return json({ ok: true });
+    }
+
+    // default: stat
     if (!body.key || !body.label || body.value === undefined) {
       return json({ error: 'Data tidak lengkap (perlu: key, label, value).' }, 400);
     }
@@ -46,6 +63,20 @@ export async function onRequestPost(context) {
       ON CONFLICT(stat_key) DO UPDATE SET
         label = excluded.label, value = excluded.value, keterangan = excluded.keterangan, updated_at = excluded.updated_at
     `).bind(body.key, body.label, body.value, body.keterangan || '', Date.now()).run();
+    return json({ ok: true });
+  } catch (err) {
+    return json({ error: 'Server error: ' + err.message }, 500);
+  }
+}
+
+export async function onRequestDelete(context) {
+  const { request, env } = context;
+  if (!checkAuth(request, env)) return json({ error: 'Unauthorized' }, 401);
+  try {
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
+    if (!id) return json({ error: 'Perlu parameter id.' }, 400);
+    await env.DB.prepare('DELETE FROM ops_kegiatan WHERE id = ?').bind(id).run();
     return json({ ok: true });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);

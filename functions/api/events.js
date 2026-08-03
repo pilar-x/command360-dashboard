@@ -14,8 +14,9 @@
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+  'Access-Control-Allow-Methods': 'GET,POST,DELETE,OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, X-API-Key',
+  'Access-Control-Max-Age': '86400',
 };
 
 function json(data, status = 200) {
@@ -86,6 +87,25 @@ export async function onRequestPost(context) {
     );
     const results = await env.DB.batch(batch);
     return json({ ok: true, inserted: results.length });
+  } catch (err) {
+    return json({ error: 'Server error: ' + err.message }, 500);
+  }
+}
+
+// ===== DELETE /api/events?id=X — hapus 1 event (mis. salah scan) =====
+export async function onRequestDelete(context) {
+  const { request, env } = context;
+  if (!checkAuth(request, env)) {
+    return json({ error: 'Unauthorized — X-API-Key tidak cocok atau tidak ada.' }, 401);
+  }
+
+  try {
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
+    if (!id) return json({ error: 'Perlu parameter id.' }, 400);
+
+    const result = await env.DB.prepare('DELETE FROM apms_events WHERE id = ?').bind(id).run();
+    return json({ ok: true, deleted: result.meta.changes });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
