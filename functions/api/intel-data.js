@@ -30,7 +30,8 @@ export async function onRequestGet(context) {
     const stats = await env.DB.prepare('SELECT * FROM intel_stats').all();
     const violations = await env.DB.prepare('SELECT * FROM intel_violations ORDER BY tanggal DESC').all();
     const reports = await env.DB.prepare('SELECT * FROM intel_reports ORDER BY tanggal DESC').all();
-    return json({ ok: true, stats: stats.results, violations: violations.results, reports: reports.results });
+    const incidents = await env.DB.prepare('SELECT * FROM intel_incidents ORDER BY waktu_kejadian DESC').all();
+    return json({ ok: true, stats: stats.results, violations: violations.results, reports: reports.results, incidents: incidents.results });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -93,7 +94,27 @@ export async function onRequestPost(context) {
       return json({ ok: true });
     }
 
-    return json({ error: 'type harus "stat", "violation", atau "report".' }, 400);
+    if (body.type === 'incident') {
+      if (!body.id || !body.judul) {
+        return json({ error: 'Data kejadian tidak lengkap (perlu: id, judul).' }, 400);
+      }
+      await env.DB.prepare(`
+        INSERT INTO intel_incidents (id, kode_kejadian, judul, lokasi, lat, lng, kategori, tingkat_ancaman, sumber, waktu_kejadian, ringkasan, clearance, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          kode_kejadian = excluded.kode_kejadian, judul = excluded.judul, lokasi = excluded.lokasi,
+          lat = excluded.lat, lng = excluded.lng, kategori = excluded.kategori, tingkat_ancaman = excluded.tingkat_ancaman,
+          sumber = excluded.sumber, waktu_kejadian = excluded.waktu_kejadian, ringkasan = excluded.ringkasan,
+          clearance = excluded.clearance, updated_at = excluded.updated_at
+      `).bind(
+        body.id, body.kode_kejadian || '', body.judul, body.lokasi || '', body.lat ?? null, body.lng ?? null,
+        body.kategori || '', body.tingkat_ancaman || '', body.sumber || '', body.waktu_kejadian || '',
+        body.ringkasan || '', body.clearance || '', Date.now()
+      ).run();
+      return json({ ok: true });
+    }
+
+    return json({ error: 'type harus "stat", "violation", "report", atau "incident".' }, 400);
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -115,8 +136,10 @@ export async function onRequestDelete(context) {
       await env.DB.prepare('DELETE FROM intel_stats WHERE stat_key = ?').bind(id).run();
     } else if (type === 'report') {
       await env.DB.prepare('DELETE FROM intel_reports WHERE id = ?').bind(id).run();
+    } else if (type === 'incident') {
+      await env.DB.prepare('DELETE FROM intel_incidents WHERE id = ?').bind(id).run();
     } else {
-      return json({ error: 'type harus "stat", "violation", atau "report".' }, 400);
+      return json({ error: 'type harus "stat", "violation", "report", atau "incident".' }, 400);
     }
     return json({ ok: true });
   } catch (err) {
