@@ -3,7 +3,18 @@
  * POST /api/command-ai/chat
  * Body: { prompt, context: { metrics, role } }
  * Perlu env GEMINI_API_KEY di Cloudflare Dashboard (Settings > Environment Variables)
+ *
+ * Otomatis mencoba beberapa model secara berurutan kalau salah satu gagal
+ * (misal karena jatah gratis model tersebut 0), supaya tidak perlu diedit manual tiap kali.
  */
+
+const MODEL_CANDIDATES = [
+  'gemini-2.0-flash-lite',
+  'gemini-flash-lite-latest',
+  'gemini-2.5-flash-lite',
+  'gemini-2.0-flash',
+  'gemini-flash-latest',
+];
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -19,6 +30,36 @@ function json(data, status = 200) {
   });
 }
 
+async function tryGenerateContent(apiKey, systemInstruction, prompt) {
+  const errors = [];
+  for (const model of MODEL_CANDIDATES) {
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            systemInstruction: { parts: [{ text: systemInstruction }] },
+            generationConfig: { temperature: 0.3 },
+          }),
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return { ok: true, text, modelUsed: model };
+      }
+      const errText = await res.text();
+      errors.push(`${model}: ${errText.slice(0, 200)}`);
+    } catch (e) {
+      errors.push(`${model}: ${e.message}`);
+    }
+  }
+  return { ok: false, errors };
+}
+
 export async function onRequestGet(context) {
   const { env } = context;
   if (!env.GEMINI_API_KEY) return json({ error: 'GEMINI_API_KEY belum diatur.' }, 400);
@@ -29,7 +70,7 @@ export async function onRequestGet(context) {
     const models = (data.models || [])
       .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
       .map(m => m.name);
-    return json({ ok: true, availableModels: models });
+    return json({ ok: true, availableModels: models, modelCandidatesInUse: MODEL_CANDIDATES });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -62,28 +103,13 @@ Pedoman Jawaban:
 3. Gunakan poin-poin tebal untuk kemudahan dibaca pimpinan.
 4. Jangan mengarang data spesifik (nama personel, angka pasti) yang tidak ada di konteks — jika tidak tahu, katakan perlu verifikasi staf terkait.`;
 
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          systemInstruction: { parts: [{ text: systemInstruction }] },
-          generationConfig: { temperature: 0.3 },
-        }),
-      }
-    );
+    const result = await tryGenerateContent(env.GEMINI_API_KEY, systemInstruction, prompt);
 
-    if (!geminiRes.ok) {
-      const errText = await geminiRes.text();
-      return json({ error: 'Gagal menghubungi Gemini API: ' + errText }, 502);
+    if (!result.ok) {
+      return json({ error: 'Semua model Gemini gagal dicoba: ' + result.errors.join(' | ') }, 502);
     }
 
-    const geminiData = await geminiRes.json();
-    const text = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || 'Tidak ada respons dari AI.';
-
-    return json({ response: text, timestamp: new Date().toISOString(), model: 'gemini-1.5-flash' });
+    return json({ response: result.text, timestamp: new Date().toISOString(), model: result.modelUsed });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
