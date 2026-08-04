@@ -3,7 +3,16 @@
  * POST /api/command-ai/brief
  * Body: { briefType, staffData }
  * Perlu env GEMINI_API_KEY di Cloudflare Dashboard (Settings > Environment Variables)
+ * Otomatis mencoba beberapa model berurutan kalau salah satu gagal.
  */
+
+const MODEL_CANDIDATES = [
+  'gemini-2.0-flash-lite',
+  'gemini-flash-lite-latest',
+  'gemini-2.5-flash-lite',
+  'gemini-2.0-flash',
+  'gemini-flash-latest',
+];
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -17,6 +26,36 @@ function json(data, status = 200) {
     status,
     headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
   });
+}
+
+async function tryGenerateContent(apiKey, systemInstruction, userText) {
+  const errors = [];
+  for (const model of MODEL_CANDIDATES) {
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: userText }] }],
+            systemInstruction: { parts: [{ text: systemInstruction }] },
+            generationConfig: { temperature: 0.3, responseMimeType: 'application/json' },
+          }),
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return { ok: true, text, modelUsed: model };
+      }
+      const errText = await res.text();
+      errors.push(`${model}: ${errText.slice(0, 200)}`);
+    } catch (e) {
+      errors.push(`${model}: ${e.message}`);
+    }
+  }
+  return { ok: false, errors };
 }
 
 export async function onRequestPost(context) {
@@ -40,35 +79,20 @@ Jenis Brief: ${briefType || 'Executive Brief'}.
 PENTING: Jawab HANYA dengan JSON valid, tanpa markdown/backtick, format persis:
 {"title": "Judul Brief", "summary": "Ringkasan situasi utama 3-4 kalimat", "recommendations": ["rekomendasi 1", "rekomendasi 2"]}`;
 
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Data staf terkini: ${JSON.stringify(staffData || {})}` }] }],
-          systemInstruction: { parts: [{ text: systemInstruction }] },
-          generationConfig: { temperature: 0.3, responseMimeType: 'application/json' },
-        }),
-      }
-    );
+    const result = await tryGenerateContent(env.GEMINI_API_KEY, systemInstruction, `Data staf terkini: ${JSON.stringify(staffData || {})}`);
 
-    if (!geminiRes.ok) {
-      const errText = await geminiRes.text();
-      return json({ error: 'Gagal menghubungi Gemini API: ' + errText }, 502);
+    if (!result.ok) {
+      return json({ error: 'Semua model Gemini gagal dicoba: ' + result.errors.join(' | ') }, 502);
     }
-
-    const geminiData = await geminiRes.json();
-    const rawText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
 
     let parsed;
     try {
-      parsed = JSON.parse(rawText.replace(/```json|```/g, '').trim());
+      parsed = JSON.parse(result.text.replace(/```json|```/g, '').trim());
     } catch (e) {
-      parsed = { title: 'Executive Brief', summary: rawText };
+      parsed = { title: 'Executive Brief', summary: result.text };
     }
 
-    return json({ ...parsed, isAiGenerated: true, generatedAt: new Date().toISOString() });
+    return json({ ...parsed, isAiGenerated: true, generatedAt: new Date().toISOString(), modelUsed: result.modelUsed });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
