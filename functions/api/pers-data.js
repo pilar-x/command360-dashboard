@@ -32,9 +32,11 @@ export async function onRequestGet(context) {
     const stats = await env.DB.prepare('SELECT * FROM pers_stats').all();
     const notes = await env.DB.prepare('SELECT * FROM pers_notes ORDER BY section, updated_at').all();
     const records = await env.DB.prepare('SELECT * FROM pers_records ORDER BY updated_at DESC').all();
+    const statusOverrides = await env.DB.prepare('SELECT * FROM pers_status_override').all();
     return json({
       ok: true, prestasi: prestasi.results, pendidikan: pendidikan.results,
       stats: stats.results, notes: notes.results, records: records.results,
+      statusOverrides: statusOverrides.results,
     });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
@@ -80,6 +82,15 @@ export async function onRequestPost(context) {
         INSERT INTO pers_records (id, nama, nrp, jabatan, status, updated_at) VALUES (?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET nama=excluded.nama, nrp=excluded.nrp, jabatan=excluded.jabatan, status=excluded.status, updated_at=excluded.updated_at
       `).bind(body.id, body.nama, body.nrp || '', body.jabatan || '', body.status || '', Date.now()).run();
+      return json({ ok: true });
+    }
+
+    if (body.type === 'status_override') {
+      if (!body.personnel_id || !body.status) return json({ error: 'Data tidak lengkap.' }, 400);
+      await env.DB.prepare(`
+        INSERT INTO pers_status_override (personnel_id, status, updated_at) VALUES (?, ?, ?)
+        ON CONFLICT(personnel_id) DO UPDATE SET status=excluded.status, updated_at=excluded.updated_at
+      `).bind(body.personnel_id, body.status, Date.now()).run();
       return json({ ok: true });
     }
 
