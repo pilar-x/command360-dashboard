@@ -19,6 +19,22 @@ function json(data, status = 200) {
   });
 }
 
+export async function onRequestGet(context) {
+  const { env } = context;
+  if (!env.GEMINI_API_KEY) return json({ error: 'GEMINI_API_KEY belum diatur.' }, 400);
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${env.GEMINI_API_KEY}`);
+    const data = await res.json();
+    if (!res.ok) return json({ error: 'Gagal ambil daftar model: ' + JSON.stringify(data) }, 502);
+    const models = (data.models || [])
+      .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
+      .map(m => m.name);
+    return json({ ok: true, availableModels: models });
+  } catch (err) {
+    return json({ error: 'Server error: ' + err.message }, 500);
+  }
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
   try {
