@@ -47,7 +47,7 @@ Pedoman Jawaban:
 4. Jangan mengarang data spesifik (nama personel, angka pasti) yang tidak ada di konteks — jika tidak tahu, katakan perlu verifikasi staf terkait.`;
 
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${env.GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,7 +67,7 @@ Pedoman Jawaban:
     const geminiData = await geminiRes.json();
     const text = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || 'Tidak ada respons dari AI.';
 
-    return json({ response: text, timestamp: new Date().toISOString(), model: 'gemini-2.0-flash' });
+    return json({ response: text, timestamp: new Date().toISOString(), model: 'gemini-1.5-flash' });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
