@@ -64,7 +64,19 @@ export async function onRequestGet(context) {
       return json({ error: 'Daerah tidak dikenal. Pilihan: ' + Object.keys(ALLOWED_FEEDS).join(', ') }, 400);
     }
 
-    const res = await fetch(feedUrl, { headers: { 'User-Agent': 'Command360-NewsMonitor/1.0' } });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // batas 8 detik, tidak menggantung lama
+
+    let res;
+    try {
+      res = await fetch(feedUrl, {
+        headers: { 'User-Agent': 'Mozilla/5.0 Command360-NewsMonitor/1.0' },
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
+
     if (!res.ok) return json({ error: 'Gagal mengambil feed berita (status ' + res.status + ')' }, 502);
 
     const xml = await res.text();
@@ -72,7 +84,8 @@ export async function onRequestGet(context) {
 
     return json({ ok: true, sumber: 'ANTARA News Sumatera Barat (LKBN ANTARA)', daerah, items });
   } catch (err) {
-    return json({ error: 'Server error: ' + err.message }, 500);
+    const isTimeout = err.name === 'AbortError';
+    return json({ error: isTimeout ? 'Waktu tunggu habis mengambil berita (server ANTARA lambat merespons). Coba lagi.' : 'Server error: ' + err.message }, isTimeout ? 504 : 500);
   }
 }
 
