@@ -41,7 +41,7 @@ PENTING: Jawab HANYA dengan JSON valid, tanpa markdown/backtick, format persis:
 {"title": "Judul Brief", "summary": "Ringkasan situasi utama 3-4 kalimat", "recommendations": ["rekomendasi 1", "rekomendasi 2"]}`;
 
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${env.GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
