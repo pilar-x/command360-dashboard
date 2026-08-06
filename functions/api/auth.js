@@ -24,14 +24,21 @@ export async function onRequestPost(context) {
     const body = await request.json();
 
     if (body.action === 'login') {
-      const { username, password } = body;
-      if (!username || !password) return json({ error: 'Username dan password wajib diisi.' }, 400);
+      const { username, password, role, rolePassword } = body;
+      if (!username || !password) return json({ error: 'Username dan password satuan wajib diisi.' }, 400);
+      if (!role || !rolePassword) return json({ error: 'Peran (role) dan password role wajib diisi.' }, 400);
 
       const tenant = await env.DB.prepare(
         'SELECT * FROM satuan_tenants WHERE username = ? AND password = ?'
       ).bind(username, password).first();
 
-      if (!tenant) return json({ error: 'Username atau password salah.' }, 401);
+      if (!tenant) return json({ error: 'Username atau password satuan salah.' }, 401);
+
+      const roleMatch = await env.DB.prepare(
+        'SELECT id FROM role_passwords WHERE tenant_id = ? AND role = ? AND password = ?'
+      ).bind(tenant.id, role, rolePassword).first();
+
+      if (!roleMatch) return json({ error: 'Password role salah untuk peran "' + role + '".' }, 401);
 
       return json({
         ok: true,
@@ -45,6 +52,7 @@ export async function onRequestPost(context) {
           korem: tenant.korem,
           kedudukan: tenant.kedudukan,
         },
+        role,
       });
     }
 
