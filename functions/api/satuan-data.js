@@ -28,7 +28,8 @@ export async function onRequestGet(context) {
   const { env } = context;
   try {
     const notes = await env.DB.prepare('SELECT * FROM satuan_notes ORDER BY section, urutan').all();
-    return json({ ok: true, notes: notes.results });
+    const jabatan = await env.DB.prepare('SELECT * FROM satuan_jabatan ORDER BY urutan').all();
+    return json({ ok: true, notes: notes.results, jabatan: jabatan.results });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -39,6 +40,16 @@ export async function onRequestPost(context) {
   if (!checkAuth(request, env)) return json({ error: 'Unauthorized' }, 401);
   try {
     const body = await request.json();
+
+    if (body.type === 'jabatan') {
+      if (!body.id || !body.jabatan) return json({ error: 'Data tidak lengkap.' }, 400);
+      await env.DB.prepare(`
+        INSERT INTO satuan_jabatan (id, jabatan, nama, pangkat, status, urutan, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET jabatan=excluded.jabatan, nama=excluded.nama, pangkat=excluded.pangkat, status=excluded.status, urutan=excluded.urutan, updated_at=excluded.updated_at
+      `).bind(body.id, body.jabatan, body.nama || '', body.pangkat || '', body.status || '', body.urutan ?? 0, Date.now()).run();
+      return json({ ok: true });
+    }
+
     if (!body.id || !body.section || !body.judul) return json({ error: 'Data tidak lengkap.' }, 400);
     await env.DB.prepare(`
       INSERT INTO satuan_notes (id, section, judul, isi, urutan, updated_at) VALUES (?, ?, ?, ?, ?, ?)
@@ -56,8 +67,13 @@ export async function onRequestDelete(context) {
   try {
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
+    const type = url.searchParams.get('type');
     if (!id) return json({ error: 'Perlu parameter id.' }, 400);
-    await env.DB.prepare('DELETE FROM satuan_notes WHERE id = ?').bind(id).run();
+    if (type === 'jabatan') {
+      await env.DB.prepare('DELETE FROM satuan_jabatan WHERE id = ?').bind(id).run();
+    } else {
+      await env.DB.prepare('DELETE FROM satuan_notes WHERE id = ?').bind(id).run();
+    }
     return json({ ok: true });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
