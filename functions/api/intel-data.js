@@ -1,9 +1,9 @@
 /**
  * APMS COMMAND360 — API Data Staf Intelijen
- * GET    /api/intel-data                — ambil semua stats + violations
- * POST   /api/intel-data                — simpan 1 stat (body: {type:'stat', key, label, value, keterangan})
- *                                          atau 1 violation (body: {type:'violation', id, nama, ...})
- * DELETE /api/intel-data?type=violation&id=X — hapus 1 violation
+ * Semua data terisolasi per satuan (tenant_id).
+ * GET    /api/intel-data?tenant_id=X
+ * POST   /api/intel-data   (body wajib punya tenant_id)
+ * DELETE /api/intel-data?type=X&id=Y&tenant_id=Z
  */
 
 const CORS_HEADERS = {
@@ -26,14 +26,17 @@ function checkAuth(request, env) {
 }
 
 export async function onRequestGet(context) {
-  const { env } = context;
+  const { request, env } = context;
   try {
-    const stats = await env.DB.prepare('SELECT * FROM intel_stats').all();
-    const violations = await env.DB.prepare('SELECT * FROM intel_violations ORDER BY tanggal DESC').all();
-    const reports = await env.DB.prepare('SELECT * FROM intel_reports ORDER BY tanggal DESC').all();
-    const incidents = await env.DB.prepare('SELECT * FROM intel_incidents ORDER BY waktu_kejadian DESC').all();
-    const notes = await env.DB.prepare('SELECT * FROM intel_notes ORDER BY section, urutan').all();
-    const accessRequests = await env.DB.prepare('SELECT * FROM intel_access_requests ORDER BY requested_at DESC').all();
+    const url = new URL(request.url);
+    const tenantId = url.searchParams.get('tenant_id') || 'sat-897';
+
+    const stats = await env.DB.prepare('SELECT * FROM intel_stats WHERE tenant_id = ?').bind(tenantId).all();
+    const violations = await env.DB.prepare('SELECT * FROM intel_violations WHERE tenant_id = ? ORDER BY tanggal DESC').bind(tenantId).all();
+    const reports = await env.DB.prepare('SELECT * FROM intel_reports WHERE tenant_id = ? ORDER BY tanggal DESC').bind(tenantId).all();
+    const incidents = await env.DB.prepare('SELECT * FROM intel_incidents WHERE tenant_id = ? ORDER BY waktu_kejadian DESC').bind(tenantId).all();
+    const notes = await env.DB.prepare('SELECT * FROM intel_notes WHERE tenant_id = ? ORDER BY section, urutan').bind(tenantId).all();
+    const accessRequests = await env.DB.prepare('SELECT * FROM intel_access_requests WHERE tenant_id = ? ORDER BY requested_at DESC').bind(tenantId).all();
     return json({ ok: true, stats: stats.results, violations: violations.results, reports: reports.results, incidents: incidents.results, notes: notes.results, accessRequests: accessRequests.results });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
@@ -46,17 +49,18 @@ export async function onRequestPost(context) {
 
   try {
     const body = await request.json();
+    const tenantId = body.tenant_id || 'sat-897';
 
     if (body.type === 'stat') {
       if (!body.key || !body.label || body.value === undefined) {
         return json({ error: 'Data stat tidak lengkap (perlu: key, label, value).' }, 400);
       }
       await env.DB.prepare(`
-        INSERT INTO intel_stats (stat_key, label, value, keterangan, updated_at)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO intel_stats (stat_key, label, value, keterangan, tenant_id, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?)
         ON CONFLICT(stat_key) DO UPDATE SET
           label = excluded.label, value = excluded.value, keterangan = excluded.keterangan, updated_at = excluded.updated_at
-      `).bind(body.key, body.label, body.value, body.keterangan || '', Date.now()).run();
+      `).bind(body.key, body.label, body.value, body.keterangan || '', tenantId, Date.now()).run();
       return json({ ok: true });
     }
 
@@ -65,8 +69,8 @@ export async function onRequestPost(context) {
         return json({ error: 'Data pelanggaran tidak lengkap (perlu: id, nama).' }, 400);
       }
       await env.DB.prepare(`
-        INSERT INTO intel_violations (id, nama, pangkat_nrp, satuan, jenis_pelanggaran, tanggal, status, keterangan, tindak_lanjut, dokumen, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO intel_violations (id, nama, pangkat_nrp, satuan, jenis_pelanggaran, tanggal, status, keterangan, tindak_lanjut, dokumen, tenant_id, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
           nama = excluded.nama, pangkat_nrp = excluded.pangkat_nrp, satuan = excluded.satuan,
           jenis_pelanggaran = excluded.jenis_pelanggaran, tanggal = excluded.tanggal, status = excluded.status,
@@ -75,7 +79,7 @@ export async function onRequestPost(context) {
       `).bind(
         body.id, body.nama, body.pangkat_nrp || '', body.satuan || '', body.jenis_pelanggaran || '',
         body.tanggal || '', body.status || '', body.keterangan || '', body.tindak_lanjut || '', body.dokumen || '',
-        Date.now()
+        tenantId, Date.now()
       ).run();
       return json({ ok: true });
     }
@@ -85,14 +89,14 @@ export async function onRequestPost(context) {
         return json({ error: 'Data laporan tidak lengkap (perlu: id, judul).' }, 400);
       }
       await env.DB.prepare(`
-        INSERT INTO intel_reports (id, judul, jenis, tanggal, pembuat, status, clearance, ringkasan, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO intel_reports (id, judul, jenis, tanggal, pembuat, status, clearance, ringkasan, tenant_id, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
           judul = excluded.judul, jenis = excluded.jenis, tanggal = excluded.tanggal, pembuat = excluded.pembuat,
           status = excluded.status, clearance = excluded.clearance, ringkasan = excluded.ringkasan, updated_at = excluded.updated_at
       `).bind(
         body.id, body.judul, body.jenis || '', body.tanggal || '', body.pembuat || '',
-        body.status || '', body.clearance || '', body.ringkasan || '', Date.now()
+        body.status || '', body.clearance || '', body.ringkasan || '', tenantId, Date.now()
       ).run();
       return json({ ok: true });
     }
@@ -102,8 +106,8 @@ export async function onRequestPost(context) {
         return json({ error: 'Data kejadian tidak lengkap (perlu: id, judul).' }, 400);
       }
       await env.DB.prepare(`
-        INSERT INTO intel_incidents (id, kode_kejadian, judul, lokasi, lat, lng, kategori, tingkat_ancaman, sumber, waktu_kejadian, ringkasan, clearance, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO intel_incidents (id, kode_kejadian, judul, lokasi, lat, lng, kategori, tingkat_ancaman, sumber, waktu_kejadian, ringkasan, clearance, tenant_id, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
           kode_kejadian = excluded.kode_kejadian, judul = excluded.judul, lokasi = excluded.lokasi,
           lat = excluded.lat, lng = excluded.lng, kategori = excluded.kategori, tingkat_ancaman = excluded.tingkat_ancaman,
@@ -112,7 +116,7 @@ export async function onRequestPost(context) {
       `).bind(
         body.id, body.kode_kejadian || '', body.judul, body.lokasi || '', body.lat ?? null, body.lng ?? null,
         body.kategori || '', body.tingkat_ancaman || '', body.sumber || '', body.waktu_kejadian || '',
-        body.ringkasan || '', body.clearance || '', Date.now()
+        body.ringkasan || '', body.clearance || '', tenantId, Date.now()
       ).run();
       return json({ ok: true });
     }
@@ -122,28 +126,28 @@ export async function onRequestPost(context) {
         return json({ error: 'Data catatan tidak lengkap (perlu: id, section, judul).' }, 400);
       }
       await env.DB.prepare(`
-        INSERT INTO intel_notes (id, section, judul, isi, urutan, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO intel_notes (id, section, judul, isi, urutan, tenant_id, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
           section = excluded.section, judul = excluded.judul, isi = excluded.isi, urutan = excluded.urutan, updated_at = excluded.updated_at
-      `).bind(body.id, body.section, body.judul, body.isi || '', body.urutan ?? 0, Date.now()).run();
+      `).bind(body.id, body.section, body.judul, body.isi || '', body.urutan ?? 0, tenantId, Date.now()).run();
       return json({ ok: true });
     }
 
     if (body.type === 'access_request') {
       const id = `req-${Date.now()}`;
       await env.DB.prepare(`
-        INSERT INTO intel_access_requests (id, requested_by_role, status, requested_at)
-        VALUES (?, ?, 'pending', ?)
-      `).bind(id, body.requested_by_role || 'PASI PERS', Date.now()).run();
+        INSERT INTO intel_access_requests (id, requested_by_role, status, tenant_id, requested_at)
+        VALUES (?, ?, 'pending', ?, ?)
+      `).bind(id, body.requested_by_role || 'PASI PERS', tenantId, Date.now()).run();
       return json({ ok: true, id });
     }
 
     if (body.type === 'respond_access_request') {
       if (!body.id || !body.status) return json({ error: 'Data tidak lengkap.' }, 400);
       await env.DB.prepare(`
-        UPDATE intel_access_requests SET status = ?, responded_at = ?, responded_by_role = ? WHERE id = ?
-      `).bind(body.status, Date.now(), body.responded_by_role || '', body.id).run();
+        UPDATE intel_access_requests SET status = ?, responded_at = ?, responded_by_role = ? WHERE id = ? AND tenant_id = ?
+      `).bind(body.status, Date.now(), body.responded_by_role || '', body.id, tenantId).run();
       return json({ ok: true });
     }
 
@@ -161,20 +165,21 @@ export async function onRequestDelete(context) {
     const url = new URL(request.url);
     const type = url.searchParams.get('type');
     const id = url.searchParams.get('id');
+    const tenantId = url.searchParams.get('tenant_id') || 'sat-897';
     if (!id) return json({ error: 'Perlu parameter id.' }, 400);
 
     if (type === 'violation') {
-      await env.DB.prepare('DELETE FROM intel_violations WHERE id = ?').bind(id).run();
+      await env.DB.prepare('DELETE FROM intel_violations WHERE id = ? AND tenant_id = ?').bind(id, tenantId).run();
     } else if (type === 'stat') {
-      await env.DB.prepare('DELETE FROM intel_stats WHERE stat_key = ?').bind(id).run();
+      await env.DB.prepare('DELETE FROM intel_stats WHERE stat_key = ? AND tenant_id = ?').bind(id, tenantId).run();
     } else if (type === 'report') {
-      await env.DB.prepare('DELETE FROM intel_reports WHERE id = ?').bind(id).run();
+      await env.DB.prepare('DELETE FROM intel_reports WHERE id = ? AND tenant_id = ?').bind(id, tenantId).run();
     } else if (type === 'incident') {
-      await env.DB.prepare('DELETE FROM intel_incidents WHERE id = ?').bind(id).run();
+      await env.DB.prepare('DELETE FROM intel_incidents WHERE id = ? AND tenant_id = ?').bind(id, tenantId).run();
     } else if (type === 'note') {
-      await env.DB.prepare('DELETE FROM intel_notes WHERE id = ?').bind(id).run();
+      await env.DB.prepare('DELETE FROM intel_notes WHERE id = ? AND tenant_id = ?').bind(id, tenantId).run();
     } else {
-      return json({ error: 'type harus "stat", "violation", "report", "incident", "note", "access_request", atau "respond_access_request".' }, 400);
+      return json({ error: 'type harus "stat", "violation", "report", "incident", atau "note".' }, 400);
     }
     return json({ ok: true });
   } catch (err) {
