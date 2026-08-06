@@ -33,7 +33,8 @@ export async function onRequestGet(context) {
     const reports = await env.DB.prepare('SELECT * FROM intel_reports ORDER BY tanggal DESC').all();
     const incidents = await env.DB.prepare('SELECT * FROM intel_incidents ORDER BY waktu_kejadian DESC').all();
     const notes = await env.DB.prepare('SELECT * FROM intel_notes ORDER BY section, urutan').all();
-    return json({ ok: true, stats: stats.results, violations: violations.results, reports: reports.results, incidents: incidents.results, notes: notes.results });
+    const accessRequests = await env.DB.prepare('SELECT * FROM intel_access_requests ORDER BY requested_at DESC').all();
+    return json({ ok: true, stats: stats.results, violations: violations.results, reports: reports.results, incidents: incidents.results, notes: notes.results, accessRequests: accessRequests.results });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -129,7 +130,24 @@ export async function onRequestPost(context) {
       return json({ ok: true });
     }
 
-    return json({ error: 'type harus "stat", "violation", "report", "incident", atau "note".' }, 400);
+    if (body.type === 'access_request') {
+      const id = `req-${Date.now()}`;
+      await env.DB.prepare(`
+        INSERT INTO intel_access_requests (id, requested_by_role, status, requested_at)
+        VALUES (?, ?, 'pending', ?)
+      `).bind(id, body.requested_by_role || 'PASI PERS', Date.now()).run();
+      return json({ ok: true, id });
+    }
+
+    if (body.type === 'respond_access_request') {
+      if (!body.id || !body.status) return json({ error: 'Data tidak lengkap.' }, 400);
+      await env.DB.prepare(`
+        UPDATE intel_access_requests SET status = ?, responded_at = ?, responded_by_role = ? WHERE id = ?
+      `).bind(body.status, Date.now(), body.responded_by_role || '', body.id).run();
+      return json({ ok: true });
+    }
+
+    return json({ error: 'type harus "stat", "violation", "report", "incident", "note", "access_request", atau "respond_access_request".' }, 400);
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
@@ -156,7 +174,7 @@ export async function onRequestDelete(context) {
     } else if (type === 'note') {
       await env.DB.prepare('DELETE FROM intel_notes WHERE id = ?').bind(id).run();
     } else {
-      return json({ error: 'type harus "stat", "violation", "report", "incident", atau "note".' }, 400);
+      return json({ error: 'type harus "stat", "violation", "report", "incident", "note", "access_request", atau "respond_access_request".' }, 400);
     }
     return json({ ok: true });
   } catch (err) {
