@@ -18,9 +18,11 @@ function checkAuth(request, env) {
 }
 
 export async function onRequestGet(context) {
-  const { env } = context;
+  const { request, env } = context;
   try {
-    const stats = await env.DB.prepare('SELECT * FROM log_stats').all();
+    const url = new URL(request.url);
+    const tenantId = url.searchParams.get('tenant_id') || 'sat-897';
+    const stats = await env.DB.prepare('SELECT * FROM log_stats WHERE tenant_id = ?').bind(tenantId).all();
     return json({ ok: true, stats: stats.results });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
@@ -32,15 +34,16 @@ export async function onRequestPost(context) {
   if (!checkAuth(request, env)) return json({ error: 'Unauthorized' }, 401);
   try {
     const body = await request.json();
+    const tenantId = body.tenant_id || 'sat-897';
     if (!body.key || !body.label || body.value === undefined) {
       return json({ error: 'Data tidak lengkap (perlu: key, label, value).' }, 400);
     }
     await env.DB.prepare(`
-      INSERT INTO log_stats (stat_key, label, value, keterangan, updated_at)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO log_stats (stat_key, label, value, keterangan, tenant_id, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?)
       ON CONFLICT(stat_key) DO UPDATE SET
         label = excluded.label, value = excluded.value, keterangan = excluded.keterangan, updated_at = excluded.updated_at
-    `).bind(body.key, body.label, body.value, body.keterangan || '', Date.now()).run();
+    `).bind(body.key, body.label, body.value, body.keterangan || '', tenantId, Date.now()).run();
     return json({ ok: true });
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
