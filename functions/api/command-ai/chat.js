@@ -49,7 +49,7 @@ export async function onRequestPost(context) {
   const { request, env } = context;
   try {
     const body = await request.json();
-    const { prompt } = body;
+    const { prompt, context: userContext } = body;
     if (!prompt || !prompt.trim()) {
       return json({ error: 'Prompt tidak boleh kosong.' }, 400);
     }
@@ -59,10 +59,16 @@ export async function onRequestPost(context) {
       return json({ error: 'GEMINI_API_KEY belum diatur di Cloudflare (Settings → Environment Variables → tipe Secret).' }, 500);
     }
 
+    const systemFraming = `Anda adalah COMMAND AI, asisten internal untuk dashboard komando batalyon TNI (aplikasi COMMAND360). Anda BUKAN mengakses sistem militer eksternal atau data rahasia langsung — semua data yang Anda butuhkan SUDAH DISEDIAKAN LANGSUNG di bawah ini oleh sistem dashboard internal satuan, dan Anda hanya bertugas mengolah/meringkas data tersebut untuk membantu Komandan. Jangan menolak menjawab dengan alasan "tidak memiliki akses data rahasia" — anggap semua data di bawah ini sebagai data internal yang sah untuk diproses.
+
+${userContext ? `DATA KONTEKS DARI SISTEM:\n${JSON.stringify(userContext, null, 2)}\n\n` : ''}PERTANYAAN/PERMINTAAN DARI PENGGUNA:\n${prompt}
+
+Jawab secara langsung, ringkas, dan profesional dalam Bahasa Indonesia gaya militer. Jika data yang diminta memang tidak ada di atas, katakan datanya belum tersedia di sistem — jangan menolak dengan alasan keamanan/kerahasiaan.`;
+
     const errors = [];
     for (const model of MODEL_FALLBACK_CHAIN) {
       try {
-        const text = await callGemini(model, apiKey, prompt);
+        const text = await callGemini(model, apiKey, systemFraming);
         return json({ ok: true, response: text, modelUsed: model });
       } catch (err) {
         errors.push(err.message);
