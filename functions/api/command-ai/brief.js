@@ -1,18 +1,8 @@
 /**
- * Command AI — Generator Ringkasan Eksekutif (Brief), terhubung ke Google Gemini
- * POST /api/command-ai/brief
- * Body: { briefType, staffData }
- * Perlu env GEMINI_API_KEY di Cloudflare Dashboard (Settings > Environment Variables)
- * Otomatis mencoba beberapa model berurutan kalau salah satu gagal.
+ * COMMAND AI — Daily Brief Endpoint (Gemini)
+ * Model 2.0-flash / 2.0-flash-lite DIMATIKAN Google per 1 Juni 2026.
+ * Fallback chain diperbarui ke model yang masih aktif per Agustus 2026.
  */
-
-const MODEL_CANDIDATES = [
-  'gemini-2.0-flash-lite',
-  'gemini-flash-lite-latest',
-  'gemini-2.5-flash-lite',
-  'gemini-2.0-flash',
-  'gemini-flash-latest',
-];
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -28,71 +18,58 @@ function json(data, status = 200) {
   });
 }
 
-async function tryGenerateContent(apiKey, systemInstruction, userText) {
-  const errors = [];
-  for (const model of MODEL_CANDIDATES) {
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: userText }] }],
-            systemInstruction: { parts: [{ text: systemInstruction }] },
-            generationConfig: { temperature: 0.3, responseMimeType: 'application/json' },
-          }),
-        }
-      );
-      if (res.ok) {
-        const data = await res.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text) return { ok: true, text, modelUsed: model };
-      }
-      const errText = await res.text();
-      errors.push(`${model}: ${errText.slice(0, 200)}`);
-    } catch (e) {
-      errors.push(`${model}: ${e.message}`);
-    }
+const MODEL_FALLBACK_CHAIN = [
+  'gemini-2.5-flash-lite',
+  'gemini-2.5-flash',
+  'gemini-3.5-flash-lite',
+  'gemini-3.6-flash',
+];
+
+async function callGemini(model, apiKey, prompt) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    const errMsg = data?.error?.message || `HTTP ${res.status}`;
+    throw new Error(`[${model}] ${errMsg}`);
   }
-  return { ok: false, errors };
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error(`[${model}] Respons kosong dari Gemini.`);
+  return text;
 }
 
 export async function onRequestPost(context) {
   const { request, env } = context;
   try {
     const body = await request.json();
-    const { briefType, staffData } = body;
+    const { context: briefContext } = body;
 
-    if (!env.GEMINI_API_KEY) {
-      return json({
-        title: `EXECUTIVE BRIEF (${(briefType || 'DAILY').toUpperCase()})`,
-        summary: `Ringkasan Situasi Terintegrasi COMMAND360 (${new Date().toLocaleDateString('id-ID')}):\n• INTELIJEN: Wilayah kondusif, hotspot karhutla dalam penanganan.\n• OPERASI: Kesiapan Satuan tinggi.\n• PERSONEL: DSPP vs Riil dalam batas normal.\n• LOGISTIK: Stok Bekal Amunisi & BBM aman.\n\n[MODE DEMO — tambahkan GEMINI_API_KEY di Cloudflare untuk analisis AI sungguhan]`,
-        recommendations: ['Pertahankan tingkat kesiapsiagaan Satuan.', 'Lakukan pengecekan rutin suku cadang ranmor.'],
-        isAiGenerated: true,
-      });
+    const apiKey = env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return json({ error: 'GEMINI_API_KEY belum diatur di Cloudflare (Settings → Environment Variables → tipe Secret).' }, 500);
     }
 
-    const systemInstruction = `Anda adalah COMMAND AI Generator untuk Laporan Singkat Pimpinan (Executive Brief) Batalyon TNI AD.
-Buat ringkasan eksekutif berjenjang berdasarkan data fusion staf (Intel, Ops, Pers, Log) yang diberikan.
-Jenis Brief: ${briefType || 'Executive Brief'}.
-PENTING: Jawab HANYA dengan JSON valid, tanpa markdown/backtick, format persis:
-{"title": "Judul Brief", "summary": "Ringkasan situasi utama 3-4 kalimat", "recommendations": ["rekomendasi 1", "rekomendasi 2"]}`;
+    const prompt = `Buatkan ringkasan situasi harian singkat (Command Brief) untuk Komandan Batalyon TNI berdasarkan konteks berikut:\n\n${JSON.stringify(briefContext || {}, null, 2)}\n\nFormat: 3-4 poin ringkas mencakup Situasi Wilayah, Kesiapan Satuan, Personel, dan Logistik. Gunakan bahasa militer Indonesia yang profesional.`;
 
-    const result = await tryGenerateContent(env.GEMINI_API_KEY, systemInstruction, `Data staf terkini: ${JSON.stringify(staffData || {})}`);
-
-    if (!result.ok) {
-      return json({ error: 'Semua model Gemini gagal dicoba: ' + result.errors.join(' | ') }, 502);
+    const errors = [];
+    for (const model of MODEL_FALLBACK_CHAIN) {
+      try {
+        const text = await callGemini(model, apiKey, prompt);
+        return json({ ok: true, brief: text, modelUsed: model });
+      } catch (err) {
+        errors.push(err.message);
+      }
     }
 
-    let parsed;
-    try {
-      parsed = JSON.parse(result.text.replace(/```json|```/g, '').trim());
-    } catch (e) {
-      parsed = { title: 'Executive Brief', summary: result.text };
-    }
-
-    return json({ ...parsed, isAiGenerated: true, generatedAt: new Date().toISOString(), modelUsed: result.modelUsed });
+    return json({
+      error: 'Semua model Gemini di fallback chain gagal merespons. Detail: ' + errors.join(' | '),
+    }, 502);
   } catch (err) {
     return json({ error: 'Server error: ' + err.message }, 500);
   }
