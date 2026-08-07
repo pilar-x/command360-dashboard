@@ -55,7 +55,9 @@ export async function onRequestPost(context) {
       return json({ error: 'GEMINI_API_KEY belum diatur di Cloudflare (Settings → Environment Variables → tipe Secret).' }, 500);
     }
 
-    const prompt = `Buatkan ringkasan situasi harian singkat (Command Brief) untuk Komandan Batalyon TNI berdasarkan konteks berikut:\n\n${JSON.stringify(briefContext || {}, null, 2)}\n\nFormat: 3-4 poin ringkas mencakup Situasi Wilayah, Kesiapan Satuan, Personel, dan Logistik. Gunakan bahasa militer Indonesia yang profesional.`;
+    const prompt = `Anda adalah COMMAND AI, asisten internal dashboard komando batalyon TNI (COMMAND360). Semua data di bawah ini SUDAH DISEDIAKAN LANGSUNG oleh sistem dashboard internal satuan — Anda hanya bertugas meringkasnya, bukan mengakses sistem rahasia eksternal. Jangan menolak dengan alasan "tidak memiliki akses data rahasia".
+
+Buatkan ringkasan situasi harian singkat (Command Brief) untuk Komandan Batalyon berdasarkan data berikut:\n\n${JSON.stringify(briefContext || {}, null, 2)}\n\nFormat: 3-4 poin ringkas mencakup Situasi Wilayah, Kesiapan Satuan, Personel, dan Logistik. Gunakan bahasa militer Indonesia yang profesional dan langsung, jangan menolak menjawab.`;
 
     const errors = [];
     for (const model of MODEL_FALLBACK_CHAIN) {
